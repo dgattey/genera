@@ -90,6 +90,29 @@ class Renderer: NSObject, MTKViewDelegate {
         encoder.setViewport(currentViewport)
         encoder.setRenderPipelineState(renderPipelineState)
         
+        let positions: [Float] = [
+             0.0,  250.5,
+            -50.5, -50.5,
+             250.5, -50.5
+        ]
+        let triBytes = mainDevice.makeBuffer(bytes: positions, length: positions.count * 32, options: .storageModeShared)
+        let colors: [Float] = [
+            1, 0, 0, 1,
+            0, 1, 0, 1,
+            0, 0, 1, 1
+        ]
+        let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 32, options: .storageModeShared)
+        
+        let viewportData: [Float] = [
+            Float(currentViewport.width), Float(currentViewport.height)
+        ]
+        let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 32, options: .storageModeShared)
+        
+        encoder.setVertexBuffer(triBytes, offset: 0, index: VertexAttribute.positions.rawValue)
+        encoder.setVertexBuffer(colorBytes, offset: 0, index: VertexAttribute.colors.rawValue)
+        encoder.setVertexBuffer(viewportBytes, offset: 0, index: VertexAttribute.viewportSize.rawValue)
+       
+        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
         
         // Done with drawing instructions
         encoder.endEncoding()

@@ -17,12 +17,6 @@ using namespace metal;
 
 typedef struct
 {
-    vector_float2 position;
-    vector_float4 color;
-} Vertex;
-
-typedef struct
-{
     // The [[position]] attribute of this member indicates that this value
     // is the clip space position of the vertex when this structure is
     // returned from the vertex function.
@@ -34,31 +28,26 @@ typedef struct
     // fragment in the triangle.
     float4 color;
 
-} RasterizerData;
+} ColoredVertex;
 
 // This function creates color and position data for the vertices from viewport size
-vertex RasterizerData
-vertexShader(uint vertexID [[vertex_id]],
-             constant Vertex *vertices [[buffer(VertexAttributeVertices)]],
-             constant vector_uint2 *viewportSizePointer [[buffer(VertexAttributeViewportSize)]])
+vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
+                                  constant float2 *positions [[buffer(VertexAttributePositions)]],
+                                  constant float4 *colors [[buffer(VertexAttributeColors)]],
+                                  constant float2 *viewportSize [[buffer(VertexAttributeViewportSize)]])
 {
-    RasterizerData out;
-    vector_float2 viewportSize = vector_float2(*viewportSizePointer);
-    
-    // Normalize by dividing by half viewport size (and these are SIMD types so
-    // they can be divided all at once).
-    float2 pixelSpacePosition = vertices[vertexID].position.xy;
-    out.position = vector_float4(0.0, 0.0, 0.0, 1.0);
-    out.position.xy = pixelSpacePosition / (viewportSize / 2.0);
-    
-    // Just set color to be whatever it was passed in as
-    out.color = vertices[vertexID].color;
-    
+    ColoredVertex out;
+    float2 pixelSpacePosition = positions[vertexID];
+    // Normalize by dividing by half viewport size
+    float x = pixelSpacePosition.x / (*viewportSize).x / 2.0;
+    float y = pixelSpacePosition.y / (*viewportSize).y / 2.0;
+    out.position = vector_float4(x, y, 0.0, 1.0);
+    out.color = colors[vertexID];
     return out;
 }
 
-// Just use interpolation between the colors already defined
-fragment float4 fragmentShader(RasterizerData in [[stage_in]])
+// Use the defined color to interpolate
+fragment float4 fragmentShader(ColoredVertex in [[stage_in]])
 {
     return in.color;
 }
