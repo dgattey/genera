@@ -14,6 +14,7 @@
 		750379A1254A8538002A0C13 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* Renderer.swift */; };
 		750379A2254A8538002A0C13 /* ShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* ShaderTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
+		750379AC254A8732002A0C13 /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750379AB254A8732002A0C13 /* Generator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,8 @@
 		7503799C254A8538002A0C13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7503799E254A8538002A0C13 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7503799F254A8538002A0C13 /* Land_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Land_macOS.entitlements; sourceTree = "<group>"; };
+		750379AB254A8732002A0C13 /* Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generator.swift; sourceTree = "<group>"; };
+		750379AE254A8FB3002A0C13 /* EXAMPLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXAMPLE.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +57,8 @@
 			children = (
 				7503798C254A8537002A0C13 /* Shaders.metal */,
 				7503798D254A8537002A0C13 /* Renderer.swift */,
+				750379AE254A8FB3002A0C13 /* EXAMPLE.swift */,
+				750379AB254A8732002A0C13 /* Generator.swift */,
 				7503798E254A8537002A0C13 /* ShaderTypes.h */,
 				7503798F254A8538002A0C13 /* Assets.xcassets */,
 			);
@@ -154,6 +159,7 @@
 				750379A0254A8538002A0C13 /* Shaders.metal in Sources */,
 				7503799A254A8538002A0C13 /* GameViewController.swift in Sources */,
 				75037998254A8538002A0C13 /* AppDelegate.swift in Sources */,
+				750379AC254A8732002A0C13 /* Generator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,9 +294,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Land macOS/Land_macOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KCH4HBZ68M;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Land macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -300,6 +306,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Land;
 				PRODUCT_NAME = Land;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Land Shared/ShaderTypes.h";
 				SWIFT_VERSION = 5.0;
@@ -312,9 +319,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Land macOS/Land_macOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KCH4HBZ68M;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "Land macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -324,6 +331,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Land;
 				PRODUCT_NAME = Land;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Land Shared/ShaderTypes.h";
 				SWIFT_VERSION = 5.0;

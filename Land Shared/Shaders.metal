@@ -17,37 +17,37 @@ using namespace metal;
 
 typedef struct
 {
-    float3 position [[attribute(VertexAttributePosition)]];
-    float2 texCoord [[attribute(VertexAttributeTexcoord)]];
-} Vertex;
-
-typedef struct
-{
+    // The [[position]] attribute of this member indicates that this value
+    // is the clip space position of the vertex when this structure is
+    // returned from the vertex function.
     float4 position [[position]];
-    float2 texCoord;
-} ColorInOut;
+    
+    // Since this member does not have a special attribute, the rasterizer
+    // interpolates its value with the values of the other triangle vertices
+    // and then passes the interpolated value to the fragment shader for each
+    // fragment in the triangle.
+    float4 color;
 
-vertex ColorInOut vertexShader(Vertex in [[stage_in]],
-                               constant Uniforms & uniforms [[ buffer(BufferIndexUniforms) ]])
+} ColoredVertex;
+
+// This function creates color and position data for the vertices from viewport size
+vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
+                                  constant float2 *positions [[buffer(VertexAttributePositions)]],
+                                  constant float4 *colors [[buffer(VertexAttributeColors)]],
+                                  constant float2 *viewportSize [[buffer(VertexAttributeViewportSize)]])
 {
-    ColorInOut out;
-
-    float4 position = float4(in.position, 1.0);
-    out.position = uniforms.projectionMatrix * uniforms.modelViewMatrix * position;
-    out.texCoord = in.texCoord;
-
+    ColoredVertex out;
+    float2 pixelSpacePosition = positions[vertexID];
+    // Normalize by dividing by half viewport size
+    float x = pixelSpacePosition.x / (*viewportSize).x / 2.0;
+    float y = pixelSpacePosition.y / (*viewportSize).y / 2.0;
+    out.position = vector_float4(x, y, 0.0, 1.0);
+    out.color = colors[vertexID];
     return out;
 }
 
-fragment float4 fragmentShader(ColorInOut in [[stage_in]],
-                               constant Uniforms & uniforms [[ buffer(BufferIndexUniforms) ]],
-                               texture2d<half> colorMap     [[ texture(TextureIndexColor) ]])
+// Use the defined color to interpolate
+fragment float4 fragmentShader(ColoredVertex in [[stage_in]])
 {
-    constexpr sampler colorSampler(mip_filter::linear,
-                                   mag_filter::linear,
-                                   min_filter::linear);
-
-    half4 colorSample   = colorMap.sample(colorSampler, in.texCoord.xy);
-
-    return float4(colorSample);
+    return in.color;
 }
