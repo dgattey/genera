@@ -11,8 +11,8 @@ import MetalKit
 // Our macOS specific view controller
 class GameViewController: NSViewController {
 
-    var renderer: Renderer?
-    var mainView: MTKView?
+    private var renderer: Renderer?
+    private var mainView: MTKView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
