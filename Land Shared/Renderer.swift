@@ -17,6 +17,7 @@ class Renderer: NSObject, MTKViewDelegate {
     private let mainDevice: MTLDevice
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
+    private var currentViewport: MTLViewport
     
     init?(view: MTKView, device: MTLDevice) {
         // Create related objects
@@ -32,6 +33,7 @@ class Renderer: NSObject, MTKViewDelegate {
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
+        self.currentViewport = viewport(from: CGSize.zero)
         super.init()
     }
     
@@ -66,30 +68,28 @@ class Renderer: NSObject, MTKViewDelegate {
         view.enableSetNeedsDisplay = true
     }
     
-    // Called on every tick to update data
-    private func updateGameState() {
-    }
+    // No-op, called on every tick to update data
+    private func updateGameState() {}
     
-    // Called whenever the frame size changes to invalidate current draws
+    // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-//        
+        currentViewport = viewport(from: size)
     }
     
     // Updates state and draws something to the screen
     func draw(in view: MTKView) {
-        guard let commandBuffer = commandQueue.makeCommandBuffer() else {
-            print("Command buffer not set up")
-            return
-        }
-        
         updateGameState()
-        
-        // Wait to grab the encoder until as late as possible
-        guard let descriptor = view.currentRenderPassDescriptor,
+
+        guard let commandBuffer = commandQueue.makeCommandBuffer(),
+              let descriptor = view.currentRenderPassDescriptor,
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
-            print("Render pass not set up correctly")
+            print("Error in drawing stage")
             return
         }
+        // Start drawing
+        encoder.setViewport(currentViewport)
+        encoder.setRenderPipelineState(renderPipelineState)
+        
         
         // Done with drawing instructions
         encoder.endEncoding()
@@ -99,11 +99,22 @@ class Renderer: NSObject, MTKViewDelegate {
             commandBuffer.present(drawable)
         }
         
-        // We're done with frame itself, so let's commit what we've queued up
+        // We're done with commands for this frame, so commit what we've queued up
         commandBuffer.commit()
     }
     
     
+}
+
+// Convenience function for creating a Viewport from a regular CGSize
+func viewport(from size: CGSize) -> MTLViewport {
+    return MTLViewport(
+        originX: 0.0,
+        originY: 0.0,
+        width: Double(size.width),
+        height: Double(size.height),
+        znear: 0.0,
+        zfar: 1.0)
 }
 
 // Generic matrix math utility functions

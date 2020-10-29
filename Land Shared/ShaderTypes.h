@@ -20,11 +20,10 @@
 
 #include <simd/simd.h>
 
-
-typedef NS_ENUM(NSInteger, VertexInputIndex)
+typedef NS_ENUM(NSInteger, VertexAttribute)
 {
-    VertexInputIndexVertices  = 0,
-    VertexInputIndexViewportSize  = 1,
+    VertexAttributeVertices  = 0,
+    VertexAttributeViewportSize  = 1,
 };
 
 #endif /* ShaderTypes_h */

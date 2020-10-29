@@ -39,8 +39,8 @@ typedef struct
 // This function creates color and position data for the vertices from viewport size
 vertex RasterizerData
 vertexShader(uint vertexID [[vertex_id]],
-             constant Vertex *vertices [[buffer(VertexInputIndexVertices)]],
-             constant vector_uint2 *viewportSizePointer [[buffer(VertexInputIndexViewportSize)]])
+             constant Vertex *vertices [[buffer(VertexAttributeVertices)]],
+             constant vector_uint2 *viewportSizePointer [[buffer(VertexAttributeViewportSize)]])
 {
     RasterizerData out;
     vector_float2 viewportSize = vector_float2(*viewportSizePointer);
