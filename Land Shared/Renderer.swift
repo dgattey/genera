@@ -13,31 +13,57 @@ import simd
 
 class Renderer: NSObject, MTKViewDelegate {
     
-    private let mainView: MTKView
+    private let view: MTKView
     private let mainDevice: MTLDevice
     private let commandQueue: MTLCommandQueue
+    private let renderPipelineState: MTLRenderPipelineState
     
-    init?(mainView: MTKView, device: MTLDevice) {
-        self.mainDevice = device
-        self.mainView = mainView
-        
-        // Command queue setup
-        guard let commandQueue = device.makeCommandQueue() else {
+    init?(view: MTKView, device: MTLDevice) {
+        // Create related objects
+        guard let commandQueue = device.makeCommandQueue(),
+              let renderPipelineState = Renderer.buildPipelineState(view: view, device: device) else {
             return nil
         }
-        self.commandQueue = commandQueue
         
         // Config changes for the view itself to set it up right
-        Renderer.configure(metalView: mainView, device: device)
+        Renderer.configure(view: view, device: device)
         
+        self.mainDevice = device
+        self.view = view
+        self.commandQueue = commandQueue
+        self.renderPipelineState = renderPipelineState
         super.init()
     }
     
+    // Builds a render pipeline state object using the current device and our shader
+    static func buildPipelineState(view: MTKView, device: MTLDevice) -> MTLRenderPipelineState? {
+        let library = device.makeDefaultLibrary()
+        let vertexFunction = library?.makeFunction(name: "vertexShader")
+        let fragmentFunction = library?.makeFunction(name: "fragmentShader")
+
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.label = "BasicPipeline"
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        
+        // Copy pixel format since this is a simple pipeline
+        descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
+        
+        // Make it!
+        var stateObject: MTLRenderPipelineState?
+        do {
+            try stateObject = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print(error)
+        }
+        return stateObject
+    }
+    
     // Configures the view itself once with everything it needs to start to render
-    static func configure(metalView: MTKView, device: MTLDevice) {
-        metalView.device = device
-        metalView.clearColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
-        metalView.enableSetNeedsDisplay = true
+    static func configure(view: MTKView, device: MTLDevice) {
+        view.device = device
+        view.clearColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
+        view.enableSetNeedsDisplay = true
     }
     
     // Called on every tick to update data

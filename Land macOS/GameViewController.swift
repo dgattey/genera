@@ -23,7 +23,7 @@ class GameViewController: NSViewController {
             return
         }
 
-        guard let newRenderer = Renderer(mainView: mainView, device: defaultDevice) else {
+        guard let newRenderer = Renderer(view: mainView, device: defaultDevice) else {
             print("Renderer cannot be initialized")
             return
         }
