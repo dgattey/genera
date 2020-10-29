@@ -1,6 +1,6 @@
 //
 //  Shaders.metal
-//  Land Shared
+//  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
 //

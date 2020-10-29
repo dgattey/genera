@@ -1,6 +1,6 @@
 //
 //  GameViewController.swift
-//  Land macOS
+//  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
 //
