@@ -100,9 +100,11 @@ class Renderer: NSObject, MTKViewDelegate {
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         currentViewport = Utility.viewport(from: size)
+        let width = min(1500, max(Float(size.width), 600))
+        let height = min(1500, max(Float(size.height), 600))
         viewportBytes = Renderer.buildBuffer(
             device: mainDevice,
-            data: [Float(currentViewport.width), Float(currentViewport.height)]
+            data: [width, height]
         )
     }
     
