@@ -12,7 +12,7 @@ class BasicGenerator {
     
     private static let bounds = 30
     
-    private let tiles: [Tile]
+    let tiles: [Tile]
     
     init() {
         self.tiles = BasicGenerator.generate()
