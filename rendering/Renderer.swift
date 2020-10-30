@@ -27,6 +27,7 @@ class Renderer: NSObject, MTKViewDelegate {
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private var currentViewport: MTLViewport
+    private var viewportData: [Float] = []
     private let generator = BasicGenerator()
     
     // MARK: - initialization
@@ -83,6 +84,9 @@ class Renderer: NSObject, MTKViewDelegate {
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         currentViewport = Utility.viewport(from: size)
+        viewportData = [
+            Float(currentViewport.width), Float(currentViewport.height)
+        ]
     }
     
     // Updates state and draws something to the screen
@@ -97,7 +101,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // Configure the encoder & draw to it
         encoder.setViewport(currentViewport)
         encoder.setRenderPipelineState(renderPipelineState)
-        draw(to: encoder)
+        drawShapes(to: encoder)
         encoder.endEncoding()
         
         // Draw to the screen itself and commit what we've enqueued
@@ -109,8 +113,8 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
-    // Queues the sample triangle to the encoder
-    private func draw(to encoder: MTLRenderCommandEncoder) {
+    // Draws the shapes as specified in our buffers
+    private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         let vertices = generator.vertices
         print("Number of vertices: \(vertices.count / 2)")
         let verticesBytes = mainDevice.makeBuffer(bytes: vertices, length: vertices.count * 32, options: .storageModeShared)
@@ -119,9 +123,6 @@ class Renderer: NSObject, MTKViewDelegate {
         print("Number of colors: \(colors.count / 4)")
         let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 32, options: .storageModeShared)
         
-        let viewportData: [Float] = [
-            Float(currentViewport.width), Float(currentViewport.height)
-        ]
         print("Viewport size: \(viewportData)")
         let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 32, options: .storageModeShared)
         

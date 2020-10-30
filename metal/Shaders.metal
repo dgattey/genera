@@ -38,8 +38,9 @@ vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
 {
     // Starts the map in the upper left instead of centered
     float2 pixelSpacePosition = positions[vertexID];
-    float x = pixelSpacePosition.x / (*viewportSize).x - 1;
-    float y = -1 * pixelSpacePosition.y / (*viewportSize).y + 1;
+    float2 roundedPixelSpacePosition = round(pixelSpacePosition * 100) / 100;
+    float x = roundedPixelSpacePosition.x / (*viewportSize).x - 1;
+    float y = -1 * roundedPixelSpacePosition.y / (*viewportSize).y + 1;
     
     ColoredVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);

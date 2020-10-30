@@ -11,7 +11,6 @@ import simd
 class BasicGenerator {
     
     private static let bounds = 30
-    private static var random = SystemRandomNumberGenerator()
     
     private let tiles: [Tile]
     
@@ -22,8 +21,7 @@ class BasicGenerator {
     private static func generate() -> [Tile] {
         return (0 ..< bounds / 2).flatMap { x -> [Tile] in
             return (0 ..< bounds / 2).flatMap { y -> [Tile] in
-                let randomNumber = random.next(upperBound: UInt(100))
-                let kind = Tile.Kind(rawValue: Int(randomNumber) % 3) ?? .water
+                let kind = Tile.Kind(rawValue: Int.random(in: (0..<30)) % 3) ?? .water
                 return [Tile(x: x, y: y, kind: kind)]
             }
         }
