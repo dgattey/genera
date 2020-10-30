@@ -27,6 +27,7 @@ class Renderer: NSObject, MTKViewDelegate {
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private var currentViewport: MTLViewport
+    private let generator = BasicGenerator()
     
     // MARK: - initialization
     
@@ -45,7 +46,7 @@ class Renderer: NSObject, MTKViewDelegate {
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
-        self.currentViewport = viewport(from: CGSize.zero)
+        self.currentViewport = Utility.viewport(from: CGSize.zero)
         super.init()
     }
     
@@ -81,7 +82,7 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        currentViewport = viewport(from: size)
+        currentViewport = Utility.viewport(from: size)
     }
     
     // Updates state and draws something to the screen
@@ -110,43 +111,31 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Queues the sample triangle to the encoder
     private func draw(to encoder: MTLRenderCommandEncoder) {
-        let positions: [Float] = [
-            0.0,  250,
-            -250, -250,
-            250, -250
-        ]
-        let triBytes = mainDevice.makeBuffer(bytes: positions, length: positions.count * 32, options: .storageModeShared)
-        let colors: [Float] = [
-            1, 0, 0, 1,
-            0, 1, 0, 1,
-            0, 0, 1, 1
-        ]
+        let vertices = generator.vertices
+        print("Number of vertices: \(vertices.count / 2)")
+        let verticesBytes = mainDevice.makeBuffer(bytes: vertices, length: vertices.count * 32, options: .storageModeShared)
+        
+        let colors = generator.colors
+        print("Number of colors: \(colors.count / 4)")
         let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 32, options: .storageModeShared)
         
         let viewportData: [Float] = [
             Float(currentViewport.width), Float(currentViewport.height)
         ]
+        print("Viewport size: \(viewportData)")
         let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 32, options: .storageModeShared)
         
-        encoder.setVertexBuffer(triBytes, offset: 0, index: VertexAttribute.positions.rawValue)
+        encoder.setVertexBuffer(verticesBytes, offset: 0, index: VertexAttribute.positions.rawValue)
         encoder.setVertexBuffer(colorBytes, offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBytes, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
-        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
+        (0..<vertices.count / Tile.vertexCount).forEach({ polygonIndex in
+            encoder.drawPrimitives(type: .triangle, vertexStart: polygonIndex * Tile.vertexCount, vertexCount: Tile.vertexCount)
+        })
+        
+        // Signal end of drawing pass
+        print()
     }
     
     
-}
-
-// MARK: - Convenience functions
-
-// Convenience function for creating a Viewport from a regular CGSize
-func viewport(from size: CGSize) -> MTLViewport {
-    return MTLViewport(
-        originX: 0.0,
-        originY: 0.0,
-        width: Double(size.width),
-        height: Double(size.height),
-        znear: 0.0,
-        zfar: 1.0)
 }
