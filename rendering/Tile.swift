@@ -46,7 +46,7 @@ class Tile {
     }
     
     // Creates an array of vertices with which to draw multiple triangles
-    var vertices: [Float] {
+    lazy var vertices: [Float] = {
         return [
             x, y,
             x + Constant.scalar, y + Constant.scalar,
@@ -55,12 +55,12 @@ class Tile {
             x + Constant.scalar, y + Constant.scalar,
             x, y,
         ]
-    }
+    }()
     
     // Converts the tile type into a color array (for as many polygons and vertices as we have)
-    var color: [Float] {
+    lazy var color: [Float] = {
         return (0..<Tile.polygonCount * Tile.vertexCount).flatMap({ _ in
             return kind.color
         })
-    }
+    }()
 }

@@ -117,14 +117,14 @@ class Renderer: NSObject, MTKViewDelegate {
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         let vertices = generator.vertices
         print("Number of vertices: \(vertices.count / 2)")
-        let verticesBytes = mainDevice.makeBuffer(bytes: vertices, length: vertices.count * 32, options: .storageModeShared)
+        let verticesBytes = mainDevice.makeBuffer(bytes: vertices, length: vertices.count * 4, options: .storageModeShared)
         
         let colors = generator.colors
         print("Number of colors: \(colors.count / 4)")
-        let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 32, options: .storageModeShared)
+        let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 4, options: .storageModeShared)
         
         print("Viewport size: \(viewportData)")
-        let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 32, options: .storageModeShared)
+        let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 4, options: .storageModeShared)
         
         encoder.setVertexBuffer(verticesBytes, offset: 0, index: VertexAttribute.positions.rawValue)
         encoder.setVertexBuffer(colorBytes, offset: 0, index: VertexAttribute.colors.rawValue)

@@ -27,20 +27,16 @@ class BasicGenerator {
         }
     }
     
-    var count: Int {
-        return tiles.count * Tile.polygonCount
-    }
-    
-    var vertices: [Float] {
+    lazy var vertices: [Float] = {
         return tiles.flatMap { tile in
             return tile.vertices
         }
-    }
+    }()
     
-    var colors: [Float] {
+    lazy var colors: [Float] = {
         return tiles.flatMap { tile in
             return tile.color
         }
-    }
+    }()
     
 }
