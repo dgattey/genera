@@ -36,17 +36,18 @@ vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
                                   constant float4 *colors [[buffer(VertexAttributeColors)]],
                                   constant float2 *viewportSize [[buffer(VertexAttributeViewportSize)]])
 {
-    ColoredVertex out;
+    // Starts the map in the upper left instead of centered
     float2 pixelSpacePosition = positions[vertexID];
-    // Normalize by dividing by half viewport size
-    float x = pixelSpacePosition.x / (*viewportSize).x;
-    float y = pixelSpacePosition.y / (*viewportSize).y;
+    float x = pixelSpacePosition.x / (*viewportSize).x - 1;
+    float y = -1 * pixelSpacePosition.y / (*viewportSize).y + 1;
+    
+    ColoredVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);
     out.color = colors[vertexID];
     return out;
 }
 
-// Use the defined color to interpolate
+// Use the defined color to set tile color
 fragment float4 fragmentShader(ColoredVertex in [[stage_in]])
 {
     return in.color;
