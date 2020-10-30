@@ -8,48 +8,60 @@
 import Metal
 import simd
 
-class BasicGenerator {
+// Just generates a random map
+class BasicGenerator: GeneratorProtocol {
+    private static let pixelSizeMultiplier: Float = 24
+
+    internal let chunkSize = 128
+    lazy var verticesBufferSize = Tile.verticesBufferSize * chunkSize * chunkSize
+    lazy var colorsBufferSize = Tile.colorsBufferSize * chunkSize * chunkSize
     
-    private static let pixelSizeMultiplier = 48
-    private static let chunkSize = 64
+    private var chunks: Dictionary<Chunk, [Tile]> = Dictionary()
+    weak var delegate: GeneratorChangeDelegate?
     
-    let tiles: [Tile]
-    
-    init() {
-        self.tiles = BasicGenerator.generate()
-    }
-    
-    private static func generate() -> [Tile] {
-        return (0 ..< chunkSize).flatMap { x -> [Tile] in
-            return (0 ..< chunkSize).flatMap { y -> [Tile] in
-                let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
-                return [Tile(x: x, y: y, kind: kind)]
+    // Asynchronously generates a chunk of data and notifies our delegate
+    func generateChunk(_ chunk: Chunk) {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            let tiles = (0 ..< strongSelf.chunkSize).flatMap { x -> [Tile] in
+                return (0 ..< strongSelf.chunkSize).flatMap { y -> [Tile] in
+                    let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
+                    return [Tile(x: x, y: y, kind: kind)]
+                }
+            }
+            
+            strongSelf.chunks[chunk] = tiles
+            
+            DispatchQueue.main.async {
+                strongSelf.delegate?.didUpdateTiles(in: chunk)
             }
         }
     }
     
-    lazy var vertices: [simd_float1] = {
+    // Returns vertices for a particular chunk of data, or nil
+    func vertices(for chunk: Chunk) -> [Float] {
+        guard let tiles = chunks[chunk] else {
+            return []
+        }
         return tiles.flatMap { tile in
             return tile.vertices.map { vertex in
-                return simd_float1(vertex * BasicGenerator.pixelSizeMultiplier)
+                return vertex * BasicGenerator.pixelSizeMultiplier
             }
         }
-    }()
+    }
     
-    lazy var verticesBufferSize: Int = {
-        return Tile.verticesBufferSize * BasicGenerator.chunkSize * BasicGenerator.chunkSize
-    }()
-    
-    lazy var colors: [simd_float1] = {
+    // Returns colors for a particular chunk of data, or nil
+    func colors(for chunk: Chunk) -> [Float] {
+        guard let tiles = chunks[chunk] else {
+            return []
+        }
         return tiles.flatMap { tile in
             return tile.color.map { colorValue in
-                return simd_float1(colorValue)
+                return colorValue
             }
         }
-    }()
-    
-    lazy var colorsBufferSize: Int = {
-        return Tile.colorsBufferSize * BasicGenerator.chunkSize * BasicGenerator.chunkSize
-    }()
+    }
     
 }

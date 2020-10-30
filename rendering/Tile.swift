@@ -16,7 +16,7 @@ class Tile {
         case sand
         case grass
         
-        var color: [simd_float1] {
+        var color: [Float] {
             switch self {
             case .water:
                 return [0, 0.2, 0.8, 1]
@@ -30,22 +30,22 @@ class Tile {
     
     static let polygonCount = 2
     static let vertexCount = 3
-    private static let bufferSize = polygonCount * vertexCount * MemoryLayout<simd_float1>.size
+    private static let bufferSize = polygonCount * vertexCount * MemoryLayout<Float>.size
     static let verticesBufferSize = bufferSize * 2
     static let colorsBufferSize = bufferSize * 4
     
-    let x: Int
-    let y: Int
+    let x: Float
+    let y: Float
     let kind: Kind
     
     init(x: Int, y: Int, kind: Kind = .water) {
-        self.x = x
-        self.y = y
+        self.x = Float(x)
+        self.y = Float(y)
         self.kind = kind
     }
     
     // Creates an array of vertices with which to draw multiple triangles
-    lazy var vertices: [Int] = {
+    lazy var vertices: [Float] = {
         return [
             x, y,
             x + 1, y + 1,
@@ -57,7 +57,7 @@ class Tile {
     }()
     
     // Converts the tile type into a color array (for as many polygons and vertices as we have)
-    lazy var color: [simd_float1] = {
+    lazy var color: [Float] = {
         return (0..<Tile.polygonCount * Tile.vertexCount).flatMap({ _ in
             return kind.color
         })
