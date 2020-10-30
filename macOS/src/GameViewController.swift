@@ -11,6 +11,7 @@ import MetalKit
 // Our macOS specific view controller
 class GameViewController: NSViewController {
 
+    private let generator = BasicGenerator()
     private var renderer: Renderer?
     private var mainView: MTKView?
 
@@ -19,19 +20,21 @@ class GameViewController: NSViewController {
 
         guard let mainView = self.view as? MTKView,
               let defaultDevice = MTLCreateSystemDefaultDevice() else {
-            print("Metal isn't set up correctly")
+            assertionFailure("Metal isn't set up correctly")
             return
         }
 
-        guard let newRenderer = Renderer(view: mainView, device: defaultDevice) else {
-            print("Renderer cannot be initialized")
+        guard let newRenderer = Renderer(view: mainView, device: defaultDevice, generator: generator) else {
+            assertionFailure("Renderer cannot be initialized")
             return
         }
-        // Set the size once to kick off initial drawing process
-        newRenderer.mtkView(mainView, drawableSizeWillChange: mainView.drawableSize)
-        
-        // Make sure the view's delegate is our new renderer, and save it
-        mainView.delegate = newRenderer
         renderer = newRenderer
+        
+        // Link up the renderer and generator
+        mainView.delegate = newRenderer
+        generator.delegate = newRenderer
+        
+        // Kick off generation
+        generator.generateChunk(Chunk(x: 0, y: 0))
     }
 }
