@@ -10,7 +10,8 @@ import simd
 
 class BasicGenerator {
     
-    private static let bounds = 30
+    private static let pixelSizeMultiplier = 48
+    static let chunkSize = 64
     
     let tiles: [Tile]
     
@@ -19,9 +20,9 @@ class BasicGenerator {
     }
     
     private static func generate() -> [Tile] {
-        return (0 ..< bounds / 2).flatMap { x -> [Tile] in
-            return (0 ..< bounds / 2).flatMap { y -> [Tile] in
-                let kind = Tile.Kind(rawValue: Int.random(in: (0..<30)) % 3) ?? .water
+        return (0 ..< chunkSize).flatMap { x -> [Tile] in
+            return (0 ..< chunkSize).flatMap { y -> [Tile] in
+                let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
                 return [Tile(x: x, y: y, kind: kind)]
             }
         }
@@ -29,7 +30,9 @@ class BasicGenerator {
     
     lazy var vertices: [Float] = {
         return tiles.flatMap { tile in
-            return tile.vertices
+            return tile.vertices.map { vertex in
+                return Float(vertex * BasicGenerator.pixelSizeMultiplier)
+            }
         }
     }()
     

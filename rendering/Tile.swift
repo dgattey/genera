@@ -8,10 +8,6 @@
 import Metal
 import simd
 
-private enum Constant {
-    static let scalar: Float = 200
-}
-
 class Tile {
     
     // Dictates which kind of tile this is
@@ -34,25 +30,28 @@ class Tile {
     
     static let polygonCount = 2
     static let vertexCount = 3
+    private static let bufferSize = polygonCount * vertexCount * MemoryLayout<Float>.size
+    static let verticesBufferSize = bufferSize * 2
+    static let colorsBufferSize = bufferSize * 4
     
-    let x: Float
-    let y: Float
+    let x: Int
+    let y: Int
     let kind: Kind
     
     init(x: Int, y: Int, kind: Kind = .water) {
-        self.x = Float(x) * Constant.scalar
-        self.y = Float(y) * Constant.scalar
+        self.x = x
+        self.y = y
         self.kind = kind
     }
     
     // Creates an array of vertices with which to draw multiple triangles
-    lazy var vertices: [Float] = {
+    lazy var vertices: [Int] = {
         return [
             x, y,
-            x + Constant.scalar, y + Constant.scalar,
-            x + Constant.scalar, y,
-            x, y + Constant.scalar,
-            x + Constant.scalar, y + Constant.scalar,
+            x + 1, y + 1,
+            x + 1, y,
+            x, y + 1,
+            x + 1, y + 1,
             x, y,
         ]
     }()
