@@ -16,6 +16,7 @@ private enum Constant {
     static let vertexFunction = "vertexShader"
     static let fragmentFunction = "fragmentShader"
     static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
+    static let maxBuffers = 3
 }
 
 // MARK: - Renderer Class
@@ -29,10 +30,10 @@ class Renderer: NSObject, MTKViewDelegate {
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private let generator: BasicGenerator
-    private let verticesBytes: MTLBuffer?
-    private let colorsBytes: MTLBuffer?
     private var currentViewport: MTLViewport
     
+    private var vertexBuffers: [MTLBuffer] = []
+    private var colorBuffers: [MTLBuffer] = []
     private var viewportBuffer: MTLBuffer?
     private var currentBuffer = 0
     
@@ -59,14 +60,24 @@ class Renderer: NSObject, MTKViewDelegate {
         self.renderPipelineState = renderPipelineState
         self.currentViewport = viewport
         
-        // Build render buffers
-        self.verticesBytes = Renderer.buildBuffer(device: device, data: generator.vertices)
-        self.colorsBytes = Renderer.buildBuffer(device: device, data: generator.colors)
         let viewportBuffer = device.makeBuffer(length: 2 * Renderer.floatSize, options: .storageModeShared)
         viewportBuffer?.label = "viewportBuffer"
         self.viewportBuffer = viewportBuffer
         
         super.init()
+        
+        // Build render buffers
+        for bufferIndex in (0..<Constant.maxBuffers) {
+            guard let vertexBuffer = device.makeBuffer(length: generator.verticesBufferSize, options: .storageModeShared),
+                  let colorBuffer = device.makeBuffer(length: generator.colorsBufferSize, options: .storageModeShared) else {
+                print("Couldn't create buffers at \(bufferIndex)")
+                return
+            }
+            vertexBuffer.label = "vertexBuffer\(bufferIndex)"
+            colorBuffer.label = "colorBuffer\(bufferIndex)"
+            self.vertexBuffers.append(vertexBuffer)
+            self.colorBuffers.append(colorBuffer)
+        }
     }
     
     // Builds a render pipeline state object using the current device and our default shaders
@@ -88,11 +99,6 @@ class Renderer: NSObject, MTKViewDelegate {
             return nil
         }
         return stateObject
-    }
-    
-    // Creates an MTLBuffer from some float data. Assumes 4x the data count
-    private static func buildBuffer(device: MTLDevice, data: [Float]) -> MTLBuffer? {
-        return device.makeBuffer(bytes: data, length: data.count * 4, options: .storageModeShared)
     }
     
     // Configures the view itself once with everything it needs to start to render
@@ -117,6 +123,20 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Updates state and draws something to the screen
     func draw(in view: MTKView) {
+        currentBuffer = (currentBuffer + 1) % Constant.maxBuffers
+        
+        var vertexPointer = vertexBuffers[currentBuffer].contents()
+        for item in generator.vertices {
+            vertexPointer.storeBytes(of: item, as: Float.self)
+            vertexPointer = vertexPointer.advanced(by: Renderer.floatSize)
+        }
+        
+        var colorPointer = colorBuffers[currentBuffer].contents()
+        for item in generator.colors {
+            colorPointer.storeBytes(of: item, as: Float.self)
+            colorPointer = colorPointer.advanced(by: Renderer.floatSize)
+        }
+        
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
               let descriptor = view.currentRenderPassDescriptor,
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
@@ -141,8 +161,8 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Draws the shapes as specified in our buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(verticesBytes, offset: 0, index: VertexAttribute.positions.rawValue)
-        encoder.setVertexBuffer(colorsBytes, offset: 0, index: VertexAttribute.colors.rawValue)
+        encoder.setVertexBuffer(vertexBuffers[currentBuffer], offset: 0, index: VertexAttribute.positions.rawValue)
+        encoder.setVertexBuffer(colorBuffers[currentBuffer], offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
         (0..<generator.tiles.count * Tile.polygonCount).forEach({ polygonIndex in

@@ -11,7 +11,7 @@ import simd
 class BasicGenerator {
     
     private static let pixelSizeMultiplier = 48
-    static let chunkSize = 64
+    private static let chunkSize = 64
     
     let tiles: [Tile]
     
@@ -36,10 +36,18 @@ class BasicGenerator {
         }
     }()
     
+    lazy var verticesBufferSize: Int = {
+        return Tile.verticesBufferSize * BasicGenerator.chunkSize * BasicGenerator.chunkSize
+    }()
+    
     lazy var colors: [Float] = {
         return tiles.flatMap { tile in
             return tile.color
         }
+    }()
+    
+    lazy var colorsBufferSize: Int = {
+        return Tile.colorsBufferSize * BasicGenerator.chunkSize * BasicGenerator.chunkSize
     }()
     
 }
