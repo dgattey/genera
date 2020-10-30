@@ -1,5 +1,5 @@
 //
-//  ShaderTypes.h
+//  SimpleShaderTypes.h
 //  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
@@ -8,8 +8,8 @@
 //
 //  Header containing types and enum constants shared between Metal shaders and Swift/ObjC source
 //
-#ifndef ShaderTypes_h
-#define ShaderTypes_h
+#ifndef SimpleShaderTypes_h
+#define SimpleShaderTypes_h
 
 #ifdef __METAL_VERSION__
 #define NS_ENUM(_type, _name) enum _name : _type _name; enum _name : _type
@@ -20,12 +20,12 @@
 
 #include <simd/simd.h>
 
-typedef NS_ENUM(NSInteger, VertexAttribute)
+typedef NS_ENUM(NSInteger, SimpleShaderIndex)
 {
-    VertexAttributePositions  = 0,
-    VertexAttributeColors  = 1,
-    VertexAttributeViewport  = 2,
+    SimpleShaderIndexPositions  = 0,
+    SimpleShaderIndexColors  = 1,
+    SimpleShaderIndexViewport  = 2,
 };
 
-#endif /* ShaderTypes_h */
+#endif /* SimpleShaderTypes_h */
 

@@ -13,8 +13,14 @@ import simd
 
 // Constants for the renderer
 private enum Constant {
-    static let vertexFunction = "vertexShader"
-    static let fragmentFunction = "fragmentShader"
+    
+    // Matches name of vertex shader in SimpleShaders
+    static let vertexFunction = "simpleVertexShader"
+    
+    // Matches name of fragment shader in SimpleShaders
+    static let fragmentFunction = "simpleFragmentShader"
+    
+    // Just a simple background color
     static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
 }
 
@@ -23,13 +29,15 @@ private enum Constant {
 class Renderer: NSObject, MTKViewDelegate {
     
     private static let floatSize = MemoryLayout<Float>.size
+
+    weak var viewportUpdaterDelegate: ViewportUpdaterDelegate?
+    weak var viewportDataDelegate: ViewportDataDelegate?
     
     private let view: MTKView
     private let mainDevice: MTLDevice
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private let generator: GeneratorProtocol
-    private var currentViewport: MTLViewport
     
     private var vertexAndColorBuffers: Dictionary<Chunk, (MTLBuffer, MTLBuffer)> = Dictionary()
     private let viewportBuffer: MTLBuffer
@@ -47,13 +55,10 @@ class Renderer: NSObject, MTKViewDelegate {
         // Config changes for the view itself to set it up right
         Renderer.configure(view: view, device: device)
         
-        let viewport = MTLViewport()
-        
         self.mainDevice = device
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
-        self.currentViewport = viewport
         self.generator = generator
         
         guard let viewportBuffer = device.makeBuffer(length: 4 * Renderer.floatSize, options: .storageModeShared) else {
@@ -75,9 +80,9 @@ class Renderer: NSObject, MTKViewDelegate {
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
-        descriptor.vertexBuffers[VertexAttribute.positions.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[VertexAttribute.colors.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[VertexAttribute.viewport.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.positions.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.colors.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.viewport.rawValue].mutability = .immutable
         
         var stateObject: MTLRenderPipelineState?
         do {
@@ -100,13 +105,13 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        currentViewport = Utility.viewport(byResizing: currentViewport, to: size)
-        updateViewportBufferData()
+        viewportUpdaterDelegate?.resizeViewport(to: size)
     }
     
     // Updates state and draws something to the screen
     func draw(in view: MTKView) {
-        guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+        guard let commandBuffer = commandQueue.makeCommandBuffer(),
+              let viewport = viewportDataDelegate?.untranslatedViewport else {
             print("No command buffer to work with")
             return
         }
@@ -119,7 +124,7 @@ class Renderer: NSObject, MTKViewDelegate {
         }
         
         // Configure the encoder & draw to it
-        encoder.setViewport(currentViewport)
+        encoder.setViewport(viewport)
         encoder.setRenderPipelineState(renderPipelineState)
         drawShapes(to: encoder)
         encoder.endEncoding()
@@ -133,25 +138,25 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
-    private func updateViewportBufferData() {
+    private func updateViewportBufferData(to viewport: MTLViewport) {
         var viewportPointer = viewportBuffer.contents()
-        viewportPointer.storeBytes(of: Float(currentViewport.originX), as: Float.self)
+        viewportPointer.storeBytes(of: Float(viewport.originX), as: Float.self)
         viewportPointer = viewportPointer + Renderer.floatSize
-        viewportPointer.storeBytes(of: Float(currentViewport.originY), as: Float.self)
+        viewportPointer.storeBytes(of: Float(viewport.originY), as: Float.self)
         viewportPointer = viewportPointer + Renderer.floatSize
-        viewportPointer.storeBytes(of: Float(currentViewport.width), as: Float.self)
+        viewportPointer.storeBytes(of: Float(viewport.width), as: Float.self)
         viewportPointer = viewportPointer + Renderer.floatSize
-        viewportPointer.storeBytes(of: Float(currentViewport.height), as: Float.self)
-        view.setNeedsDisplay(NSRect(x: currentViewport.originX, y: currentViewport.originY, width: currentViewport.width, height: currentViewport.height))
+        viewportPointer.storeBytes(of: Float(viewport.height), as: Float.self)
+        view.setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width, height: viewport.height))
     }
-    
+
     // Draws the shapes as specified in all our chunked buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewport.rawValue)
+        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: SimpleShaderIndex.viewport.rawValue)
         
         for (_, (vertexBuffer, colorBuffer)) in vertexAndColorBuffers {
-            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexAttribute.positions.rawValue)
-            encoder.setVertexBuffer(colorBuffer, offset: 0, index: VertexAttribute.colors.rawValue)
+            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: SimpleShaderIndex.positions.rawValue)
+            encoder.setVertexBuffer(colorBuffer, offset: 0, index: SimpleShaderIndex.colors.rawValue)
             
             encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
         }
@@ -202,11 +207,10 @@ extension Renderer: GeneratorChangeDelegate {
     
 }
 
-extension Renderer: ViewportChangeDelegate {
+extension Renderer: RenderNotifierDelegate {
     
-    func pan(in direction: Direction) {
-        currentViewport = Utility.viewport(byTranslating: currentViewport, inDirection: direction)
-        updateViewportBufferData()
+    func didUpdateViewport(to viewport: MTLViewport) {
+        updateViewportBufferData(to: viewport)
     }
     
 }

@@ -11,26 +11,26 @@ import MetalKit
 // A subclass of MTKView that handles key presses
 class PannableMTKView: MTKView {
     
-    weak var viewportChangeDelegate: ViewportChangeDelegate?
+    weak var viewportUpdaterDelegate: ViewportUpdaterDelegate?
     
     // If the key press is a directional one, then pan in that direction
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         guard case event.type = NSEvent.EventType.keyDown,
               let characters = event.characters,
-              let viewportChangeDelegate = viewportChangeDelegate else {
+              let viewportChangeDelegate = viewportUpdaterDelegate else {
             return super.performKeyEquivalent(with: event)
         }
         
         if characters.contains(Direction.north.rawValue) {
-            viewportChangeDelegate.pan(in: .north)
+            viewportChangeDelegate.panViewport(.north)
         } else if characters.contains(Direction.south.rawValue) {
-            viewportChangeDelegate.pan(in: .south)
+            viewportChangeDelegate.panViewport(.south)
         }
         
         if characters.contains(Direction.east.rawValue) {
-            viewportChangeDelegate.pan(in: .east)
+            viewportChangeDelegate.panViewport(.east)
         } else if characters.contains(Direction.west.rawValue) {
-            viewportChangeDelegate.pan(in: .west)
+            viewportChangeDelegate.panViewport(.west)
         }
         return false
     }
