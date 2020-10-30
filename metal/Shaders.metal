@@ -26,7 +26,7 @@ typedef struct
     // interpolates its value with the values of the other triangle vertices
     // and then passes the interpolated value to the fragment shader for each
     // fragment in the triangle.
-    float4 color;
+    float4 color [[flat]];
 
 } ColoredVertex;
 

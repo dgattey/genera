@@ -129,7 +129,7 @@ class Renderer: NSObject, MTKViewDelegate {
         encoder.setVertexBuffer(colorBytes, offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBytes, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
-        (0..<vertices.count / Tile.vertexCount).forEach({ polygonIndex in
+        (0..<vertices.count / Tile.vertexCount / Tile.polygonCount).forEach({ polygonIndex in
             encoder.drawPrimitives(type: .triangle, vertexStart: polygonIndex * Tile.vertexCount, vertexCount: Tile.vertexCount)
         })
         
