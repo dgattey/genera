@@ -48,7 +48,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // Config changes for the view itself to set it up right
         Renderer.configure(view: view, device: device)
         
-        let viewport = Utility.viewport(from: CGSize.zero)
+        let viewport = MTLViewport()
         
         self.mainDevice = device
         self.view = view
@@ -59,7 +59,7 @@ class Renderer: NSObject, MTKViewDelegate {
         
         guard let vertexBuffer = device.makeBuffer(length: generator.verticesBufferSize, options: .storageModeManaged),
               let colorBuffer = device.makeBuffer(length: generator.colorsBufferSize, options: .storageModeManaged),
-              let viewportBuffer = device.makeBuffer(length: 2 * Renderer.floatSize, options: .storageModeShared) else {
+              let viewportBuffer = device.makeBuffer(length: 4 * Renderer.floatSize, options: .storageModeShared) else {
             assertionFailure("Buffers couldn't be allocated")
             return nil
         }
@@ -82,7 +82,7 @@ class Renderer: NSObject, MTKViewDelegate {
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
         descriptor.vertexBuffers[VertexAttribute.positions.rawValue].mutability = .immutable
         descriptor.vertexBuffers[VertexAttribute.colors.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[VertexAttribute.viewportSize.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[VertexAttribute.viewport.rawValue].mutability = .immutable
         
         var stateObject: MTLRenderPipelineState?
         do {
@@ -105,11 +105,8 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        currentViewport = Utility.viewport(from: size)
-        let widthPointer = viewportBuffer.contents()
-        let heightPointer = widthPointer + Renderer.floatSize
-        widthPointer.storeBytes(of: Float(size.width), as: Float.self)
-        heightPointer.storeBytes(of: Float(size.height), as: Float.self)
+        currentViewport = Utility.viewport(byResizing: currentViewport, to: size)
+        updateViewportBufferData()
     }
     
     // Updates state and draws something to the screen
@@ -141,11 +138,23 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
+    private func updateViewportBufferData() {
+        var viewportPointer = viewportBuffer.contents()
+        viewportPointer.storeBytes(of: Float(currentViewport.originX), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(currentViewport.originY), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(currentViewport.width), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(currentViewport.height), as: Float.self)
+        view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1000, height: 1000))
+    }
+    
     // Draws the shapes as specified in our buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexAttribute.positions.rawValue)
         encoder.setVertexBuffer(colorBuffer, offset: 0, index: VertexAttribute.colors.rawValue)
-        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewportSize.rawValue)
+        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewport.rawValue)
         
         encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
     }
@@ -175,10 +184,19 @@ extension Renderer: GeneratorChangeDelegate {
             DispatchQueue.main.async {
                 strongSelf.vertexBuffer.didModifyRange((0..<strongSelf.vertexBuffer.length))
                 strongSelf.colorBuffer.didModifyRange((0..<strongSelf.colorBuffer.length))
-                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 0.1, height: 0.1))
+                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1, height: 1))
             }
         }
         
+    }
+    
+}
+
+extension Renderer: ViewportChangeDelegate {
+    
+    func pan(in direction: Direction) {
+        currentViewport = Utility.viewport(byTranslating: currentViewport, inDirection: direction)
+        updateViewportBufferData()
     }
     
 }

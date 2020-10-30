@@ -20,6 +20,9 @@
 		75FA6D31254BF07A00A1B409 /* GeneratorChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */; };
 		75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D33254BF37400A1B409 /* Chunk.swift */; };
 		75FA6D37254BF80D00A1B409 /* GeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */; };
+		75FA6D3D254C06C600A1B409 /* PannableMTKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */; };
+		75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */; };
+		75FA6D44254C09F200A1B409 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D43254C09F200A1B409 /* Direction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +42,9 @@
 		75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorChangeDelegate.swift; sourceTree = "<group>"; };
 		75FA6D33254BF37400A1B409 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
 		75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorProtocol.swift; sourceTree = "<group>"; };
+		75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableMTKView.swift; sourceTree = "<group>"; };
+		75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportChangeDelegate.swift; sourceTree = "<group>"; };
+		75FA6D43254C09F200A1B409 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,7 @@
 			children = (
 				75B2B749254B68FB00351DC8 /* AppDelegate.swift */,
 				75B2B746254B68FB00351DC8 /* GameViewController.swift */,
+				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -127,13 +134,15 @@
 		75B2B761254B70C100351DC8 /* rendering */ = {
 			isa = PBXGroup;
 			children = (
-				7503798D254A8537002A0C13 /* Renderer.swift */,
-				75B2B763254B71AC00351DC8 /* BasicGenerator.swift */,
-				75B90870254B747400231E39 /* Utility.swift */,
 				75B90874254B796A00231E39 /* Tile.swift */,
-				75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */,
 				75FA6D33254BF37400A1B409 /* Chunk.swift */,
 				75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */,
+				75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */,
+				75B2B763254B71AC00351DC8 /* BasicGenerator.swift */,
+				7503798D254A8537002A0C13 /* Renderer.swift */,
+				75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */,
+				75B90870254B747400231E39 /* Utility.swift */,
+				75FA6D43254C09F200A1B409 /* Direction.swift */,
 			);
 			path = rendering;
 			sourceTree = "<group>";
@@ -212,12 +221,15 @@
 				750379A1254A8538002A0C13 /* Renderer.swift in Sources */,
 				75B90871254B747400231E39 /* Utility.swift in Sources */,
 				75FA6D37254BF80D00A1B409 /* GeneratorProtocol.swift in Sources */,
+				75FA6D3D254C06C600A1B409 /* PannableMTKView.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
+				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,
 				75FA6D31254BF07A00A1B409 /* GeneratorChangeDelegate.swift in Sources */,
 				750379A0254A8538002A0C13 /* Shaders.metal in Sources */,
 				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
+				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

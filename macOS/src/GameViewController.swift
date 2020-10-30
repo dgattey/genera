@@ -10,15 +10,15 @@ import MetalKit
 
 // Our macOS specific view controller
 class GameViewController: NSViewController {
-
+    
     private let generator = BasicGenerator()
     private var renderer: Renderer?
-    private var mainView: MTKView?
+    private var mainView: PannableMTKView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let mainView = self.view as? MTKView,
+        guard let mainView = self.view as? PannableMTKView,
               let defaultDevice = MTLCreateSystemDefaultDevice() else {
             assertionFailure("Metal isn't set up correctly")
             return
@@ -31,6 +31,7 @@ class GameViewController: NSViewController {
         renderer = newRenderer
         
         // Link up the renderer and generator
+        mainView.viewportChangeDelegate = newRenderer
         mainView.delegate = newRenderer
         generator.delegate = newRenderer
         

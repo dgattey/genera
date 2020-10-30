@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, VertexAttribute)
 {
     VertexAttributePositions  = 0,
     VertexAttributeColors  = 1,
-    VertexAttributeViewportSize  = 2,
+    VertexAttributeViewport  = 2,
 };
 
 #endif /* ShaderTypes_h */
