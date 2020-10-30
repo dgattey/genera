@@ -28,10 +28,10 @@ class BasicGenerator {
         }
     }
     
-    lazy var vertices: [Float] = {
+    lazy var vertices: [simd_float1] = {
         return tiles.flatMap { tile in
             return tile.vertices.map { vertex in
-                return Float(vertex * BasicGenerator.pixelSizeMultiplier)
+                return simd_float1(vertex * BasicGenerator.pixelSizeMultiplier)
             }
         }
     }()
@@ -40,9 +40,11 @@ class BasicGenerator {
         return Tile.verticesBufferSize * BasicGenerator.chunkSize * BasicGenerator.chunkSize
     }()
     
-    lazy var colors: [Float] = {
+    lazy var colors: [simd_float1] = {
         return tiles.flatMap { tile in
-            return tile.color
+            return tile.color.map { colorValue in
+                return simd_float1(colorValue)
+            }
         }
     }()
     

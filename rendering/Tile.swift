@@ -16,7 +16,7 @@ class Tile {
         case sand
         case grass
         
-        var color: [Float] {
+        var color: [simd_float1] {
             switch self {
             case .water:
                 return [0, 0.2, 0.8, 1]
@@ -30,7 +30,7 @@ class Tile {
     
     static let polygonCount = 2
     static let vertexCount = 3
-    private static let bufferSize = polygonCount * vertexCount * MemoryLayout<Float>.size
+    private static let bufferSize = polygonCount * vertexCount * MemoryLayout<simd_float1>.size
     static let verticesBufferSize = bufferSize * 2
     static let colorsBufferSize = bufferSize * 4
     
@@ -57,7 +57,7 @@ class Tile {
     }()
     
     // Converts the tile type into a color array (for as many polygons and vertices as we have)
-    lazy var color: [Float] = {
+    lazy var color: [simd_float1] = {
         return (0..<Tile.polygonCount * Tile.vertexCount).flatMap({ _ in
             return kind.color
         })

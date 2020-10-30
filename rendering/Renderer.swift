@@ -23,7 +23,7 @@ private enum Constant {
 
 class Renderer: NSObject, MTKViewDelegate {
     
-    private static let floatSize = MemoryLayout<Float>.size
+    private static let floatSize = MemoryLayout<simd_float1>.size
     
     private let view: MTKView
     private let mainDevice: MTLDevice
@@ -118,12 +118,14 @@ class Renderer: NSObject, MTKViewDelegate {
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         currentViewport = Utility.viewport(from: size)
-        let width = min(1500, max(Float(size.width), 600))
-        let height = min(1500, max(Float(size.height), 600))
-        let widthPointer = viewportBuffer?.contents()
-        let heightPointer = widthPointer?.advanced(by: Renderer.floatSize)
-        widthPointer?.storeBytes(of: width, as: Float.self)
-        heightPointer?.storeBytes(of: height, as: Float.self)
+        let width = min(1500, max(simd_float1(size.width), 600))
+        let height = min(1500, max(simd_float1(size.height), 600))
+        guard let widthPointer = viewportBuffer?.contents() else {
+            return
+        }
+        let heightPointer = widthPointer + Renderer.floatSize
+        widthPointer.storeBytes(of: width, as: simd_float1.self)
+        heightPointer.storeBytes(of: height, as: simd_float1.self)
     }
     
     // Updates state and draws something to the screen
@@ -136,7 +138,7 @@ class Renderer: NSObject, MTKViewDelegate {
             return
         }
         let semaphore = inFlightSemaphore
-        commandBuffer.addCompletedHandler { (_ commandBuffer)-> Swift.Void in
+        commandBuffer.addCompletedHandler { _ in
             semaphore.signal()
         }
         
@@ -171,14 +173,14 @@ class Renderer: NSObject, MTKViewDelegate {
         
         var vertexPointer = vertexBuffers[currentBuffer].contents()
         for item in generator.vertices {
-            vertexPointer.storeBytes(of: item, as: Float.self)
-            vertexPointer = vertexPointer.advanced(by: Renderer.floatSize)
+            vertexPointer.storeBytes(of: item, as: simd_float1.self)
+            vertexPointer = vertexPointer + Renderer.floatSize
         }
         
         var colorPointer = colorBuffers[currentBuffer].contents()
         for item in generator.colors {
-            colorPointer.storeBytes(of: item, as: Float.self)
-            colorPointer = colorPointer.advanced(by: Renderer.floatSize)
+            colorPointer.storeBytes(of: item, as: simd_float1.self)
+            colorPointer = colorPointer + Renderer.floatSize
         }
     }
     
@@ -188,9 +190,7 @@ class Renderer: NSObject, MTKViewDelegate {
         encoder.setVertexBuffer(colorBuffers[currentBuffer], offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
-        (0..<generator.tiles.count * Tile.polygonCount).forEach({ polygonIndex in
-            encoder.drawPrimitives(type: .triangle, vertexStart: polygonIndex * Tile.vertexCount, vertexCount: Tile.vertexCount)
-        })
+        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * generator.tiles.count * Tile.polygonCount)
     }
     
     
