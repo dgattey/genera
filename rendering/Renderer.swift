@@ -11,24 +11,20 @@ import Metal
 import MetalKit
 import simd
 
-// Constants for the renderer
-private enum Constant {
-    
-    // Matches name of vertex shader in SimpleShaders
-    static let vertexFunction = "simpleVertexShader"
-    
-    // Matches name of fragment shader in SimpleShaders
-    static let fragmentFunction = "simpleFragmentShader"
-    
-    // Just a simple background color
-    static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
-}
-
 // MARK: - Renderer Class
 
 class Renderer: NSObject, MTKViewDelegate {
-    
+    // Size of a float for layout calculations
     private static let floatSize = MemoryLayout<Float>.size
+    
+    // Matches name of vertex shader in SimpleShaders
+    private static let vertexFunction = "simpleVertexShader"
+    
+    // Matches name of fragment shader in SimpleShaders
+    private static let fragmentFunction = "simpleFragmentShader"
+    
+    // Just a simple background color
+    private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
 
     weak var viewportUpdaterDelegate: ViewportUpdaterDelegate?
     weak var viewportDataDelegate: ViewportDataDelegate?
@@ -73,8 +69,8 @@ class Renderer: NSObject, MTKViewDelegate {
     // Builds a render pipeline state object using the current device and our default shaders
     private static func buildPipelineState(view: MTKView, device: MTLDevice) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: Constant.vertexFunction)
-        let fragmentFunction = library?.makeFunction(name: Constant.fragmentFunction)
+        let vertexFunction = library?.makeFunction(name: Renderer.vertexFunction)
+        let fragmentFunction = library?.makeFunction(name: Renderer.fragmentFunction)
 
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
@@ -97,7 +93,7 @@ class Renderer: NSObject, MTKViewDelegate {
     // Configures the view itself once with everything it needs to start to render
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
-        view.clearColor = Constant.backgroundColor
+        view.clearColor = Renderer.backgroundColor
         view.enableSetNeedsDisplay = true
     }
     
@@ -182,6 +178,7 @@ extension Renderer: GeneratorChangeDelegate {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let strongSelf = self,
                   let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
+                print("No buffer set up yet")
                 return
             }
             var vertexPointer = buffers.0.contents()
