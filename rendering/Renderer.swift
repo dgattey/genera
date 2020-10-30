@@ -37,6 +37,8 @@ class Renderer: NSObject, MTKViewDelegate {
     private var viewportBuffer: MTLBuffer?
     private var currentBuffer = 0
     
+    private let inFlightSemaphore = DispatchSemaphore(value: Constant.maxBuffers)
+    
     // MARK: - initialization
     
     // If the command queue or pipeline state fails to get created, this will fail
@@ -90,6 +92,9 @@ class Renderer: NSObject, MTKViewDelegate {
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
+        descriptor.vertexBuffers[VertexAttribute.positions.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[VertexAttribute.colors.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[VertexAttribute.viewportSize.rawValue].mutability = .immutable
         
         var stateObject: MTLRenderPipelineState?
         do {
@@ -123,22 +128,23 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Updates state and draws something to the screen
     func draw(in view: MTKView) {
-        currentBuffer = (currentBuffer + 1) % Constant.maxBuffers
+        // Start waiting so we don't do too much work
+        _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         
-        var vertexPointer = vertexBuffers[currentBuffer].contents()
-        for item in generator.vertices {
-            vertexPointer.storeBytes(of: item, as: Float.self)
-            vertexPointer = vertexPointer.advanced(by: Renderer.floatSize)
+        guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+            print("No command buffer to work with")
+            return
+        }
+        let semaphore = inFlightSemaphore
+        commandBuffer.addCompletedHandler { (_ commandBuffer)-> Swift.Void in
+            semaphore.signal()
         }
         
-        var colorPointer = colorBuffers[currentBuffer].contents()
-        for item in generator.colors {
-            colorPointer.storeBytes(of: item, as: Float.self)
-            colorPointer = colorPointer.advanced(by: Renderer.floatSize)
-        }
+        // Get the buffers updated for the GPU to use below
+        updateCurrentBuffers()
         
-        guard let commandBuffer = commandQueue.makeCommandBuffer(),
-              let descriptor = view.currentRenderPassDescriptor,
+        // In the drawing loop below here - be quick!
+        guard let descriptor = view.currentRenderPassDescriptor,
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
             print("Error in drawing stage")
             return
@@ -158,6 +164,23 @@ class Renderer: NSObject, MTKViewDelegate {
     }
     
     // MARK: - drawing functions
+    
+    // Advances current buffer and stores new data from vertices + colors
+    private func updateCurrentBuffers() {
+        currentBuffer = (currentBuffer + 1) % Constant.maxBuffers
+        
+        var vertexPointer = vertexBuffers[currentBuffer].contents()
+        for item in generator.vertices {
+            vertexPointer.storeBytes(of: item, as: Float.self)
+            vertexPointer = vertexPointer.advanced(by: Renderer.floatSize)
+        }
+        
+        var colorPointer = colorBuffers[currentBuffer].contents()
+        for item in generator.colors {
+            colorPointer.storeBytes(of: item, as: Float.self)
+            colorPointer = colorPointer.advanced(by: Renderer.floatSize)
+        }
+    }
     
     // Draws the shapes as specified in our buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
