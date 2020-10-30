@@ -1,0 +1,46 @@
+//
+//  BasicGenerator.swift
+//  Genera
+//
+//  Created by Dylan Gattey on 10/29/20.
+//
+
+import Metal
+import simd
+
+class BasicGenerator {
+    
+    private static let bounds = 10
+    
+    private let tiles: [Tile]
+    
+    init() {
+        self.tiles = BasicGenerator.generate()
+    }
+    
+    private static func generate() -> [Tile] {
+        return (-1 * bounds / 2 ..< bounds / 2).flatMap { x -> [Tile] in
+            return (-1 * bounds / 2 ..< bounds / 2).flatMap { y -> [Tile] in
+                let kind = Tile.Kind(rawValue: x * y / 2 % 3) ?? .water
+                return [Tile(x: x, y: y, kind: kind)]
+            }
+        }
+    }
+    
+    var count: Int {
+        return tiles.count * Tile.polygonCount
+    }
+    
+    var vertices: [Float] {
+        return tiles.flatMap { tile in
+            return tile.vertices
+        }
+    }
+    
+    var colors: [Float] {
+        return tiles.flatMap { tile in
+            return tile.color
+        }
+    }
+    
+}

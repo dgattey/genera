@@ -1,6 +1,6 @@
 //
 //  GameViewController.swift
-//  Land macOS
+//  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
 //
@@ -11,8 +11,8 @@ import MetalKit
 // Our macOS specific view controller
 class GameViewController: NSViewController {
 
-    var renderer: Renderer?
-    var mainView: MTKView?
+    private var renderer: Renderer?
+    private var mainView: MTKView?
 
     override func viewDidLoad() {
         super.viewDidLoad()

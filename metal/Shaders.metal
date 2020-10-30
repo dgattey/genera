@@ -1,6 +1,6 @@
 //
 //  Shaders.metal
-//  Land Shared
+//  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
 //
@@ -39,8 +39,8 @@ vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
     ColoredVertex out;
     float2 pixelSpacePosition = positions[vertexID];
     // Normalize by dividing by half viewport size
-    float x = pixelSpacePosition.x / (*viewportSize).x / 2.0;
-    float y = pixelSpacePosition.y / (*viewportSize).y / 2.0;
+    float x = pixelSpacePosition.x / (*viewportSize).x;
+    float y = pixelSpacePosition.y / (*viewportSize).y;
     out.position = vector_float4(x, y, 0.0, 1.0);
     out.color = colors[vertexID];
     return out;
