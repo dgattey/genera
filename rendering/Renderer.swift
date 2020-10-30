@@ -31,8 +31,7 @@ class Renderer: NSObject, MTKViewDelegate {
     private let generator: GeneratorProtocol
     private var currentViewport: MTLViewport
     
-    private let vertexBuffer: MTLBuffer
-    private let colorBuffer: MTLBuffer
+    private var vertexAndColorBuffers: Dictionary<Chunk, (MTLBuffer, MTLBuffer)> = Dictionary()
     private let viewportBuffer: MTLBuffer
     
     // MARK: - initialization
@@ -57,14 +56,10 @@ class Renderer: NSObject, MTKViewDelegate {
         self.currentViewport = viewport
         self.generator = generator
         
-        guard let vertexBuffer = device.makeBuffer(length: generator.verticesBufferSize, options: .storageModeManaged),
-              let colorBuffer = device.makeBuffer(length: generator.colorsBufferSize, options: .storageModeManaged),
-              let viewportBuffer = device.makeBuffer(length: 4 * Renderer.floatSize, options: .storageModeShared) else {
-            assertionFailure("Buffers couldn't be allocated")
+        guard let viewportBuffer = device.makeBuffer(length: 4 * Renderer.floatSize, options: .storageModeShared) else {
+            assertionFailure("Viewport buffer couldn't be allocated")
             return nil
         }
-        self.vertexBuffer = vertexBuffer
-        self.colorBuffer = colorBuffer
         self.viewportBuffer = viewportBuffer
         
         super.init()
@@ -147,16 +142,19 @@ class Renderer: NSObject, MTKViewDelegate {
         viewportPointer.storeBytes(of: Float(currentViewport.width), as: Float.self)
         viewportPointer = viewportPointer + Renderer.floatSize
         viewportPointer.storeBytes(of: Float(currentViewport.height), as: Float.self)
-        view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1000, height: 1000))
+        view.setNeedsDisplay(NSRect(x: currentViewport.originX, y: currentViewport.originY, width: currentViewport.width, height: currentViewport.height))
     }
     
-    // Draws the shapes as specified in our buffers
+    // Draws the shapes as specified in all our chunked buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexAttribute.positions.rawValue)
-        encoder.setVertexBuffer(colorBuffer, offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewport.rawValue)
         
-        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
+        for (_, (vertexBuffer, colorBuffer)) in vertexAndColorBuffers {
+            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexAttribute.positions.rawValue)
+            encoder.setVertexBuffer(colorBuffer, offset: 0, index: VertexAttribute.colors.rawValue)
+            
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
+        }
     }
     
     
@@ -165,25 +163,37 @@ class Renderer: NSObject, MTKViewDelegate {
 extension Renderer: GeneratorChangeDelegate {
     
     func didUpdateTiles(in chunk: Chunk) {
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let strongSelf = self else {
+        // Create the buffers if they don't exist
+        if (vertexAndColorBuffers[chunk] == nil) {
+            guard let vertexBuffer = mainDevice.makeBuffer(length: generator.verticesBufferSize, options: .storageModeManaged),
+                  let colorBuffer = mainDevice.makeBuffer(length: generator.colorsBufferSize, options: .storageModeManaged) else {
+                assertionFailure("Couldn't create buffers")
                 return
             }
-            var vertexPointer = strongSelf.vertexBuffer.contents()
+            vertexAndColorBuffers[chunk] = (vertexBuffer, colorBuffer)
+        }
+        
+        // Then dispatch to the background to populate them
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let strongSelf = self,
+                  let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
+                return
+            }
+            var vertexPointer = buffers.0.contents()
             for item in strongSelf.generator.vertices(for: chunk) {
                 vertexPointer.storeBytes(of: item, as: Float.self)
                 vertexPointer = vertexPointer + Renderer.floatSize
             }
             
-            var colorPointer = strongSelf.colorBuffer.contents()
+            var colorPointer = buffers.1.contents()
             for item in strongSelf.generator.colors(for: chunk) {
                 colorPointer.storeBytes(of: item, as: Float.self)
                 colorPointer = colorPointer + Renderer.floatSize
             }
             
             DispatchQueue.main.async {
-                strongSelf.vertexBuffer.didModifyRange((0..<strongSelf.vertexBuffer.length))
-                strongSelf.colorBuffer.didModifyRange((0..<strongSelf.colorBuffer.length))
+                buffers.0.didModifyRange((0 ..< buffers.0.length))
+                buffers.1.didModifyRange((0 ..< buffers.1.length))
                 strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1, height: 1))
             }
         }

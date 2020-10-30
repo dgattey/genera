@@ -36,13 +36,12 @@ vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
                                   constant float4 *colors [[buffer(VertexAttributeColors)]],
                                   constant float4 *viewport [[buffer(VertexAttributeViewport)]])
 {
-    // Starts the map in the upper left instead of centered
     float2 pixelSpacePosition = positions[vertexID];
     float2 roundedPixelSpacePosition = round(pixelSpacePosition * 100) / 100;
     float2 viewportOrigin = float2((*viewport).x, (*viewport).y);
     float2 viewportSize = float2((*viewport).z, (*viewport).w);
-    float x = (roundedPixelSpacePosition.x / viewportSize.x - 1) + viewportOrigin.x / viewportSize.x;
-    float y = (-1 * roundedPixelSpacePosition.y / viewportSize.y + 1) - viewportOrigin.y / viewportSize.y;
+    float x = (roundedPixelSpacePosition.x / viewportSize.x) + viewportOrigin.x / viewportSize.x;
+    float y = (roundedPixelSpacePosition.y / viewportSize.y) + viewportOrigin.y / viewportSize.y;
     
     ColoredVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);

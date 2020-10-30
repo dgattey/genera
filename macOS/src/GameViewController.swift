@@ -36,6 +36,15 @@ class GameViewController: NSViewController {
         generator.delegate = newRenderer
         
         // Kick off generation
-        generator.generateChunk(Chunk(x: 0, y: 0))
+        for x in (0..<10) {
+            for y in (0..<10) {
+                generator.generateChunk(Chunk(x: x, y: y))
+            }
+        }
+        for x in (-10..<0) {
+            for y in (-10..<0) {
+                generator.generateChunk(Chunk(x: x, y: y))
+            }
+        }
     }
 }
