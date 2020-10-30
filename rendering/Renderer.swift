@@ -27,7 +27,10 @@ class Renderer: NSObject, MTKViewDelegate {
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private var currentViewport: MTLViewport
-    private let generator = BasicGenerator()
+    private let generator: BasicGenerator
+    private let verticesBytes: MTLBuffer?
+    private let colorsBytes: MTLBuffer?
+    private var viewportBytes: MTLBuffer?
     
     // MARK: - initialization
     
@@ -42,11 +45,20 @@ class Renderer: NSObject, MTKViewDelegate {
         // Config changes for the view itself to set it up right
         Renderer.configure(view: view, device: device)
         
+        let generator = BasicGenerator()
+        let viewport = Utility.viewport(from: CGSize.zero)
+        
+        self.generator = generator
         self.mainDevice = device
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
-        self.currentViewport = Utility.viewport(from: CGSize.zero)
+        self.currentViewport = viewport
+        
+        // Build render buffers
+        self.verticesBytes = Renderer.buildBuffer(device: device, data: generator.vertices)
+        self.colorsBytes = Renderer.buildBuffer(device: device, data: generator.colors)
+        self.viewportBytes = Renderer.buildBuffer(device: device, data: [Float(viewport.width), Float(viewport.height)])
         super.init()
     }
     
@@ -71,6 +83,11 @@ class Renderer: NSObject, MTKViewDelegate {
         return stateObject
     }
     
+    // Creates an MTLBuffer from some float data. Assumes 4x the data count
+    private static func buildBuffer(device: MTLDevice, data: [Float]) -> MTLBuffer? {
+        return device.makeBuffer(bytes: data, length: data.count * 4, options: .storageModeShared)
+    }
+    
     // Configures the view itself once with everything it needs to start to render
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
@@ -83,6 +100,12 @@ class Renderer: NSObject, MTKViewDelegate {
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         currentViewport = Utility.viewport(from: size)
+        let width = min(1500, max(Float(size.width), 600))
+        let height = min(1500, max(Float(size.height), 600))
+        viewportBytes = Renderer.buildBuffer(
+            device: mainDevice,
+            data: [width, height]
+        )
     }
     
     // Updates state and draws something to the screen
@@ -97,7 +120,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // Configure the encoder & draw to it
         encoder.setViewport(currentViewport)
         encoder.setRenderPipelineState(renderPipelineState)
-        draw(to: encoder)
+        drawShapes(to: encoder)
         encoder.endEncoding()
         
         // Draw to the screen itself and commit what we've enqueued
@@ -109,32 +132,15 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
-    // Queues the sample triangle to the encoder
-    private func draw(to encoder: MTLRenderCommandEncoder) {
-        let vertices = generator.vertices
-        print("Number of vertices: \(vertices.count / 2)")
-        let verticesBytes = mainDevice.makeBuffer(bytes: vertices, length: vertices.count * 32, options: .storageModeShared)
-        
-        let colors = generator.colors
-        print("Number of colors: \(colors.count / 4)")
-        let colorBytes = mainDevice.makeBuffer(bytes: colors, length: colors.count * 32, options: .storageModeShared)
-        
-        let viewportData: [Float] = [
-            Float(currentViewport.width), Float(currentViewport.height)
-        ]
-        print("Viewport size: \(viewportData)")
-        let viewportBytes = mainDevice.makeBuffer(bytes: viewportData, length: viewportData.count * 32, options: .storageModeShared)
-        
+    // Draws the shapes as specified in our buffers
+    private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBuffer(verticesBytes, offset: 0, index: VertexAttribute.positions.rawValue)
-        encoder.setVertexBuffer(colorBytes, offset: 0, index: VertexAttribute.colors.rawValue)
+        encoder.setVertexBuffer(colorsBytes, offset: 0, index: VertexAttribute.colors.rawValue)
         encoder.setVertexBuffer(viewportBytes, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
-        (0..<vertices.count / Tile.vertexCount).forEach({ polygonIndex in
+        (0..<generator.tiles.count * Tile.polygonCount).forEach({ polygonIndex in
             encoder.drawPrimitives(type: .triangle, vertexStart: polygonIndex * Tile.vertexCount, vertexCount: Tile.vertexCount)
         })
-        
-        // Signal end of drawing pass
-        print()
     }
     
     

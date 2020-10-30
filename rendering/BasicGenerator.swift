@@ -10,37 +10,33 @@ import simd
 
 class BasicGenerator {
     
-    private static let bounds = 10
+    private static let bounds = 30
     
-    private let tiles: [Tile]
+    let tiles: [Tile]
     
     init() {
         self.tiles = BasicGenerator.generate()
     }
     
     private static func generate() -> [Tile] {
-        return (-1 * bounds / 2 ..< bounds / 2).flatMap { x -> [Tile] in
-            return (-1 * bounds / 2 ..< bounds / 2).flatMap { y -> [Tile] in
-                let kind = Tile.Kind(rawValue: x * y / 2 % 3) ?? .water
+        return (0 ..< bounds / 2).flatMap { x -> [Tile] in
+            return (0 ..< bounds / 2).flatMap { y -> [Tile] in
+                let kind = Tile.Kind(rawValue: Int.random(in: (0..<30)) % 3) ?? .water
                 return [Tile(x: x, y: y, kind: kind)]
             }
         }
     }
     
-    var count: Int {
-        return tiles.count * Tile.polygonCount
-    }
-    
-    var vertices: [Float] {
+    lazy var vertices: [Float] = {
         return tiles.flatMap { tile in
             return tile.vertices
         }
-    }
+    }()
     
-    var colors: [Float] {
+    lazy var colors: [Float] = {
         return tiles.flatMap { tile in
             return tile.color
         }
-    }
+    }()
     
 }
