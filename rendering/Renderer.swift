@@ -22,15 +22,19 @@ private enum Constant {
 
 class Renderer: NSObject, MTKViewDelegate {
     
+    private static let floatSize = MemoryLayout<Float>.size
+    
     private let view: MTKView
     private let mainDevice: MTLDevice
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
-    private var currentViewport: MTLViewport
     private let generator: BasicGenerator
     private let verticesBytes: MTLBuffer?
     private let colorsBytes: MTLBuffer?
-    private var viewportBytes: MTLBuffer?
+    private var currentViewport: MTLViewport
+    
+    private var viewportBuffer: MTLBuffer?
+    private var currentBuffer = 0
     
     // MARK: - initialization
     
@@ -58,7 +62,10 @@ class Renderer: NSObject, MTKViewDelegate {
         // Build render buffers
         self.verticesBytes = Renderer.buildBuffer(device: device, data: generator.vertices)
         self.colorsBytes = Renderer.buildBuffer(device: device, data: generator.colors)
-        self.viewportBytes = Renderer.buildBuffer(device: device, data: [Float(viewport.width), Float(viewport.height)])
+        let viewportBuffer = device.makeBuffer(length: 2 * Renderer.floatSize, options: .storageModeShared)
+        viewportBuffer?.label = "viewportBuffer"
+        self.viewportBuffer = viewportBuffer
+        
         super.init()
     }
     
@@ -102,10 +109,10 @@ class Renderer: NSObject, MTKViewDelegate {
         currentViewport = Utility.viewport(from: size)
         let width = min(1500, max(Float(size.width), 600))
         let height = min(1500, max(Float(size.height), 600))
-        viewportBytes = Renderer.buildBuffer(
-            device: mainDevice,
-            data: [width, height]
-        )
+        let widthPointer = viewportBuffer?.contents()
+        let heightPointer = widthPointer?.advanced(by: Renderer.floatSize)
+        widthPointer?.storeBytes(of: width, as: Float.self)
+        heightPointer?.storeBytes(of: height, as: Float.self)
     }
     
     // Updates state and draws something to the screen
@@ -136,7 +143,7 @@ class Renderer: NSObject, MTKViewDelegate {
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBuffer(verticesBytes, offset: 0, index: VertexAttribute.positions.rawValue)
         encoder.setVertexBuffer(colorsBytes, offset: 0, index: VertexAttribute.colors.rawValue)
-        encoder.setVertexBuffer(viewportBytes, offset: 0, index: VertexAttribute.viewportSize.rawValue)
+        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewportSize.rawValue)
         
         (0..<generator.tiles.count * Tile.polygonCount).forEach({ polygonIndex in
             encoder.drawPrimitives(type: .triangle, vertexStart: polygonIndex * Tile.vertexCount, vertexCount: Tile.vertexCount)
