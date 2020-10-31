@@ -194,7 +194,7 @@ extension MapRenderer: MapUpdateDelegate {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let strongSelf = self,
                   let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
-                assertionFailure("No buffer set up yet or self missing: \(String(describing: self))")
+                assertionFailure("No buffer for \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: self?.vertexAndColorBuffers))")
                 return
             }
             // TODO: @dgattey make buffers not a tuple (real struct)
