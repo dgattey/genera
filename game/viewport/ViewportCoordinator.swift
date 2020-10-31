@@ -61,7 +61,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     /// Convenience function for translating a viewport to another location
     private static func viewport(byTranslating viewport: MTLViewport,
-                                 in directions: [Direction],
+                                 in directions: Set<VectoredDirection<Double>>,
                                  atZoom zoomMultiplier: Double = 1.0) -> MTLViewport {
         if directions.isEmpty {
             assertionFailure("No directions to translate")
@@ -71,18 +71,18 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
         var x = viewport.originX
         var y = viewport.originY
         
-        // Normalize by number of directions we're moving in, otherwise we move too fast
+        // Normalize by number of directions we're moving in, otherwise diagonal move amount is too much
         let amount = directions.count == 2 ? diagonalTranslationStep : translationStep
-        for direction in directions {
-            switch direction {
+        for value in directions {
+            switch value.direction {
             case .east:
-                x += amount * zoomMultiplier
+                x += amount * zoomMultiplier * value.magnitude
             case .west:
-                x -= amount * zoomMultiplier
+                x -= amount * zoomMultiplier * value.magnitude
             case .north:
-                y += amount * zoomMultiplier
+                y += amount * zoomMultiplier * value.magnitude
             case .south:
-                y -= amount * zoomMultiplier
+                y -= amount * zoomMultiplier * value.magnitude
             }
         }
         return MTLViewport(
@@ -132,7 +132,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 extension ViewportCoordinator: ViewportChangeDelegate {
     
     /// Change the user position only, not the actual viewport
-    func panViewport(_ directions: [Direction]) {
+    func panViewport(_ directions: Set<VectoredDirection<Double>>) {
         userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, in: directions, atZoom: currentZoomLevel)
         mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }

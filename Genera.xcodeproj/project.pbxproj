@@ -12,6 +12,7 @@
 		750379A2254A8538002A0C13 /* SimpleShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SimpleShaderTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
 		759E0002254DE944004CF89F /* GenerationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0001254DE944004CF89F /* GenerationDelegate.swift */; };
+		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B746254B68FB00351DC8 /* GeneraViewController.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		759E0001254DE944004CF89F /* GenerationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationDelegate.swift; sourceTree = "<group>"; };
+		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
 		75B2B746254B68FB00351DC8 /* GeneraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneraViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				75B90874254B796A00231E39 /* Tile.swift */,
 				75FA6D33254BF37400A1B409 /* Chunk.swift */,
 				75FA6D43254C09F200A1B409 /* Direction.swift */,
+				759E0009254E16FC004CF89F /* VectoredDirection.swift */,
 				75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */,
 				75FA6D7B254D35D000A1B409 /* Color.swift */,
 			);
@@ -256,6 +259,7 @@
 				75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */,
 				75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */,
 				75FA6D3D254C06C600A1B409 /* InteractableMTKView.swift in Sources */,
+				759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
 				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,

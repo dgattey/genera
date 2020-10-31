@@ -22,12 +22,6 @@ private enum KeyCode: UInt16 {
 /// Directions to pan in, with their key codes attached
 enum Direction {
     
-    /// This array contains opposing (cancels each other out) directions in the form of tuples
-    fileprivate static let opposingDirections = [
-        (Direction.north, Direction.south ),
-        (Direction.east, Direction.west )
-    ]
-    
     case north
     case east
     case south
@@ -48,23 +42,6 @@ enum Direction {
         default:
             return nil
         }
-    }
-    
-}
-
-/// Extends the array of directions with some help
-extension Set where Element == Direction {
-
-    /// Returns directions that don't cancel each other out
-    var nonCancellable: Set<Direction> {
-        var directions = Set<Direction>(self)
-        for (a, b) in Direction.opposingDirections {
-            if directions.contains(a) && directions.contains(b) {
-                directions.remove(a)
-                directions.remove(b)
-            }
-        }
-        return directions
     }
     
 }

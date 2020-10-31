@@ -10,8 +10,8 @@ import Metal
 /// Handles changes that should be made to the viewport
 protocol ViewportChangeDelegate: NSObject {
     
-    /// Pans viewport in the given directions
-    func panViewport(_ directions: [Direction]) -> Void
+    /// Pans viewport in the given vectored directions
+    func panViewport(_ directions: Set<VectoredDirection<Double>>) -> Void
     
     /// Resizes viewport to a new size
     func resizeViewport(to size: CGSize) -> Void
