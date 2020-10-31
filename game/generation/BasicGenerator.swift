@@ -10,14 +10,17 @@ import simd
 
 // Just generates a random map
 class BasicGenerator: GeneratorProtocol {
+    
+    // MARK: constants
     private static let pixelSizeMultiplier: Float = 24
+    
+    // MARK: variables
 
     internal let chunkSize = 32
     lazy var verticesBufferSize = Tile.verticesBufferSize * chunkSize * chunkSize
     lazy var colorsBufferSize = Tile.colorsBufferSize * chunkSize * chunkSize
-    
     private var chunks: Dictionary<Chunk, [Tile]> = Dictionary()
-    weak var delegate: GeneratorChangeDelegate?
+    weak var mapUpdateDelegate: MapUpdateDelegate?
     
     // Asynchronously generates a chunk of data and notifies our delegate
     func generateChunk(_ chunk: Chunk) {
@@ -36,7 +39,7 @@ class BasicGenerator: GeneratorProtocol {
             strongSelf.chunks[chunk] = tiles
             
             DispatchQueue.main.async {
-                strongSelf.delegate?.didUpdateTiles(in: chunk)
+                strongSelf.mapUpdateDelegate?.didUpdateTiles(in: chunk)
             }
         }
     }

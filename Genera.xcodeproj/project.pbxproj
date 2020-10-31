@@ -17,13 +17,12 @@
 		75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* BasicGenerator.swift */; };
 		75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90870254B747400231E39 /* ViewportCoordinator.swift */; };
 		75B90875254B796A00231E39 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90874254B796A00231E39 /* Tile.swift */; };
-		75FA6D31254BF07A00A1B409 /* GeneratorChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */; };
+		75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */; };
 		75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D33254BF37400A1B409 /* Chunk.swift */; };
 		75FA6D37254BF80D00A1B409 /* GeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */; };
 		75FA6D3D254C06C600A1B409 /* PannableMTKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */; };
-		75FA6D40254C098500A1B409 /* ViewportUpdaterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3F254C098500A1B409 /* ViewportUpdaterDelegate.swift */; };
+		75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */; };
 		75FA6D44254C09F200A1B409 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D43254C09F200A1B409 /* Direction.swift */; };
-		75FA6D4D254C8F7000A1B409 /* RenderNotifierDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4C254C8F7000A1B409 /* RenderNotifierDelegate.swift */; };
 		75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */; };
 		75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */; };
 /* End PBXBuildFile section */
@@ -42,13 +41,12 @@
 		75B2B763254B71AC00351DC8 /* BasicGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicGenerator.swift; sourceTree = "<group>"; };
 		75B90870254B747400231E39 /* ViewportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportCoordinator.swift; sourceTree = "<group>"; };
 		75B90874254B796A00231E39 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
-		75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorChangeDelegate.swift; sourceTree = "<group>"; };
+		75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUpdateDelegate.swift; sourceTree = "<group>"; };
 		75FA6D33254BF37400A1B409 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
 		75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorProtocol.swift; sourceTree = "<group>"; };
 		75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableMTKView.swift; sourceTree = "<group>"; };
-		75FA6D3F254C098500A1B409 /* ViewportUpdaterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportUpdaterDelegate.swift; sourceTree = "<group>"; };
+		75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportChangeDelegate.swift; sourceTree = "<group>"; };
 		75FA6D43254C09F200A1B409 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
-		75FA6D4C254C8F7000A1B409 /* RenderNotifierDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderNotifierDelegate.swift; sourceTree = "<group>"; };
 		75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataDelegate.swift; sourceTree = "<group>"; };
 		75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -116,7 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				7503798D254A8537002A0C13 /* Renderer.swift */,
-				75FA6D4C254C8F7000A1B409 /* RenderNotifierDelegate.swift */,
+				75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */,
 			);
 			path = rendering;
 			sourceTree = "<group>";
@@ -125,26 +123,25 @@
 			isa = PBXGroup;
 			children = (
 				75FA6D36254BF80D00A1B409 /* GeneratorProtocol.swift */,
-				75FA6D30254BF07A00A1B409 /* GeneratorChangeDelegate.swift */,
 				75B2B763254B71AC00351DC8 /* BasicGenerator.swift */,
 			);
 			path = generation;
 			sourceTree = "<group>";
 		};
-		75FA6D55254CD95400A1B409 /* definitions */ = {
+		75FA6D55254CD95400A1B409 /* data structures */ = {
 			isa = PBXGroup;
 			children = (
 				75B90874254B796A00231E39 /* Tile.swift */,
 				75FA6D33254BF37400A1B409 /* Chunk.swift */,
 				75FA6D43254C09F200A1B409 /* Direction.swift */,
 			);
-			path = definitions;
+			path = "data structures";
 			sourceTree = "<group>";
 		};
 		75FA6D58254CDB6A00A1B409 /* viewport */ = {
 			isa = PBXGroup;
 			children = (
-				75FA6D3F254C098500A1B409 /* ViewportUpdaterDelegate.swift */,
+				75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */,
 				75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */,
 				75B90870254B747400231E39 /* ViewportCoordinator.swift */,
 			);
@@ -156,7 +153,7 @@
 			children = (
 				75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */,
 				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
-				75FA6D55254CD95400A1B409 /* definitions */,
+				75FA6D55254CD95400A1B409 /* data structures */,
 				75FA6D54254CD8B500A1B409 /* generation */,
 				75FA6D58254CDB6A00A1B409 /* viewport */,
 				75B2B761254B70C100351DC8 /* rendering */,
@@ -241,10 +238,9 @@
 				75FA6D3D254C06C600A1B409 /* PannableMTKView.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
-				75FA6D40254C098500A1B409 /* ViewportUpdaterDelegate.swift in Sources */,
-				75FA6D31254BF07A00A1B409 /* GeneratorChangeDelegate.swift in Sources */,
+				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,
+				75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */,
 				750379A0254A8538002A0C13 /* SimpleShaders.metal in Sources */,
-				75FA6D4D254C8F7000A1B409 /* RenderNotifierDelegate.swift in Sources */,
 				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,

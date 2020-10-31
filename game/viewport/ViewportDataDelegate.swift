@@ -12,5 +12,5 @@ protocol ViewportDataDelegate: NSObject {
     
     // The current, untranslated viewport
     var untranslatedViewport: MTLViewport { get }
-    
+
 }

@@ -19,8 +19,8 @@ protocol GeneratorProtocol {
     // The static size of one chunk's colors
     var colorsBufferSize: Int { get }
     
-    // A delegate to notify for changes
-    var delegate: GeneratorChangeDelegate? { get set }
+    // A map update delegate to notify with changes
+    var mapUpdateDelegate: MapUpdateDelegate? { get set }
     
     // Should asynchronously generate a chunk and notify the delegate when done
     func generateChunk(_ chunk: Chunk)

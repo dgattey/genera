@@ -10,12 +10,15 @@ import Metal
 // ViewportCoordinator functions for use with Metal manipulations
 class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
+    // MARK: constants
+    
     private static let translationStep: Double = 20
+    
+    // MARK: variables
     
     private var translatedViewport: MTLViewport = MTLViewport()
     internal var untranslatedViewport: MTLViewport = MTLViewport()
-    
-    weak var renderNotifierDelegate: RenderNotifierDelegate?
+    internal weak var mapUpdateDelegate: MapUpdateDelegate?
 
     // Convenience function for creating a Viewport from a regular CGSize
     private static func viewport(byResizing viewport: MTLViewport, to size: CGSize) -> MTLViewport {
@@ -53,15 +56,15 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 
 }
 
-extension ViewportCoordinator: ViewportUpdaterDelegate {
+extension ViewportCoordinator: ViewportChangeDelegate {
     func panViewport(_ direction: Direction) {
         translatedViewport = ViewportCoordinator.viewport(byTranslating: translatedViewport, inDirection: direction)
-        renderNotifierDelegate?.didUpdateViewport(to: translatedViewport)
+        mapUpdateDelegate?.didUpdateViewport(to: translatedViewport)
     }
     
     func resizeViewport(to size: CGSize) {
         translatedViewport = ViewportCoordinator.viewport(byResizing: translatedViewport, to: size)
         untranslatedViewport = ViewportCoordinator.viewport(byResizing: untranslatedViewport, to: size)
-        renderNotifierDelegate?.didUpdateViewport(to: translatedViewport)
+        mapUpdateDelegate?.didUpdateViewport(to: translatedViewport)
     }
 }

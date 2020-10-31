@@ -26,7 +26,7 @@ class Renderer: NSObject, MTKViewDelegate {
     // Just a simple background color
     private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
 
-    weak var viewportUpdaterDelegate: ViewportUpdaterDelegate?
+    weak var viewportChangeDelegate: ViewportChangeDelegate?
     weak var viewportDataDelegate: ViewportDataDelegate?
     
     private let view: MTKView
@@ -101,7 +101,7 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        viewportUpdaterDelegate?.resizeViewport(to: size)
+        viewportChangeDelegate?.resizeViewport(to: size)
     }
     
     // Updates state and draws something to the screen
@@ -161,8 +161,11 @@ class Renderer: NSObject, MTKViewDelegate {
     
 }
 
-extension Renderer: GeneratorChangeDelegate {
+extension Renderer: MapUpdateDelegate {
     
+    /**
+     On a background thread, copies all data to the buffers, then set needs display for the chunk
+     */
     func didUpdateTiles(in chunk: Chunk) {
         // Create the buffers if they don't exist
         if (vertexAndColorBuffers[chunk] == nil) {
@@ -181,6 +184,7 @@ extension Renderer: GeneratorChangeDelegate {
                 print("No buffer set up yet")
                 return
             }
+            // TODO: @dgattey make buffers not a tuple (real struct)
             var vertexPointer = buffers.0.contents()
             for item in strongSelf.generator.vertices(for: chunk) {
                 vertexPointer.storeBytes(of: item, as: Float.self)
@@ -196,16 +200,16 @@ extension Renderer: GeneratorChangeDelegate {
             DispatchQueue.main.async {
                 buffers.0.didModifyRange((0 ..< buffers.0.length))
                 buffers.1.didModifyRange((0 ..< buffers.1.length))
+                // TODO: @dgattey make this a real size
                 strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1, height: 1))
             }
         }
         
     }
     
-}
-
-extension Renderer: RenderNotifierDelegate {
-    
+    /**
+     Updates viewport buffer data with the new viewport info
+     */
     func didUpdateViewport(to viewport: MTLViewport) {
         updateViewportBufferData(to: viewport)
     }

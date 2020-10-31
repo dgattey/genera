@@ -32,15 +32,16 @@ class GameCoordinator {
             return nil
         }
         
-        // Link all the delegates and coordinators and such
+        // Link viewport coordinator with the delegates
         view.delegate = renderer
         view.viewportDelegate = viewportCoordinator
         renderer.viewportDataDelegate = viewportCoordinator
-        renderer.viewportUpdaterDelegate = viewportCoordinator
-        viewportCoordinator.renderNotifierDelegate = renderer
-        generator.delegate = renderer
+        renderer.viewportChangeDelegate = viewportCoordinator
         
-        // Save the vars
+        // Notify the renderer when the map gets updated
+        viewportCoordinator.mapUpdateDelegate = renderer
+        generator.mapUpdateDelegate = renderer
+        
         self.renderer = renderer
         self.generator = generator
         

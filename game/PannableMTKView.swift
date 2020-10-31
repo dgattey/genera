@@ -10,7 +10,7 @@ import MetalKit
 // A subclass of MTKView that handles key presses to viewport update
 class PannableMTKView: MTKView {
     
-    weak var viewportDelegate: ViewportUpdaterDelegate?
+    weak var viewportDelegate: ViewportChangeDelegate?
     
     // If the key press is a directional one, then pan in that direction
     override func performKeyEquivalent(with event: NSEvent) -> Bool {

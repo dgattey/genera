@@ -1,5 +1,5 @@
 //
-//  ViewportUpdaterDelegate.swift
+//  ViewportChangeDelegate.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/30/20.
@@ -8,7 +8,7 @@
 import Metal
 
 // Handles changes that should be made to the viewport
-protocol ViewportUpdaterDelegate: NSObject {
+protocol ViewportChangeDelegate: NSObject {
     
     // Pans in a given direction
     func panViewport(_ direction: Direction) -> Void
