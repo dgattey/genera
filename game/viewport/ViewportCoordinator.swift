@@ -7,7 +7,7 @@
 
 import Metal
 
-// ViewportCoordinator functions for use with Metal manipulations
+/// ViewportCoordinator functions for use with Metal manipulations
 class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     // MARK: constants
@@ -16,11 +16,11 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     // MARK: variables
     
-    private var translatedViewport: MTLViewport = MTLViewport()
-    internal var untranslatedViewport: MTLViewport = MTLViewport()
+    private var userPosition: MTLViewport = MTLViewport()
+    internal var currentViewport: MTLViewport = MTLViewport()
     internal weak var mapUpdateDelegate: MapUpdateDelegate?
 
-    // Convenience function for creating a Viewport from a regular CGSize
+    /// Convenience function for creating a Viewport from a regular CGSize
     private static func viewport(byResizing viewport: MTLViewport, to size: CGSize) -> MTLViewport {
         return MTLViewport(
             originX: viewport.originX,
@@ -31,7 +31,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
             zfar: viewport.zfar)
     }
     
-    // Convenience function for translating a viewport
+    /// Convenience function for translating a viewport
     private static func viewport(byTranslating viewport: MTLViewport, inDirection direction: Direction) -> MTLViewport {
         var x = viewport.originX
         var y = viewport.originY
@@ -57,14 +57,17 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 }
 
 extension ViewportCoordinator: ViewportChangeDelegate {
+    
+    /// Change the user position only, not the actual viewport
     func panViewport(_ direction: Direction) {
-        translatedViewport = ViewportCoordinator.viewport(byTranslating: translatedViewport, inDirection: direction)
-        mapUpdateDelegate?.didUpdateViewport(to: translatedViewport)
+        userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, inDirection: direction)
+        mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
     
+    /// Resize both the user position and the actual viewport
     func resizeViewport(to size: CGSize) {
-        translatedViewport = ViewportCoordinator.viewport(byResizing: translatedViewport, to: size)
-        untranslatedViewport = ViewportCoordinator.viewport(byResizing: untranslatedViewport, to: size)
-        mapUpdateDelegate?.didUpdateViewport(to: translatedViewport)
+        userPosition = ViewportCoordinator.viewport(byResizing: userPosition, to: size)
+        currentViewport = ViewportCoordinator.viewport(byResizing: currentViewport, to: size)
+        mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
 }

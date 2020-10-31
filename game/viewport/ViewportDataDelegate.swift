@@ -7,10 +7,10 @@
 
 import Metal
 
-// Returns viewport data to other objects
+/// Returns viewport data to other objects
 protocol ViewportDataDelegate: NSObject {
     
-    // The current, untranslated viewport
-    var untranslatedViewport: MTLViewport { get }
+    /// The current viewport to render within (should always have origin at 0,0)
+    var currentViewport: MTLViewport { get }
 
 }

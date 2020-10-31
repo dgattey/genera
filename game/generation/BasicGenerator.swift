@@ -11,13 +11,6 @@ import simd
 // Just generates a random map
 class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
     
-    // MARK: constants
-    
-    private static let chunkDimension = 32
-    
-    // TODO: @dgattey move to renderer
-    private static let pixelSizeMultiplier: Float = 24
-    
     // MARK: variables
     
     private var chunks: Dictionary<Chunk, [Tile]> = Dictionary()
@@ -25,21 +18,18 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
     
     // MARK: - GeneratorDataDelegate
     
-    let chunkSize = BasicGenerator.chunkDimension
-    let verticesBufferSize = Tile.verticesBufferSize * BasicGenerator.chunkDimension * BasicGenerator.chunkDimension
-    let colorsBufferSize = Tile.colorsBufferSize * BasicGenerator.chunkDimension * BasicGenerator.chunkDimension
-    
     // Asynchronously generates a chunk of data and notifies our delegate
     func generateChunk(_ chunk: Chunk) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let strongSelf = self else {
                 return
             }
-            let tiles = (0 ..< BasicGenerator.chunkDimension).flatMap { x -> [Tile] in
-                return (0 ..< BasicGenerator.chunkDimension).map { y -> Tile in
-                    let tileX = x + chunk.x * BasicGenerator.chunkDimension
-                    let tileY = y + chunk.y * BasicGenerator.chunkDimension
-                    let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
+            let tiles = (0 ..< Size.chunk).flatMap { x -> [Tile] in
+                return (0 ..< Size.chunk).map { y -> Tile in
+                    let tileX = x + chunk.x * Size.chunk
+                    let tileY = y + chunk.y * Size.chunk
+                    let randomRawTileKind = Int.random(in: (0 ..< Tile.Kind.total))
+                    let kind = Tile.Kind(rawValue: randomRawTileKind) ?? .water
                     return Tile(x: tileX, y: tileY, kind: kind)
                 }
             }
@@ -57,9 +47,10 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
         guard let tiles = chunks[chunk] else {
             return []
         }
+        let tileWidth = Float(Size.tileWidthInPixels)
         return tiles.flatMap { tile in
             return tile.vertices.map { vertex in
-                return vertex * BasicGenerator.pixelSizeMultiplier
+                return vertex * tileWidth
             }
         }
     }
@@ -70,7 +61,7 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
             return []
         }
         return tiles.flatMap { tile in
-            return tile.color.map { colorValue in
+            return tile.colors.map { colorValue in
                 return colorValue
             }
         }

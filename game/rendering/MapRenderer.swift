@@ -15,8 +15,8 @@ import simd
  Renders a full map to the main Metal screen, using the SimpleShaders
  */
 class MapRenderer: NSObject {
-    // Size of a float for layout calculations
-    private static let floatSize = MemoryLayout<Float>.size
+    
+    // MARK: - constants
     
     // Matches name of vertex shader in SimpleShaders
     private static let vertexFunction = "simpleVertexShader"
@@ -26,6 +26,8 @@ class MapRenderer: NSObject {
     
     // Just a simple background color
     private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
+    
+    // MARK: - variables
 
     weak var viewportChangeDelegate: ViewportChangeDelegate?
     weak var viewportDataDelegate: ViewportDataDelegate?
@@ -36,12 +38,15 @@ class MapRenderer: NSObject {
     private let renderPipelineState: MTLRenderPipelineState
     private let generatorDataDelegate: GeneratorDataDelegate
     
+    /// This keeps track of vertices and colors for a given chunk
     private var vertexAndColorBuffers: Dictionary<Chunk, (MTLBuffer, MTLBuffer)> = Dictionary()
-    private let viewportBuffer: MTLBuffer
+    
+    /// This keeps track of the user position viewport for use in rendering
+    private let userPositionViewportBuffer: MTLBuffer
     
     // MARK: - initialization
     
-    // If the command queue or pipeline state fails to get created, this will fail
+    /// If the command queue or pipeline state fails to get created, this will fail
     init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegate) {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
@@ -58,16 +63,16 @@ class MapRenderer: NSObject {
         self.renderPipelineState = renderPipelineState
         self.generatorDataDelegate = generatorDataDelegate
         
-        guard let viewportBuffer = device.makeBuffer(length: 4 * MapRenderer.floatSize, options: .storageModeShared) else {
+        guard let userPositionViewportBuffer = device.makeBuffer(length: Size.viewportGrouping * Size.datum, options: .storageModeShared) else {
             assertionFailure("Viewport buffer couldn't be allocated")
             return nil
         }
-        self.viewportBuffer = viewportBuffer
+        self.userPositionViewportBuffer = userPositionViewportBuffer
         
         super.init()
     }
     
-    // Builds a render pipeline state object using the current device and our default shaders
+    /// Builds a render pipeline state object using the current device and our default shaders
     private static func buildPipelineState(view: MTKView, device: MTLDevice) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
         let vertexFunction = library?.makeFunction(name: MapRenderer.vertexFunction)
@@ -91,7 +96,7 @@ class MapRenderer: NSObject {
         return stateObject
     }
     
-    // Configures the view itself once with everything it needs to start to render
+    //. Configures the view itself once with everything it needs to start to render
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
         view.clearColor = MapRenderer.backgroundColor
@@ -100,28 +105,27 @@ class MapRenderer: NSObject {
     
     // MARK: - drawing functions
     
-    private func updateViewportBufferData(to viewport: MTLViewport) {
-        var viewportPointer = viewportBuffer.contents()
-        viewportPointer.storeBytes(of: Float(viewport.originX), as: Float.self)
-        viewportPointer = viewportPointer + MapRenderer.floatSize
-        viewportPointer.storeBytes(of: Float(viewport.originY), as: Float.self)
-        viewportPointer = viewportPointer + MapRenderer.floatSize
-        viewportPointer.storeBytes(of: Float(viewport.width), as: Float.self)
-        viewportPointer = viewportPointer + MapRenderer.floatSize
-        viewportPointer.storeBytes(of: Float(viewport.height), as: Float.self)
+    /// Makes sure bytes are stored for the new user position viewport
+    private func updateUserViewportBufferData(to viewport: MTLViewport) {
+        var pointer = userPositionViewportBuffer.contents()
+        pointer.storeBytes(of: Float(viewport.originX), as: Float.self)
+        pointer = pointer + Size.datum
+        pointer.storeBytes(of: Float(viewport.originY), as: Float.self)
+        pointer = pointer + Size.datum
+        pointer.storeBytes(of: Float(viewport.width), as: Float.self)
+        pointer = pointer + Size.datum
+        pointer.storeBytes(of: Float(viewport.height), as: Float.self)
         view.setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width, height: viewport.height))
     }
 
-    // Draws the shapes as specified in all our chunked buffers
+    /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: SimpleShaderIndex.viewport.rawValue)
+        encoder.setVertexBuffer(userPositionViewportBuffer, offset: 0, index: SimpleShaderIndex.viewport.rawValue)
         
         for (_, (vertexBuffer, colorBuffer)) in vertexAndColorBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: SimpleShaderIndex.positions.rawValue)
             encoder.setVertexBuffer(colorBuffer, offset: 0, index: SimpleShaderIndex.colors.rawValue)
-            
-            let vertexCount = Tile.vertexCount * Tile.polygonCount * generatorDataDelegate.chunkSize * generatorDataDelegate.chunkSize
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexCount )
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Size.verticesPerChunk )
         }
     }
 }
@@ -130,15 +134,15 @@ class MapRenderer: NSObject {
 
 extension MapRenderer: MTKViewDelegate {
     
-    // Set the new viewport size for next draw pass
+    /// Tell our change delegate we've resized
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         viewportChangeDelegate?.resizeViewport(to: size)
     }
     
-    // Updates state and draws something to the screen
+    /// Updates map state and draws it to the screen
     func draw(in view: MTKView) {
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
-              let viewport = viewportDataDelegate?.untranslatedViewport else {
+              let viewport = viewportDataDelegate?.currentViewport else {
             print("No command buffer to work with")
             return
         }
@@ -169,13 +173,13 @@ extension MapRenderer: MTKViewDelegate {
 extension MapRenderer: MapUpdateDelegate {
     
     /**
-     On a background thread, copies all data to the buffers, then set needs display for the chunk
+     On a background thread, copies all data to the buffers, then set needs display for the chunk.
      */
     func didUpdateTiles(in chunk: Chunk) {
-        // Create the buffers if they don't exist
+        // Create the buffers if they don't exist, on the main thread
         if (vertexAndColorBuffers[chunk] == nil) {
-            guard let vertexBuffer = mainDevice.makeBuffer(length: generatorDataDelegate.verticesBufferSize, options: .storageModeManaged),
-                  let colorBuffer = mainDevice.makeBuffer(length: generatorDataDelegate.colorsBufferSize, options: .storageModeManaged) else {
+            guard let vertexBuffer = mainDevice.makeBuffer(length: BufferSize.chunkVertices, options: .storageModeManaged),
+                  let colorBuffer = mainDevice.makeBuffer(length: BufferSize.chunkColors, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
             }
@@ -193,30 +197,28 @@ extension MapRenderer: MapUpdateDelegate {
             var vertexPointer = buffers.0.contents()
             for item in strongSelf.generatorDataDelegate.vertices(for: chunk) {
                 vertexPointer.storeBytes(of: item, as: Float.self)
-                vertexPointer = vertexPointer + MapRenderer.floatSize
+                vertexPointer = vertexPointer + Size.datum
             }
             
             var colorPointer = buffers.1.contents()
             for item in strongSelf.generatorDataDelegate.colors(for: chunk) {
                 colorPointer.storeBytes(of: item, as: Float.self)
-                colorPointer = colorPointer + MapRenderer.floatSize
+                colorPointer = colorPointer + Size.datum
             }
             
             DispatchQueue.main.async {
                 buffers.0.didModifyRange((0 ..< buffers.0.length))
                 buffers.1.didModifyRange((0 ..< buffers.1.length))
                 // TODO: @dgattey make this a real size
-                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1, height: 1))
+                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 0, height: 0))
             }
         }
         
     }
     
-    /**
-     Updates viewport buffer data with the new viewport info
-     */
-    func didUpdateViewport(to viewport: MTLViewport) {
-        updateViewportBufferData(to: viewport)
+    /// Updates viewport buffer data with the new viewport info
+    func didUpdateUserPosition(to viewport: MTLViewport) {
+        updateUserViewportBufferData(to: viewport)
     }
     
 }

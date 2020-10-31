@@ -8,13 +8,13 @@
 import Foundation
 import Metal
 
-// A delegate for use with all map updates to be notifed of actions
+/// A delegate for use with all map updates to be notifed of actions
 protocol MapUpdateDelegate: NSObject {
 
-    // Called when a chunk has updated tiles to use
+    /// Called when a chunk has updated tiles to use
     func didUpdateTiles(in chunk: Chunk) -> Void
     
-    // Called when the viewport has changed to a new viewport
-    func didUpdateViewport(to viewport: MTLViewport) -> Void
+    /// Called when the user position has changed to a new viewport
+    func didUpdateUserPosition(to viewport: MTLViewport) -> Void
     
 }

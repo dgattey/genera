@@ -26,6 +26,8 @@
 		75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */; };
 		75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */; };
 		75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */; };
+		75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D77254D2DFA00A1B409 /* Size.swift */; };
+		75FA6D7C254D35D000A1B409 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7B254D35D000A1B409 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataDelegate.swift; sourceTree = "<group>"; };
 		75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
 		75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorProtocol.swift; sourceTree = "<group>"; };
+		75FA6D77254D2DFA00A1B409 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
+		75FA6D7B254D35D000A1B409 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,9 +138,12 @@
 		75FA6D55254CD95400A1B409 /* data structures */ = {
 			isa = PBXGroup;
 			children = (
+				75FA6D77254D2DFA00A1B409 /* Size.swift */,
 				75B90874254B796A00231E39 /* Tile.swift */,
 				75FA6D33254BF37400A1B409 /* Chunk.swift */,
 				75FA6D43254C09F200A1B409 /* Direction.swift */,
+				75FA6D7B254D35D000A1B409 /* Color.swift */,
+				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
 			);
 			path = "data structures";
 			sourceTree = "<group>";
@@ -155,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */,
-				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
 				75FA6D55254CD95400A1B409 /* data structures */,
 				75FA6D54254CD8B500A1B409 /* generation */,
 				75FA6D58254CDB6A00A1B409 /* viewport */,
@@ -238,6 +244,7 @@
 				750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */,
 				75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */,
 				75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */,
+				75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */,
 				75FA6D3D254C06C600A1B409 /* PannableMTKView.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
@@ -250,6 +257,7 @@
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
 				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,
 				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,
+				75FA6D7C254D35D000A1B409 /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
