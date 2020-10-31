@@ -13,7 +13,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     // MARK: constants
     
     /// The amount by which to translate in pixels when using keyboard or mouse
-    private static let translationStep: Double = 40
+    private static let translationStep: Double = 10
     
     /// The amount by which to translate on a diagonal in pixels when using keyboard
     /// or mouse, resulting in the same diagonal movement when applied to both the

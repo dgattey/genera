@@ -15,7 +15,7 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     // MARK: - constants
     
     /// The length of the event loop where we process key presses/mouse movement
-    private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(20)
+    private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(5)
     
     /// Converts an event into a direction
     private static func direction(from event: NSEvent) -> Direction? {
