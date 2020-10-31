@@ -6,32 +6,79 @@
 //
 
 import MetalKit
+import Cocoa
+import Combine
 
-// A subclass of MTKView that handles key presses to viewport update
+/// A subclass of MTKView that handles key presses to viewport update
 class PannableMTKView: MTKView {
     
-    weak var viewportDelegate: ViewportChangeDelegate?
+    // MARK: - static functions
     
-    // If the key press is a directional one, then pan in that direction
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        guard case event.type = NSEvent.EventType.keyDown,
-              let characters = event.characters,
-              let delegate = viewportDelegate else {
-            return super.performKeyEquivalent(with: event)
+    /// Converts an event into a direction
+    private static func direction(from event: NSEvent) -> Direction? {
+        return Direction(from: event.keyCode)
+    }
+    
+    // MARK: - variables
+    
+    weak var viewportDelegate: ViewportChangeDelegate?
+    private var currentDirections = Set<Direction>()
+    private var keyPressEventLoop: Cancellable?
+    
+    /// Makes sure we can zooms and key presses
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+    
+    // MARK: - initialization
+    
+    /// Make sure that as soon as this view appears, it grabs first responder status
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        becomeFirstResponder()
+    }
+    
+    // MARK: - handle events
+    
+    /// If the key is a direction, add it to our array and start panning in that direction
+    override func keyDown(with event: NSEvent) {
+        guard let direction = PannableMTKView.direction(from: event) else {
+            super.keyDown(with: event)
+            return
         }
         
-        if characters.contains(Direction.north.rawValue) {
-            delegate.panViewport(.north)
-        } else if characters.contains(Direction.south.rawValue) {
-            delegate.panViewport(.south)
+        // Insert the direction, and start the event loop for panning if needed
+        currentDirections.insert(direction)
+        if keyPressEventLoop == nil {
+            keyPressEventLoop = DispatchQueue.main.schedule(
+                after: DispatchQueue.SchedulerTimeType(.now()),
+                interval: .milliseconds(20),
+                panView)
+        }
+    }
+    
+    /// If the key is a direction, remove it from our array and stop panning in that direction
+    override func keyUp(with event: NSEvent) {
+        guard let direction = PannableMTKView.direction(from: event) else {
+            super.keyUp(with: event)
+            return
         }
         
-        if characters.contains(Direction.east.rawValue) {
-            delegate.panViewport(.east)
-        } else if characters.contains(Direction.west.rawValue) {
-            delegate.panViewport(.west)
+        // Remove the direction and stop the event loop if it's empty
+        currentDirections.remove(direction)
+        if currentDirections.isEmpty {
+            keyPressEventLoop?.cancel()
+            keyPressEventLoop = nil
         }
-        return false
+    }
+    
+    // MARK: - helpers
+    
+    /// Translate the currently keyed directions into functional directions, meaning
+    /// that if both north and south are held, they cancel out and don't pan
+    private func panView() {
+        let nonCancellableDirections = currentDirections.nonCancellable
+        viewportDelegate?.panViewport(Array(nonCancellableDirections))
     }
     
 }

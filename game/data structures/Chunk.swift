@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Represents a single chunk identifier
 struct Chunk: Hashable {
     let x: Int
     let y: Int

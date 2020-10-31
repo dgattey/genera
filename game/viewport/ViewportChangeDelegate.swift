@@ -7,13 +7,13 @@
 
 import Metal
 
-// Handles changes that should be made to the viewport
+/// Handles changes that should be made to the viewport
 protocol ViewportChangeDelegate: NSObject {
     
-    // Pans in a given direction
-    func panViewport(_ direction: Direction) -> Void
+    /// Pans viewport in the given directions
+    func panViewport(_ directions: [Direction]) -> Void
     
-    // Resizes to a new size
+    /// Resizes viewport to a new size
     func resizeViewport(to size: CGSize) -> Void
 
 }

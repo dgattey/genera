@@ -12,15 +12,20 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     // MARK: constants
     
-    private static let translationStep: Double = 20
+    /// The amount by which to translate in pixels when using keyboard or mouse
+    private static let translationStep: Double = 40
     
     // MARK: variables
     
+    /// This is the user position, including zooming and translation
     private var userPosition: MTLViewport = MTLViewport()
-    internal var currentViewport: MTLViewport = MTLViewport()
-    internal weak var mapUpdateDelegate: MapUpdateDelegate?
+    
+    /// This is the viewport for drawing, not including translation
+    private(set) var currentViewport: MTLViewport = MTLViewport()
+    
+    weak var mapUpdateDelegate: MapUpdateDelegate?
 
-    /// Convenience function for creating a Viewport from a regular CGSize
+    /// Convenience function for resizing a viewport to another size
     private static func viewport(byResizing viewport: MTLViewport, to size: CGSize) -> MTLViewport {
         return MTLViewport(
             originX: viewport.originX,
@@ -31,19 +36,24 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
             zfar: viewport.zfar)
     }
     
-    /// Convenience function for translating a viewport
-    private static func viewport(byTranslating viewport: MTLViewport, inDirection direction: Direction) -> MTLViewport {
+    /// Convenience function for translating a viewport to another location
+    private static func viewport(byTranslating viewport: MTLViewport, in directions: [Direction]) -> MTLViewport {
         var x = viewport.originX
         var y = viewport.originY
-        switch direction {
-        case .east:
-            x += translationStep
-        case .west:
-            x -= translationStep
-        case .north:
-            y += translationStep
-        case .south:
-            y -= translationStep
+        
+        // Normalize by number of directions we're moving in, otherwise we move too fast
+        let amount = translationStep / Double(directions.count)
+        for direction in directions {
+            switch direction {
+            case .east:
+                x += amount
+            case .west:
+                x -= amount
+            case .north:
+                y += amount
+            case .south:
+                y -= amount
+            }
         }
         return MTLViewport(
             originX: x,
@@ -59,8 +69,8 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 extension ViewportCoordinator: ViewportChangeDelegate {
     
     /// Change the user position only, not the actual viewport
-    func panViewport(_ direction: Direction) {
-        userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, inDirection: direction)
+    func panViewport(_ directions: [Direction]) {
+        userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, in: directions)
         mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
     
