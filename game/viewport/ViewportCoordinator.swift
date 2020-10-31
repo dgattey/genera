@@ -15,6 +15,11 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     /// The amount by which to translate in pixels when using keyboard or mouse
     private static let translationStep: Double = 40
     
+    /// The amount by which to translate on a diagonal in pixels when using keyboard
+    /// or mouse, resulting in the same diagonal movement when applied to both the
+    /// horizontal and the vertical translation
+    private static let diagonalTranslationStep: Double = translationStep * sin(45)
+    
     // MARK: variables
     
     /// This is the user position, including zooming and translation
@@ -38,11 +43,16 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     /// Convenience function for translating a viewport to another location
     private static func viewport(byTranslating viewport: MTLViewport, in directions: [Direction]) -> MTLViewport {
+        if directions.isEmpty {
+            assertionFailure("No directions to translate")
+            return viewport
+        }
+        
         var x = viewport.originX
         var y = viewport.originY
         
         // Normalize by number of directions we're moving in, otherwise we move too fast
-        let amount = translationStep / Double(directions.count)
+        let amount = directions.count == 2 ? diagonalTranslationStep : translationStep
         for direction in directions {
             switch direction {
             case .east:
