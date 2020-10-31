@@ -78,7 +78,9 @@ class PannableMTKView: MTKView {
     /// that if both north and south are held, they cancel out and don't pan
     private func panView() {
         let nonCancellableDirections = currentDirections.nonCancellable
-        viewportDelegate?.panViewport(Array(nonCancellableDirections))
+        if !nonCancellableDirections.isEmpty {
+            viewportDelegate?.panViewport(Array(nonCancellableDirections))
+        }
     }
     
 }

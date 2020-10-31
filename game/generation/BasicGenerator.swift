@@ -34,9 +34,8 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
                 }
             }
             
-            strongSelf.chunks[chunk] = tiles
-            
             DispatchQueue.main.async {
+                strongSelf.chunks[chunk] = tiles
                 strongSelf.mapUpdateDelegate?.didUpdateTiles(in: chunk)
             }
         }

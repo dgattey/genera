@@ -190,7 +190,7 @@ extension MapRenderer: MapUpdateDelegate {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let strongSelf = self,
                   let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
-                print("No buffer set up yet")
+                print("No buffer set up yet or self missing: \(String(describing: self))")
                 return
             }
             // TODO: @dgattey make buffers not a tuple (real struct)
