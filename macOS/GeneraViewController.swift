@@ -7,21 +7,20 @@
 
 import Cocoa
 
-// Our macOS specific view controller
+/// Our macOS specific view controller - starts coordination of the game
 class GeneraViewController: NSViewController {
     
     private var coordinator: GameCoordinator?
 
+    /// Ensures we have the right views and sets up a game coordinator on view load.
+    /// This is set up originally in the Main storyboard
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        guard let pannableView = self.view as? PannableMTKView else {
-            assertionFailure("Configuration of app is wrong")
+        guard let generaView = self.view as? GeneraMTLView else {
+            assertionFailure("App views are setup incorrectly: \(view)")
             return
         }
-        
-        // Creates the game coordinator and sets it up
-        self.coordinator = GameCoordinator(view: pannableView)
+        self.coordinator = GameCoordinator(view: generaView)
         
     }
 }

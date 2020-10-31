@@ -14,9 +14,9 @@ class GameCoordinator {
     
     // MARK: variables
     
-    private let generator: GeneratorProtocol
+    private let generator: GeneratorProtocol & GeneratorDataDelegate
     private let viewportCoordinator = ViewportCoordinator()
-    private let renderer: Renderer
+    private let renderer: MapRenderer
     
     // MARK: initialization
     
@@ -24,36 +24,25 @@ class GameCoordinator {
      Initialization will fail if Metal is missing or the renderer isn't
      created correctly. Otherwise, sets everything up
      */
-    init?(view: PannableMTKView) {
+    init?(view: GeneraMTLView) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = Renderer(view: view, device: defaultDevice, generator: generator) else {
+              let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator, generationDelegate: generator) else {
             assertionFailure("Game coordinator cannot be initialized")
             return nil
         }
         
-        // Link all the delegates and coordinators and such
-        view.delegate = renderer
-        view.viewportDelegate = viewportCoordinator
-        renderer.viewportDataDelegate = viewportCoordinator
-        renderer.viewportUpdaterDelegate = viewportCoordinator
-        viewportCoordinator.renderNotifierDelegate = renderer
-        generator.delegate = renderer
-        
-        // Save the vars
         self.renderer = renderer
         self.generator = generator
         
-        // FOR NOW - kick off generation manually
-        for x in (0..<10) {
-            for y in (0..<10) {
-                generator.generateChunk(Chunk(x: x, y: y))
-            }
-        }
-        for x in (-10..<0) {
-            for y in (-10..<0) {
-                generator.generateChunk(Chunk(x: x, y: y))
-            }
-        }
+        // Link viewport coordinator with the delegates
+        view.delegate = renderer
+        view.viewportDelegate = viewportCoordinator
+        renderer.viewportDataDelegate = viewportCoordinator
+        renderer.viewportChangeDelegate = viewportCoordinator
+        
+        // Notify the renderer when the map gets updated
+        viewportCoordinator.mapUpdateDelegate = renderer
+        generator.mapUpdateDelegate = renderer
     }
 }
