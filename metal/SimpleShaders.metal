@@ -1,5 +1,5 @@
 //
-//  Shaders.metal
+//  SimpleShaders.metal
 //  Genera
 //
 //  Created by Dylan Gattey on 10/28/20.
@@ -11,7 +11,7 @@
 #include <simd/simd.h>
 
 // Including header shared between this Metal shader code and Swift/C code executing Metal API commands
-#import "ShaderTypes.h"
+#import "SimpleShaderTypes.h"
 
 using namespace metal;
 
@@ -31,16 +31,17 @@ typedef struct
 } ColoredVertex;
 
 // This function creates color and position data for the vertices from viewport size
-vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
-                                  constant float2 *positions [[buffer(VertexAttributePositions)]],
-                                  constant float4 *colors [[buffer(VertexAttributeColors)]],
-                                  constant float2 *viewportSize [[buffer(VertexAttributeViewportSize)]])
+vertex ColoredVertex simpleVertexShader(uint vertexID [[vertex_id]],
+                                        constant float2 *positions [[buffer(SimpleShaderIndexPositions)]],
+                                        constant float4 *colors [[buffer(SimpleShaderIndexColors)]],
+                                        constant float4 *viewport [[buffer(SimpleShaderIndexViewport)]])
 {
-    // Starts the map in the upper left instead of centered
     float2 pixelSpacePosition = positions[vertexID];
     float2 roundedPixelSpacePosition = round(pixelSpacePosition * 100) / 100;
-    float x = roundedPixelSpacePosition.x / (*viewportSize).x - 1;
-    float y = -1 * roundedPixelSpacePosition.y / (*viewportSize).y + 1;
+    float2 viewportOrigin = float2((*viewport).x, (*viewport).y);
+    float2 viewportSize = float2((*viewport).z, (*viewport).w);
+    float x = (roundedPixelSpacePosition.x - viewportOrigin.x) / viewportSize.x;
+    float y = (roundedPixelSpacePosition.y - viewportOrigin.y) / viewportSize.y;
     
     ColoredVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);
@@ -49,7 +50,7 @@ vertex ColoredVertex vertexShader(uint vertexID [[vertex_id]],
 }
 
 // Use the defined color to set tile color
-fragment float4 fragmentShader(ColoredVertex in [[stage_in]])
+fragment float4 simpleFragmentShader(ColoredVertex in [[stage_in]])
 {
     return in.color;
 }

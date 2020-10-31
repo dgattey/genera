@@ -11,28 +11,31 @@ import Metal
 import MetalKit
 import simd
 
-// Constants for the renderer
-private enum Constant {
-    static let vertexFunction = "vertexShader"
-    static let fragmentFunction = "fragmentShader"
-    static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
-}
-
 // MARK: - Renderer Class
 
 class Renderer: NSObject, MTKViewDelegate {
-    
+    // Size of a float for layout calculations
     private static let floatSize = MemoryLayout<Float>.size
+    
+    // Matches name of vertex shader in SimpleShaders
+    private static let vertexFunction = "simpleVertexShader"
+    
+    // Matches name of fragment shader in SimpleShaders
+    private static let fragmentFunction = "simpleFragmentShader"
+    
+    // Just a simple background color
+    private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
+
+    weak var viewportUpdaterDelegate: ViewportUpdaterDelegate?
+    weak var viewportDataDelegate: ViewportDataDelegate?
     
     private let view: MTKView
     private let mainDevice: MTLDevice
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private let generator: GeneratorProtocol
-    private var currentViewport: MTLViewport
     
-    private let vertexBuffer: MTLBuffer
-    private let colorBuffer: MTLBuffer
+    private var vertexAndColorBuffers: Dictionary<Chunk, (MTLBuffer, MTLBuffer)> = Dictionary()
     private let viewportBuffer: MTLBuffer
     
     // MARK: - initialization
@@ -48,23 +51,16 @@ class Renderer: NSObject, MTKViewDelegate {
         // Config changes for the view itself to set it up right
         Renderer.configure(view: view, device: device)
         
-        let viewport = Utility.viewport(from: CGSize.zero)
-        
         self.mainDevice = device
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
-        self.currentViewport = viewport
         self.generator = generator
         
-        guard let vertexBuffer = device.makeBuffer(length: generator.verticesBufferSize, options: .storageModeManaged),
-              let colorBuffer = device.makeBuffer(length: generator.colorsBufferSize, options: .storageModeManaged),
-              let viewportBuffer = device.makeBuffer(length: 2 * Renderer.floatSize, options: .storageModeShared) else {
-            assertionFailure("Buffers couldn't be allocated")
+        guard let viewportBuffer = device.makeBuffer(length: 4 * Renderer.floatSize, options: .storageModeShared) else {
+            assertionFailure("Viewport buffer couldn't be allocated")
             return nil
         }
-        self.vertexBuffer = vertexBuffer
-        self.colorBuffer = colorBuffer
         self.viewportBuffer = viewportBuffer
         
         super.init()
@@ -73,16 +69,16 @@ class Renderer: NSObject, MTKViewDelegate {
     // Builds a render pipeline state object using the current device and our default shaders
     private static func buildPipelineState(view: MTKView, device: MTLDevice) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: Constant.vertexFunction)
-        let fragmentFunction = library?.makeFunction(name: Constant.fragmentFunction)
+        let vertexFunction = library?.makeFunction(name: Renderer.vertexFunction)
+        let fragmentFunction = library?.makeFunction(name: Renderer.fragmentFunction)
 
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
-        descriptor.vertexBuffers[VertexAttribute.positions.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[VertexAttribute.colors.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[VertexAttribute.viewportSize.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.positions.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.colors.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[SimpleShaderIndex.viewport.rawValue].mutability = .immutable
         
         var stateObject: MTLRenderPipelineState?
         do {
@@ -97,7 +93,7 @@ class Renderer: NSObject, MTKViewDelegate {
     // Configures the view itself once with everything it needs to start to render
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
-        view.clearColor = Constant.backgroundColor
+        view.clearColor = Renderer.backgroundColor
         view.enableSetNeedsDisplay = true
     }
     
@@ -105,16 +101,13 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // Set the new viewport size for next draw pass
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        currentViewport = Utility.viewport(from: size)
-        let widthPointer = viewportBuffer.contents()
-        let heightPointer = widthPointer + Renderer.floatSize
-        widthPointer.storeBytes(of: Float(size.width), as: Float.self)
-        heightPointer.storeBytes(of: Float(size.height), as: Float.self)
+        viewportUpdaterDelegate?.resizeViewport(to: size)
     }
     
     // Updates state and draws something to the screen
     func draw(in view: MTKView) {
-        guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+        guard let commandBuffer = commandQueue.makeCommandBuffer(),
+              let viewport = viewportDataDelegate?.untranslatedViewport else {
             print("No command buffer to work with")
             return
         }
@@ -127,7 +120,7 @@ class Renderer: NSObject, MTKViewDelegate {
         }
         
         // Configure the encoder & draw to it
-        encoder.setViewport(currentViewport)
+        encoder.setViewport(viewport)
         encoder.setRenderPipelineState(renderPipelineState)
         drawShapes(to: encoder)
         encoder.endEncoding()
@@ -141,13 +134,28 @@ class Renderer: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
-    // Draws the shapes as specified in our buffers
+    private func updateViewportBufferData(to viewport: MTLViewport) {
+        var viewportPointer = viewportBuffer.contents()
+        viewportPointer.storeBytes(of: Float(viewport.originX), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(viewport.originY), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(viewport.width), as: Float.self)
+        viewportPointer = viewportPointer + Renderer.floatSize
+        viewportPointer.storeBytes(of: Float(viewport.height), as: Float.self)
+        view.setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width, height: viewport.height))
+    }
+
+    // Draws the shapes as specified in all our chunked buffers
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexAttribute.positions.rawValue)
-        encoder.setVertexBuffer(colorBuffer, offset: 0, index: VertexAttribute.colors.rawValue)
-        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: VertexAttribute.viewportSize.rawValue)
+        encoder.setVertexBuffer(viewportBuffer, offset: 0, index: SimpleShaderIndex.viewport.rawValue)
         
-        encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
+        for (_, (vertexBuffer, colorBuffer)) in vertexAndColorBuffers {
+            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: SimpleShaderIndex.positions.rawValue)
+            encoder.setVertexBuffer(colorBuffer, offset: 0, index: SimpleShaderIndex.colors.rawValue)
+            
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Tile.vertexCount * Tile.polygonCount * generator.chunkSize * generator.chunkSize )
+        }
     }
     
     
@@ -156,29 +164,50 @@ class Renderer: NSObject, MTKViewDelegate {
 extension Renderer: GeneratorChangeDelegate {
     
     func didUpdateTiles(in chunk: Chunk) {
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let strongSelf = self else {
+        // Create the buffers if they don't exist
+        if (vertexAndColorBuffers[chunk] == nil) {
+            guard let vertexBuffer = mainDevice.makeBuffer(length: generator.verticesBufferSize, options: .storageModeManaged),
+                  let colorBuffer = mainDevice.makeBuffer(length: generator.colorsBufferSize, options: .storageModeManaged) else {
+                assertionFailure("Couldn't create buffers")
                 return
             }
-            var vertexPointer = strongSelf.vertexBuffer.contents()
+            vertexAndColorBuffers[chunk] = (vertexBuffer, colorBuffer)
+        }
+        
+        // Then dispatch to the background to populate them
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let strongSelf = self,
+                  let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
+                print("No buffer set up yet")
+                return
+            }
+            var vertexPointer = buffers.0.contents()
             for item in strongSelf.generator.vertices(for: chunk) {
                 vertexPointer.storeBytes(of: item, as: Float.self)
                 vertexPointer = vertexPointer + Renderer.floatSize
             }
             
-            var colorPointer = strongSelf.colorBuffer.contents()
+            var colorPointer = buffers.1.contents()
             for item in strongSelf.generator.colors(for: chunk) {
                 colorPointer.storeBytes(of: item, as: Float.self)
                 colorPointer = colorPointer + Renderer.floatSize
             }
             
             DispatchQueue.main.async {
-                strongSelf.vertexBuffer.didModifyRange((0..<strongSelf.vertexBuffer.length))
-                strongSelf.colorBuffer.didModifyRange((0..<strongSelf.colorBuffer.length))
-                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 0.1, height: 0.1))
+                buffers.0.didModifyRange((0 ..< buffers.0.length))
+                buffers.1.didModifyRange((0 ..< buffers.1.length))
+                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 1, height: 1))
             }
         }
         
+    }
+    
+}
+
+extension Renderer: RenderNotifierDelegate {
+    
+    func didUpdateViewport(to viewport: MTLViewport) {
+        updateViewportBufferData(to: viewport)
     }
     
 }

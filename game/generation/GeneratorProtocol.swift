@@ -20,7 +20,7 @@ protocol GeneratorProtocol {
     var colorsBufferSize: Int { get }
     
     // A delegate to notify for changes
-    var delegate: GeneratorChangeDelegate? { get }
+    var delegate: GeneratorChangeDelegate? { get set }
     
     // Should asynchronously generate a chunk and notify the delegate when done
     func generateChunk(_ chunk: Chunk)

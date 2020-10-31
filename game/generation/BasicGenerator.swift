@@ -12,7 +12,7 @@ import simd
 class BasicGenerator: GeneratorProtocol {
     private static let pixelSizeMultiplier: Float = 24
 
-    internal let chunkSize = 128
+    internal let chunkSize = 32
     lazy var verticesBufferSize = Tile.verticesBufferSize * chunkSize * chunkSize
     lazy var colorsBufferSize = Tile.colorsBufferSize * chunkSize * chunkSize
     
@@ -25,10 +25,11 @@ class BasicGenerator: GeneratorProtocol {
             guard let strongSelf = self else {
                 return
             }
-            let tiles = (0 ..< strongSelf.chunkSize).flatMap { x -> [Tile] in
-                return (0 ..< strongSelf.chunkSize).flatMap { y -> [Tile] in
+            let chunkSize = strongSelf.chunkSize
+            let tiles = (0 ..< chunkSize).flatMap { x -> [Tile] in
+                return (0 ..< chunkSize).flatMap { y -> [Tile] in
                     let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
-                    return [Tile(x: x, y: y, kind: kind)]
+                    return [Tile(x: x + chunk.x * chunkSize, y: y + chunk.y * chunkSize, kind: kind)]
                 }
             }
             
