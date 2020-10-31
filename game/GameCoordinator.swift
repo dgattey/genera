@@ -27,10 +27,13 @@ class GameCoordinator {
     init?(view: GeneraMTLView) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {
+              let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator, generationDelegate: generator) else {
             assertionFailure("Game coordinator cannot be initialized")
             return nil
         }
+        
+        self.renderer = renderer
+        self.generator = generator
         
         // Link viewport coordinator with the delegates
         view.delegate = renderer
@@ -41,20 +44,5 @@ class GameCoordinator {
         // Notify the renderer when the map gets updated
         viewportCoordinator.mapUpdateDelegate = renderer
         generator.mapUpdateDelegate = renderer
-        
-        self.renderer = renderer
-        self.generator = generator
-        
-        // FOR NOW - kick off generation manually
-        for x in (0..<10) {
-            for y in (0..<10) {
-                generator.generateChunk(Chunk(x: x, y: y))
-            }
-        }
-        for x in (-10..<0) {
-            for y in (-10..<0) {
-                generator.generateChunk(Chunk(x: x, y: y))
-            }
-        }
     }
 }
