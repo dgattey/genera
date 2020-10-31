@@ -9,18 +9,25 @@ import Metal
 import simd
 
 // Just generates a random map
-class BasicGenerator: GeneratorProtocol {
+class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
     
     // MARK: constants
+    
+    private static let chunkDimension = 32
+    
+    // TODO: @dgattey move to renderer
     private static let pixelSizeMultiplier: Float = 24
     
     // MARK: variables
-
-    internal let chunkSize = 32
-    lazy var verticesBufferSize = Tile.verticesBufferSize * chunkSize * chunkSize
-    lazy var colorsBufferSize = Tile.colorsBufferSize * chunkSize * chunkSize
+    
     private var chunks: Dictionary<Chunk, [Tile]> = Dictionary()
     weak var mapUpdateDelegate: MapUpdateDelegate?
+    
+    // MARK: - GeneratorDataDelegate
+    
+    let chunkSize = BasicGenerator.chunkDimension
+    let verticesBufferSize = Tile.verticesBufferSize * BasicGenerator.chunkDimension * BasicGenerator.chunkDimension
+    let colorsBufferSize = Tile.colorsBufferSize * BasicGenerator.chunkDimension * BasicGenerator.chunkDimension
     
     // Asynchronously generates a chunk of data and notifies our delegate
     func generateChunk(_ chunk: Chunk) {
@@ -28,11 +35,12 @@ class BasicGenerator: GeneratorProtocol {
             guard let strongSelf = self else {
                 return
             }
-            let chunkSize = strongSelf.chunkSize
-            let tiles = (0 ..< chunkSize).flatMap { x -> [Tile] in
-                return (0 ..< chunkSize).flatMap { y -> [Tile] in
+            let tiles = (0 ..< BasicGenerator.chunkDimension).flatMap { x -> [Tile] in
+                return (0 ..< BasicGenerator.chunkDimension).map { y -> Tile in
+                    let tileX = x + chunk.x * BasicGenerator.chunkDimension
+                    let tileY = y + chunk.y * BasicGenerator.chunkDimension
                     let kind = Tile.Kind(rawValue: Int.random(in: (0..<3))) ?? .water
-                    return [Tile(x: x + chunk.x * chunkSize, y: y + chunk.y * chunkSize, kind: kind)]
+                    return Tile(x: tileX, y: tileY, kind: kind)
                 }
             }
             

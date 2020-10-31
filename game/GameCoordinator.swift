@@ -14,9 +14,9 @@ class GameCoordinator {
     
     // MARK: variables
     
-    private let generator: GeneratorProtocol
+    private let generator: GeneratorProtocol & GeneratorDataDelegate
     private let viewportCoordinator = ViewportCoordinator()
-    private let renderer: Renderer
+    private let renderer: MapRenderer
     
     // MARK: initialization
     
@@ -27,7 +27,7 @@ class GameCoordinator {
     init?(view: PannableMTKView) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = Renderer(view: view, device: defaultDevice, generator: generator) else {
+              let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {
             assertionFailure("Game coordinator cannot be initialized")
             return nil
         }
