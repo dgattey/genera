@@ -181,20 +181,24 @@ extension MapRenderer: MapUpdateDelegate {
      */
     func didUpdateTiles(in chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
-        if (vertexAndColorBuffers[chunk] == nil) {
+        let savedBuffers = vertexAndColorBuffers[chunk]
+        let buffers: (MTLBuffer, MTLBuffer)
+        if let savedBuffers = savedBuffers {
+            buffers = savedBuffers
+        } else {
             guard let vertexBuffer = mainDevice.makeBuffer(length: BufferSize.chunkVertices, options: .storageModeManaged),
                   let colorBuffer = mainDevice.makeBuffer(length: BufferSize.chunkColors, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
             }
             vertexAndColorBuffers[chunk] = (vertexBuffer, colorBuffer)
+            buffers = (vertexBuffer, colorBuffer)
         }
         
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let strongSelf = self,
-                  let buffers = strongSelf.vertexAndColorBuffers[chunk] else {
-                assertionFailure("No buffer for \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: self?.vertexAndColorBuffers))")
+            guard let strongSelf = self else {
+                assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffers))")
                 return
             }
             // TODO: @dgattey make buffers not a tuple (real struct)
