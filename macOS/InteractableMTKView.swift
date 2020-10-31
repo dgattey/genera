@@ -43,6 +43,15 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     
     // MARK: - handle events
     
+    /// Use the y axis's scrolling delta to zoom the viewport in or out
+    override func scrollWheel(with event: NSEvent) {
+        guard event.phase == .changed else {
+            return
+        }
+        let amount = Double(event.scrollingDeltaY)
+        viewportDelegate?.zoomViewport(ZoomDirection(amount), at: event.locationInWindow)
+    }
+    
     /// If the key is a direction, add it to our array and start panning in that direction
     override func keyDown(with event: NSEvent) {
         guard let direction = InteractableMTKView.direction(from: event) else {

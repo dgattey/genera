@@ -30,6 +30,7 @@
 		75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */; };
 		75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D77254D2DFA00A1B409 /* Size.swift */; };
 		75FA6D7C254D35D000A1B409 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7B254D35D000A1B409 /* Color.swift */; };
+		75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorProtocol.swift; sourceTree = "<group>"; };
 		75FA6D77254D2DFA00A1B409 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		75FA6D7B254D35D000A1B409 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDirection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				75B90874254B796A00231E39 /* Tile.swift */,
 				75FA6D33254BF37400A1B409 /* Chunk.swift */,
 				75FA6D43254C09F200A1B409 /* Direction.swift */,
+				75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */,
 				75FA6D7B254D35D000A1B409 /* Color.swift */,
 			);
 			path = "data structures";
@@ -256,6 +259,7 @@
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
 				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,
+				75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */,
 				75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */,
 				750379A0254A8538002A0C13 /* SimpleShaders.metal in Sources */,
 				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,

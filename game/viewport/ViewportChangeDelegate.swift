@@ -15,5 +15,8 @@ protocol ViewportChangeDelegate: NSObject {
     
     /// Resizes viewport to a new size
     func resizeViewport(to size: CGSize) -> Void
+    
+    /// Zooms the viewport in a given direction at a point onscreen
+    func zoomViewport(_ direction: ZoomDirection, at point: NSPoint) -> Void
 
 }
