@@ -1,5 +1,5 @@
 //
-//  PannableMTKView.swift
+//  InteractableMTKView.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/30/20.
@@ -9,10 +9,13 @@ import MetalKit
 import Cocoa
 import Combine
 
-/// A subclass of MTKView that handles key presses to viewport update
-class PannableMTKView: MTKView {
+/// A subclass of MTKView that handles key presses + mouse movements to update the viewport
+class InteractableMTKView: MTKView, GeneraMTLView {
     
-    // MARK: - static functions
+    // MARK: - constants
+    
+    /// The length of the event loop where we process key presses/mouse movement
+    private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(20)
     
     /// Converts an event into a direction
     private static func direction(from event: NSEvent) -> Direction? {
@@ -42,7 +45,7 @@ class PannableMTKView: MTKView {
     
     /// If the key is a direction, add it to our array and start panning in that direction
     override func keyDown(with event: NSEvent) {
-        guard let direction = PannableMTKView.direction(from: event) else {
+        guard let direction = InteractableMTKView.direction(from: event) else {
             super.keyDown(with: event)
             return
         }
@@ -52,14 +55,14 @@ class PannableMTKView: MTKView {
         if keyPressEventLoop == nil {
             keyPressEventLoop = DispatchQueue.main.schedule(
                 after: DispatchQueue.SchedulerTimeType(.now()),
-                interval: .milliseconds(20),
+                interval: InteractableMTKView.eventLoopLength,
                 panView)
         }
     }
     
     /// If the key is a direction, remove it from our array and stop panning in that direction
     override func keyUp(with event: NSEvent) {
-        guard let direction = PannableMTKView.direction(from: event) else {
+        guard let direction = InteractableMTKView.direction(from: event) else {
             super.keyUp(with: event)
             return
         }

@@ -24,7 +24,7 @@ class GameCoordinator {
      Initialization will fail if Metal is missing or the renderer isn't
      created correctly. Otherwise, sets everything up
      */
-    init?(view: PannableMTKView) {
+    init?(view: GeneraMTLView) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
               let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {

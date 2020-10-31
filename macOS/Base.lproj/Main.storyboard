@@ -133,7 +133,7 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="GeneraViewController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" customClass="PannableMTKView" customModule="Genera" customModuleProvider="target">
+                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl" userLabel="Genera MTL View" customClass="InteractableMTKView" customModule="Genera" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
