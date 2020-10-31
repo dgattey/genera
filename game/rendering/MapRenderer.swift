@@ -37,6 +37,7 @@ class MapRenderer: NSObject {
     private let commandQueue: MTLCommandQueue
     private let renderPipelineState: MTLRenderPipelineState
     private let generatorDataDelegate: GeneratorDataDelegate
+    private let drawingSemaphore = DispatchSemaphore(value: 1)
     
     /// This keeps track of vertices and colors for a given chunk
     private var vertexAndColorBuffers: Dictionary<Chunk, (MTLBuffer, MTLBuffer)> = Dictionary()
@@ -151,6 +152,13 @@ extension MapRenderer: MTKViewDelegate {
             return
         }
         
+        // Block the semaphore while drawing so we don't update out of sync
+        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
+        let semaphore = drawingSemaphore
+        commandBuffer.addCompletedHandler { _ in
+            semaphore.signal()
+        }
+        
         // In the drawing loop below here - be quick!
         guard let descriptor = view.currentRenderPassDescriptor,
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
@@ -214,11 +222,19 @@ extension MapRenderer: MapUpdateDelegate {
                 colorPointer = colorPointer + Size.datum
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let strongSelf = self else {
+                    assertionFailure("Couldn't capture self from main thread")
+                    return
+                }
+                strongSelf.drawingSemaphore.signal()
+                
                 buffers.0.didModifyRange((0 ..< buffers.0.length))
                 buffers.1.didModifyRange((0 ..< buffers.1.length))
-                // TODO: @dgattey make this a real size
-                strongSelf.view.setNeedsDisplay(NSRect(x: 0, y: 0, width: 0, height: 0))
+                // TODO: @dgattey make this a real size - this doesn't work...
+                strongSelf.view.setNeedsDisplay(strongSelf.view.bounds)
+                
+                _ = strongSelf.drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
             }
         }
         
