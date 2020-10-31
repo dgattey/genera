@@ -11,7 +11,7 @@
 		750379A1254A8538002A0C13 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* Renderer.swift */; };
 		750379A2254A8538002A0C13 /* SimpleShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SimpleShaderTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
-		75B2B74B254B68FB00351DC8 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B746254B68FB00351DC8 /* GameViewController.swift */; };
+		75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B746254B68FB00351DC8 /* GeneraViewController.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
 		75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B749254B68FB00351DC8 /* AppDelegate.swift */; };
 		75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* BasicGenerator.swift */; };
@@ -25,6 +25,7 @@
 		75FA6D44254C09F200A1B409 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D43254C09F200A1B409 /* Direction.swift */; };
 		75FA6D4D254C8F7000A1B409 /* RenderNotifierDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4C254C8F7000A1B409 /* RenderNotifierDelegate.swift */; };
 		75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */; };
+		75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +35,7 @@
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
-		75B2B746254B68FB00351DC8 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		75B2B746254B68FB00351DC8 /* GeneraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneraViewController.swift; sourceTree = "<group>"; };
 		75B2B748254B68FB00351DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75B2B749254B68FB00351DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75B2B74A254B68FB00351DC8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		75FA6D43254C09F200A1B409 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		75FA6D4C254C8F7000A1B409 /* RenderNotifierDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderNotifierDelegate.swift; sourceTree = "<group>"; };
 		75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataDelegate.swift; sourceTree = "<group>"; };
+		75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,10 +69,7 @@
 			children = (
 				75B2B744254B68FB00351DC8 /* macOS */,
 				7503798B254A8537002A0C13 /* metal */,
-				75B2B761254B70C100351DC8 /* rendering */,
-				75FA6D58254CDB6A00A1B409 /* viewport */,
-				75FA6D54254CD8B500A1B409 /* generation */,
-				75FA6D55254CD95400A1B409 /* definitions */,
+				75FA6D5E254CE20300A1B409 /* game */,
 				75B2B75A254B6F6E00351DC8 /* config */,
 				75037995254A8538002A0C13 /* Products */,
 			);
@@ -98,8 +97,7 @@
 			children = (
 				75B2B747254B68FB00351DC8 /* Main.storyboard */,
 				75B2B749254B68FB00351DC8 /* AppDelegate.swift */,
-				75B2B746254B68FB00351DC8 /* GameViewController.swift */,
-				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
+				75B2B746254B68FB00351DC8 /* GeneraViewController.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -151,6 +149,19 @@
 				75B90870254B747400231E39 /* ViewportCoordinator.swift */,
 			);
 			path = viewport;
+			sourceTree = "<group>";
+		};
+		75FA6D5E254CE20300A1B409 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */,
+				75FA6D3C254C06C600A1B409 /* PannableMTKView.swift */,
+				75FA6D55254CD95400A1B409 /* definitions */,
+				75FA6D54254CD8B500A1B409 /* generation */,
+				75FA6D58254CDB6A00A1B409 /* viewport */,
+				75B2B761254B70C100351DC8 /* rendering */,
+			);
+			path = game;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,7 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75B2B74B254B68FB00351DC8 /* GameViewController.swift in Sources */,
+				75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */,
 				750379A1254A8538002A0C13 /* Renderer.swift in Sources */,
 				75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */,
 				75FA6D37254BF80D00A1B409 /* GeneratorProtocol.swift in Sources */,
@@ -237,6 +248,7 @@
 				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
+				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,
 				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
