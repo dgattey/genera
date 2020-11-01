@@ -11,6 +11,11 @@ import simd
 /// Just generates a totally random map
 class BasicGenerator: GeneratorDataDelegate {
     
+    // MARK: constants
+    
+    /// The amount by which to pad (in chunk units) the visible chunks to smoothly generate
+    private static let visibleChunkPadding = 3
+    
     // MARK: variables
     
     /// TODO: @dgattey replace with bounded priority queue based on access frequency
@@ -128,8 +133,11 @@ extension BasicGenerator: GeneratorProtocol {
     
     /// Makes sure these chunks are currently generated
     func didUpdateVisibleChunks(_ ranges: (x: Range<Int>, y: Range<Int>)) {
-        for x in ranges.x {
-            for y in ranges.y {
+        let padRange = { (range: Range<Int>) -> Range<Int> in
+            return (range.startIndex - BasicGenerator.visibleChunkPadding ..< range.endIndex + BasicGenerator.visibleChunkPadding)
+        }
+        for x in padRange(ranges.x) {
+            for y in padRange(ranges.y) {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }
