@@ -44,6 +44,7 @@ class GameCoordinator {
         // Notify the renderer when the map gets updated
         generator.mapUpdateDelegate = renderer
         viewportCoordinator.mapUpdateDelegate = renderer
+        viewportCoordinator.generationDelegate = generator
         
         // Resize the renderer's view to make sure we're ready before map generation
         renderer.mtkView(view, drawableSizeWillChange: view.drawableSize)

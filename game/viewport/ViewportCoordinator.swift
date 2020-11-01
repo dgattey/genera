@@ -49,9 +49,14 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private var currentZoomLevel: Double = 1.0
     
     weak var mapUpdateDelegate: MapUpdateDelegate?
+    var generationDelegate: GeneratorProtocol?
     
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
-    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition)
+    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition) {
+        didSet {
+            generationDelegate?.didUpdateVisibleChunks(visibleChunks)
+        }
+    }
     
     /// Initializes the viewports to a size
     init(initialSize: CGSize) {
