@@ -8,6 +8,7 @@
 import Metal
 import simd
 import Combine
+import SwiftPriorityQueue
 
 /// Just generates a totally random map
 class BasicGenerator: GeneratorDataDelegate {
@@ -17,14 +18,11 @@ class BasicGenerator: GeneratorDataDelegate {
     /// The amount by which to pad (in chunk units) the visible chunks to smoothly generate
     private static let visibleChunkPadding = 2
     
-    /// The amount of chunks in memory we allow (~ 150 MB total)
-    private static let maxChunksInMemory = 64
-    
     /// The length of the event loop where we process evictions
-    private static let evictionEventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(5)
+    private static let evictionEventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
     
     /// Pads the given chunk range by the visible chunk padding to compute what's "in range" of generation
-    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>)) -> (x: Range<Int>, y: Range<Int>) {
+    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>), amount: Int = visibleChunkPadding) -> (x: Range<Int>, y: Range<Int>) {
         let pad = { (range: Range<Int>) -> Range<Int> in
             return (range.startIndex - visibleChunkPadding ..< range.endIndex + visibleChunkPadding)
         }
@@ -33,13 +31,16 @@ class BasicGenerator: GeneratorDataDelegate {
     
     // MARK: variables
     
-    /// TODO: @dgattey replace with bounded priority queue based on access frequency
     /// Basic dict of chunk -> array of tiles
     private var chunks = Dictionary<Chunk, [Tile]>()
+    
+    /// Keeps track of the order we added chunks for smarter removal (pop the top)
+    private var recentlyAccessedChunks = PriorityQueue<DatedChunk>(ascending: true)
     
     /// Makes sure we only ever have one event loop running for evictions (no sense in
     /// making this happen multiple times)
     private var evictionEventLoop: Cancellable?
+    
     
     /// TODO: @dgattey replace with priority queue based on request frequency
     /// The chunks we need to generate and their state
@@ -62,12 +63,22 @@ class BasicGenerator: GeneratorDataDelegate {
         }
         return BasicGenerator.paddedChunkRanges(ranges)
     }
+
+    /// The amount of chunks in memory we allow (based on viewport size + 10%)
+    private var maxChunksInMemory: Int {
+        let ranges = paddedVisibleRanges
+        let maxRanges = BasicGenerator.paddedChunkRanges(ranges, amount: Int(ranges.x.count / 10))
+        return maxRanges.x.count * maxRanges.y.count
+    }
     
     // MARK: - GeneratorDataDelegate
     
-    /// Returns vertices for a particular chunk of data  if it exists, or nil
+    /// Returns vertices for a particular chunk of data if it exists, or nil (and marks it as recently accessed for use in eviction)
     func vertices(for chunk: Chunk) -> [Float] {
         chunkAccessSemaphore.wait()
+        unsafelyMarkChunkAsRecentlyAccessed(chunk)
+        
+        // Get the tiles if they exist
         guard let tiles = chunks[chunk] else {
             chunkAccessSemaphore.signal()
             return []
@@ -96,6 +107,8 @@ class BasicGenerator: GeneratorDataDelegate {
         }
     }
     
+    // MARK: - helper functions
+    
     /// Generates the tiles for a given chunk, then dispatches to the main
     /// thread. MUST be called for speed from a background thread. Makes sure
     /// this generation pass is still valid to start
@@ -120,6 +133,8 @@ class BasicGenerator: GeneratorDataDelegate {
                 return Tile(x: tileX, y: tileY, kind: kind)
             }
         }
+        
+        // Update the chunks array with the tiles and remove from generation queue
         chunkAccessSemaphore.wait()
         chunks[chunk] = tiles
         generationQueue.removeValue(forKey: chunk)
@@ -130,31 +145,73 @@ class BasicGenerator: GeneratorDataDelegate {
         }
     }
     
-    /// Evicts chunks from the given ranges, assuming this is called from a background
-    /// thread for performance reasons.
-    private func evictChunksFromBackgroundThread() {
+    /// Marks a chunk as recently accessed with semaphore. Use `unsafelyMarkChunkAsRecentlyAccessed` if you're already waiting
+    /// on`chunkAccessSemaphore`.
+    private func markChunkAsRecentlyAccessed(_ chunk: Chunk) {
         chunkAccessSemaphore.wait()
-        // Evict each if we still have too many
-        let keys = chunks.keys
-        var excessChunks = chunks.count - BasicGenerator.maxChunksInMemory
+        unsafelyMarkChunkAsRecentlyAccessed(chunk)
+        chunkAccessSemaphore.signal()
+    }
+    
+    /// Marks a chunk as recently accessed. Should be used in a context where you're already waiting on the
+    /// `chunkAccessSemaphore`, otherwise it's unsafe. There's an analogous `markChunkAsRecentlyAccessed` if
+    /// you need the locking done for you.
+    private func unsafelyMarkChunkAsRecentlyAccessed(_ chunk: Chunk) {
+        let datedChunk = DatedChunk(chunk)
+        // This only works because hashing and equatable use the chunk itself, not the date
+        if recentlyAccessedChunks.peek() == datedChunk {
+            // Perf improvement if it was the first element
+            _ = recentlyAccessedChunks.pop()
+        } else if recentlyAccessedChunks.contains(datedChunk) {
+            recentlyAccessedChunks.remove(datedChunk)
+        }
+        // Replace whatever was there with newly-dated data
+        recentlyAccessedChunks.push(datedChunk)
+    }
+    
+    /// Evicts one chunk at a time, assuming this is called on a loop from a background
+    /// thread for performance reasons. Cancels the loop if we have nothing new to evict.
+    private func evictOldestChunk() {
+        chunkAccessSemaphore.wait()
+        let leastRecentChunk = recentlyAccessedChunks.peek()
+        let excessChunks = chunks.count - maxChunksInMemory
+        
+        // Cancel the runner of this function for perf if there's nothing to evict
+        guard excessChunks > 0, let evictableChunk = leastRecentChunk else {
+            chunkAccessSemaphore.signal()
+            evictionEventLoop?.cancel()
+            evictionEventLoop = nil
+            print("~Evict~ finished evicting: \(excessChunks), recentChunk: \(leastRecentChunk)")
+            return
+        }
+        
+        // If it's within the visible range, mark as accessed recently (and the element will move
+        // so the next iteration of this eviction loop should get a different element)
+        guard !evictableChunk.chunk.isWithin(paddedVisibleRanges) else {
+            unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.chunk)
+            print("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
+            chunkAccessSemaphore.signal()
+            return
+        }
+        
+        // Evict the chunk itself! Also make sure to pop recently accessed chunk because we
+        // peeked before. This will be THE SAME because we haven't released the semaphore
+        // and we ALWAYS use the semaphore around access to `recentlyAccessedChunks`.
+        let mostRecentChunk = recentlyAccessedChunks.pop()
+        if evictableChunk.chunk != mostRecentChunk?.chunk {
+            assertionFailure("Invariant of recently accessed chunks didn't hold")
+        }
+        let oldTiles = chunks.removeValue(forKey: evictableChunk.chunk)
+        print("~Evict~ removed a chunk: \(evictableChunk.chunk)")
         chunkAccessSemaphore.signal()
         
-        for chunk in keys {
-            // Once we reach 0, exit
-            guard excessChunks > 0 else {
-                return
-            }
-            // Make sure we update the count from the current value in the array, and notify when we remove
-            if !chunk.isWithin(paddedVisibleRanges) {
-                chunkAccessSemaphore.wait()
-                chunks.removeValue(forKey: chunk)
-                excessChunks = BasicGenerator.maxChunksInMemory - chunks.count
-                chunkAccessSemaphore.signal()
-                DispatchQueue.main.async { [weak self] in
-                    self?.mapUpdateDelegate?.didDelete(chunk: chunk)
-                }
+        // Only notify if we actually removed something (as we may have already removed this guy)
+        if (oldTiles != nil) {
+            DispatchQueue.main.async { [weak self] in
+                self?.mapUpdateDelegate?.didDelete(chunk: evictableChunk.chunk)
             }
         }
+        
     }
     
     /// If we've reached our chunk limit, this starts the loop of evicting them on a background thread
@@ -164,18 +221,18 @@ class BasicGenerator: GeneratorDataDelegate {
         }
         
         chunkAccessSemaphore.wait()
-        let excessChunks = chunks.count - BasicGenerator.maxChunksInMemory
+        let excessChunks = chunks.count - maxChunksInMemory
         chunkAccessSemaphore.signal()
         guard excessChunks > 0 else {
-            evictionEventLoop?.cancel()
+            print("~Evict~ no excess: \(excessChunks)")
             return
         }
         
-        // We have too many chunks - let's evict
+        // We have too many chunks - let's evict until we have nothing new to evict
         evictionEventLoop = DispatchQueue.global(qos: .background).schedule(
             after: DispatchQueue.SchedulerTimeType(.now()),
-            interval: BasicGenerator.evictionEventLoopLength,
-            evictChunksFromBackgroundThread)
+            interval: BasicGenerator.evictionEventLoopInterval,
+            evictOldestChunk)
     }
     
 }
