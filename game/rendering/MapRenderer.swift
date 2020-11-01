@@ -48,7 +48,7 @@ class MapRenderer: NSObject {
     // MARK: - initialization
     
     /// If the command queue or pipeline state fails to get created, this will fail
-    init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegate, generationDelegate: GenerationDelegate) {
+    init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegate) {
 
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
@@ -72,9 +72,6 @@ class MapRenderer: NSObject {
         self.userPositionViewportBuffer = userPositionViewportBuffer
         
         super.init()
-        
-        // On next event loop, start map generation
-        DispatchQueue.global(qos: .utility).async(execute: generationDelegate.startMapGeneration)
     }
     
     /// Builds a render pipeline state object using the current device and our default shaders

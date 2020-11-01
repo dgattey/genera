@@ -15,12 +15,13 @@ class GeneraViewController: NSViewController {
     /// Ensures we have the right views and sets up a game coordinator on view load.
     /// This is set up originally in the Main storyboard
     override func viewDidLoad() {
-        super.viewDidLoad()
         guard let generaView = self.view as? GeneraMTLView else {
             assertionFailure("App views are setup incorrectly: \(view)")
             return
         }
-        self.coordinator = GameCoordinator(view: generaView)
-        
+        // Putting it on the next run loop means the window will be correctly sized for the view to lay out
+        DispatchQueue.main.async {
+            self.coordinator = GameCoordinator(view: generaView)
+        }
     }
 }

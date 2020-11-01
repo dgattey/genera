@@ -36,14 +36,14 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     // MARK: variables
     
     /// This is the user position, including zooming and translation, which sets visibleChunks on set
-    private(set) var userPosition: MTLViewport = MTLViewport() {
+    private(set) var userPosition: MTLViewport {
         didSet {
             visibleChunks = ViewportCoordinator.visibleChunks(from: userPosition)
         }
     }
     
     /// This is the viewport for drawing, not including translation
-    private(set) var currentViewport: MTLViewport = MTLViewport()
+    private(set) var currentViewport: MTLViewport
     
     /// The current zoom level, within the min and max range
     private var currentZoomLevel: Double = 1.0
@@ -51,20 +51,27 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     weak var mapUpdateDelegate: MapUpdateDelegate?
     
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
-    private var visibleChunks: NSRect = .zero
+    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition)
+    
+    /// Initializes the viewports to a size
+    init(initialSize: CGSize) {
+        let initialViewport = ViewportCoordinator.viewport(byResizing: MTLViewport(), to: initialSize)
+        self.userPosition = initialViewport
+        self.currentViewport = initialViewport
+    }
     
     /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units)
-    private static func visibleChunks(from viewport: MTLViewport) -> NSRect {
-        let smartRound = { (value: Double) -> Double in
+    private static func visibleChunks(from viewport: MTLViewport) -> (x: Range<Int>, y: Range<Int>) {
+        let smartRound = { (value: Double) -> Int in
             let converted = value / Double(Size.chunkInPixels)
-            return value < 0 ? floor(converted) : ceil(converted)
+            return Int(value < 0 ? floor(converted) : ceil(converted))
         }
         
         let startX = smartRound(viewport.originX - viewport.width)
         let startY = smartRound(viewport.originY - viewport.height)
         let endX = smartRound(viewport.originX + viewport.width)
         let endY = smartRound(viewport.originY + viewport.height)
-        return NSRect(x: startX, y: startY, width: endX - startX, height: endY - startY)
+        return ((startX..<endX), (startY..<endY))
     }
 
     /// Convenience function for resizing a viewport to another size
