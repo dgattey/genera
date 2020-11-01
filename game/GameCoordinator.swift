@@ -20,10 +20,8 @@ class GameCoordinator {
     
     // MARK: initialization
     
-    /**
-     Initialization will fail if Metal is missing or the renderer isn't
-     created correctly. Otherwise, sets everything up
-     */
+    /// Initialization will fail if Metal is missing or the renderer isn't
+    /// created correctly. Otherwise, sets everything up.
     init?(view: GeneraMTLView) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
