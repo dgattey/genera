@@ -11,6 +11,7 @@
 		750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* MapRenderer.swift */; };
 		750379A2254A8538002A0C13 /* SimpleShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SimpleShaderTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
+		757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B746254B68FB00351DC8 /* GeneraViewController.swift */; };
@@ -39,6 +40,7 @@
 		7503798E254A8537002A0C13 /* SimpleShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleShaderTypes.h; sourceTree = "<group>"; };
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkGenerationState.swift; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */,
 				75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */,
 				75B2B763254B71AC00351DC8 /* BasicGenerator.swift */,
+				757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */,
 			);
 			path = generation;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,
 				75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
+				757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
 				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,
 				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,

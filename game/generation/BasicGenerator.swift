@@ -13,11 +13,13 @@ class BasicGenerator: GeneratorDataDelegate {
     
     // MARK: variables
     
+    /// TODO: @dgattey replace with bounded priority queue based on access frequency
     /// Basic dict of chunk -> array of tiles
-    private var chunks: Dictionary<Chunk, [Tile]> = Dictionary()
+    private var chunks = Dictionary<Chunk, [Tile]>()
     
-    /// The chunks we need to generate (should be queued on the generation queue)
-    private var generationQueueKeys = Set<Chunk>()
+    /// TODO: @dgattey replace with priority queue based on request frequency
+    /// The chunks we need to generate and their state
+    private var generationQueue = Dictionary<Chunk,ChunkGenerationState >()
     
     /// Used to update the map itself when generation of a chunk is done
     weak var mapUpdateDelegate: MapUpdateDelegate?
@@ -25,13 +27,19 @@ class BasicGenerator: GeneratorDataDelegate {
     /// Used to find out what's visible
     weak var viewportDataDelegate: ViewportDataDelegate?
     
+    /// Makes sure only one thing can access the chunks array at once
+    private let chunkAccessSemaphore = DispatchSemaphore(value: 1)
+    
     // MARK: - GeneratorDataDelegate
     
     /// Returns vertices for a particular chunk of data  if it exists, or nil
     func vertices(for chunk: Chunk) -> [Float] {
+        chunkAccessSemaphore.wait()
         guard let tiles = chunks[chunk] else {
+            chunkAccessSemaphore.signal()
             return []
         }
+        chunkAccessSemaphore.signal()
         let tileWidth = Float(Size.tileWidthInPixels)
         return tiles.flatMap { tile in
             return tile.vertices.map { vertex in
@@ -42,9 +50,12 @@ class BasicGenerator: GeneratorDataDelegate {
     
     /// Returns colors for a particular chunk of data if it exists, or nil
     func colors(for chunk: Chunk) -> [Float] {
+        chunkAccessSemaphore.wait()
         guard let tiles = chunks[chunk] else {
+            chunkAccessSemaphore.signal()
             return []
         }
+        chunkAccessSemaphore.signal()
         return tiles.flatMap { tile in
             return tile.colors.map { colorValue in
                 return colorValue
@@ -55,6 +66,9 @@ class BasicGenerator: GeneratorDataDelegate {
     /// Generates the tiles for a given chunk, then dispatches to the main
     /// thread. MUST be called for speed from a background thread.
     private func generateTiles(for chunk: Chunk) {
+        chunkAccessSemaphore.wait()
+        generationQueue[chunk] = .isGenerating
+        chunkAccessSemaphore.signal()
         let tiles = (0 ..< Size.chunk).flatMap { x -> [Tile] in
             return (0 ..< Size.chunk).map { y -> Tile in
                 let tileX = x + chunk.x * Size.chunk
@@ -64,13 +78,18 @@ class BasicGenerator: GeneratorDataDelegate {
                 return Tile(x: tileX, y: tileY, kind: kind)
             }
         }
+        chunkAccessSemaphore.wait()
+        generationQueue[chunk] = .done
+        chunkAccessSemaphore.signal()
         
         DispatchQueue.main.async { [weak self] in
             guard let strongSelf = self else {
                 return
             }
+            strongSelf.chunkAccessSemaphore.wait()
             strongSelf.chunks[chunk] = tiles
-            strongSelf.generationQueueKeys.remove(chunk)
+            strongSelf.generationQueue.removeValue(forKey: chunk)
+            strongSelf.chunkAccessSemaphore.signal()
             strongSelf.mapUpdateDelegate?.didUpdateTiles(in: chunk)
         }
     }
@@ -94,20 +113,22 @@ extension BasicGenerator: GeneratorProtocol {
     /// the main thread when done. All generation is async and random.
     func generateChunkIfNeeded(_ chunk: Chunk) {
         // Make sure we're not generating this right now or already have generated
-        if generationQueueKeys.contains(chunk) || chunks.keys.contains(chunk) {
+        chunkAccessSemaphore.wait()
+        if generationQueue.keys.contains(chunk) || chunks.keys.contains(chunk) {
+            chunkAccessSemaphore.signal()
             return
         }
-        generationQueueKeys.insert(chunk)
+        generationQueue[chunk] = .needsGeneration
+        chunkAccessSemaphore.signal()
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.generateTiles(for: chunk)
         }
     }
     
-    /// Makes sure these chunks are generated!
+    /// Makes sure these chunks are currently generated
     func didUpdateVisibleChunks(_ ranges: (x: Range<Int>, y: Range<Int>)) {
         for x in ranges.x {
             for y in ranges.y {
-                // TODO: @dgattey this is really slow and breaks something? - I need to sync GPU and CPU better?
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }
