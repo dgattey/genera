@@ -19,6 +19,9 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
     /// Used to update the map itself when generation of a chunk is done
     weak var mapUpdateDelegate: MapUpdateDelegate?
     
+    /// Used to find out what's visible
+    weak var viewportDataDelegate: ViewportDataDelegate?
+    
     // MARK: - GeneratorDataDelegate
     
     /// Asynchronously generates a chunk of data and notifies our delegate on
@@ -76,16 +79,14 @@ class BasicGenerator: GeneratorProtocol, GeneratorDataDelegate {
 
 extension BasicGenerator: GenerationDelegate {
     
-    /// Just generates a few basic chunks to start with
+    /// Just generates visible chunks to start with
     func startMapGeneration() {
-        /// TODO: @dgattey do this better
-        for x in (0..<10) {
-            for y in (0..<10) {
-                generateChunk(Chunk(x: x, y: y))
-            }
+        guard let (xRange, yRange) = viewportDataDelegate?.visibleChunks else {
+            assertionFailure("No chunks visible at start of map generation")
+            return
         }
-        for x in (-10..<0) {
-            for y in (-10..<0) {
+        for x in xRange {
+            for y in yRange {
                 generateChunk(Chunk(x: x, y: y))
             }
         }

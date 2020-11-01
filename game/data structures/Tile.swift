@@ -27,11 +27,14 @@ class Tile {
         /// Grass for the plains
         case grass
         
+        /// Trees, appearing on plains
+        case tree
+        
         /// Snow for the high elevations
         case snow
         
         /// This should be kept up to date with the number of tile kinds!
-        static let total = 5
+        static let total = 6
         
         /// The corresponding tile color, expressed as a 4 item float array from 0...1
         var color: [Float] {
@@ -44,6 +47,8 @@ class Tile {
                 return Color.components(from: #colorLiteral(red: 0.7593135834, green: 0.7986099124, blue: 0.6198268533, alpha: 1))
             case .grass:
                 return Color.components(from: #colorLiteral(red: 0, green: 0.7016168237, blue: 0.1941453218, alpha: 1))
+            case .tree:
+                return Color.components(from: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1))
             case .snow:
                 return Color.components(from: #colorLiteral(red: 0.9536334872, green: 0.957352221, blue: 1, alpha: 1))
             }

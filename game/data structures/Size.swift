@@ -33,6 +33,9 @@ enum Size {
     
     /// The width or height of a chunk, in number of tiles
     static let chunk = 32
+    
+    /// The width or height of a chunk, in pixels
+    static let chunkInPixels = tileWidthInPixels * chunk
 }
 
 /// A collection of buffer sizes for various data structures
