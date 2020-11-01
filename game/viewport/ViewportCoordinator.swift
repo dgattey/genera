@@ -27,7 +27,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
         static let min: Double = 0.2
         
         /// Max zoom supported
-        static let max: Double = 3.0
+        static let max: Double = 1.6
         
         /// The multiplier on the zoom amount
         static let multiplier = 0.01

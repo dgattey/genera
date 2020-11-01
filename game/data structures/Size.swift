@@ -32,7 +32,7 @@ enum Size {
     static let tileWidthInPixels = 24
     
     /// The width or height of a chunk, in number of tiles
-    static let chunk = 32
+    static let chunk = 64
     
     /// The width or height of a chunk, in pixels
     static let chunkInPixels = tileWidthInPixels * chunk
