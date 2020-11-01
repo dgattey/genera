@@ -19,7 +19,7 @@ class BasicGenerator: GeneratorDataDelegate {
     
     /// TODO: @dgattey replace with priority queue based on request frequency
     /// The chunks we need to generate and their state
-    private var generationQueue = Dictionary<Chunk,ChunkGenerationState >()
+    private var generationQueue = Dictionary<Chunk,(state: ChunkGenerationState, numRequests: Int) >()
     
     /// Used to update the map itself when generation of a chunk is done
     weak var mapUpdateDelegate: MapUpdateDelegate?
@@ -67,7 +67,7 @@ class BasicGenerator: GeneratorDataDelegate {
     /// thread. MUST be called for speed from a background thread.
     private func generateTiles(for chunk: Chunk) {
         chunkAccessSemaphore.wait()
-        generationQueue[chunk] = .isGenerating
+        generationQueue[chunk] = (.isGenerating, generationQueue[chunk]?.numRequests ?? 0)
         chunkAccessSemaphore.signal()
         let tiles = (0 ..< Size.chunk).flatMap { x -> [Tile] in
             return (0 ..< Size.chunk).map { y -> Tile in
@@ -79,7 +79,7 @@ class BasicGenerator: GeneratorDataDelegate {
             }
         }
         chunkAccessSemaphore.wait()
-        generationQueue[chunk] = .done
+        generationQueue[chunk] = (.done, 0)
         chunkAccessSemaphore.signal()
         
         DispatchQueue.main.async { [weak self] in
@@ -115,10 +115,11 @@ extension BasicGenerator: GeneratorProtocol {
         // Make sure we're not generating this right now or already have generated
         chunkAccessSemaphore.wait()
         if generationQueue.keys.contains(chunk) || chunks.keys.contains(chunk) {
+            generationQueue[chunk]?.numRequests += 1
             chunkAccessSemaphore.signal()
             return
         }
-        generationQueue[chunk] = .needsGeneration
+        generationQueue[chunk] = (.needsGeneration, generationQueue[chunk]?.numRequests ?? 0 + 1)
         chunkAccessSemaphore.signal()
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.generateTiles(for: chunk)
