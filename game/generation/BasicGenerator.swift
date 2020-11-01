@@ -7,6 +7,7 @@
 
 import Metal
 import simd
+import Combine
 
 /// Just generates a totally random map
 class BasicGenerator: GeneratorDataDelegate {
@@ -14,13 +15,31 @@ class BasicGenerator: GeneratorDataDelegate {
     // MARK: constants
     
     /// The amount by which to pad (in chunk units) the visible chunks to smoothly generate
-    private static let visibleChunkPadding = 3
+    private static let visibleChunkPadding = 2
+    
+    /// The amount of chunks in memory we allow (~ 150 MB total)
+    private static let maxChunksInMemory = 64
+    
+    /// The length of the event loop where we process evictions
+    private static let evictionEventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(5)
+    
+    /// Pads the given chunk range by the visible chunk padding to compute what's "in range" of generation
+    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>)) -> (x: Range<Int>, y: Range<Int>) {
+        let pad = { (range: Range<Int>) -> Range<Int> in
+            return (range.startIndex - visibleChunkPadding ..< range.endIndex + visibleChunkPadding)
+        }
+        return (pad(ranges.x), pad(ranges.y))
+    }
     
     // MARK: variables
     
     /// TODO: @dgattey replace with bounded priority queue based on access frequency
     /// Basic dict of chunk -> array of tiles
     private var chunks = Dictionary<Chunk, [Tile]>()
+    
+    /// Makes sure we only ever have one event loop running for evictions (no sense in
+    /// making this happen multiple times)
+    private var evictionEventLoop: Cancellable?
     
     /// TODO: @dgattey replace with priority queue based on request frequency
     /// The chunks we need to generate and their state
@@ -34,6 +53,15 @@ class BasicGenerator: GeneratorDataDelegate {
     
     /// Makes sure only one thing can access the chunks array at once
     private let chunkAccessSemaphore = DispatchSemaphore(value: 1)
+    
+    /// Gets all visible chunks and pads it by our constant
+    private var paddedVisibleRanges: (x: Range<Int>, y: Range<Int>) {
+        guard let ranges = viewportDataDelegate?.visibleChunks else {
+            assertionFailure("No visible chunks to use (shouldn't be possible)")
+            return ((0..<0), (0..<0))
+        }
+        return BasicGenerator.paddedChunkRanges(ranges)
+    }
     
     // MARK: - GeneratorDataDelegate
     
@@ -69,8 +97,17 @@ class BasicGenerator: GeneratorDataDelegate {
     }
     
     /// Generates the tiles for a given chunk, then dispatches to the main
-    /// thread. MUST be called for speed from a background thread.
+    /// thread. MUST be called for speed from a background thread. Makes sure
+    /// this generation pass is still valid to start
     private func generateTiles(for chunk: Chunk) {
+        guard chunk.isWithin(paddedVisibleRanges) else {
+            chunkAccessSemaphore.wait()
+            generationQueue.removeValue(forKey: chunk)
+            chunkAccessSemaphore.signal()
+            return
+        }
+        
+        // Set state, generate, and set state again
         chunkAccessSemaphore.wait()
         generationQueue[chunk] = (.isGenerating, generationQueue[chunk]?.numRequests ?? 0)
         chunkAccessSemaphore.signal()
@@ -84,19 +121,61 @@ class BasicGenerator: GeneratorDataDelegate {
             }
         }
         chunkAccessSemaphore.wait()
-        generationQueue[chunk] = (.done, 0)
+        chunks[chunk] = tiles
+        generationQueue.removeValue(forKey: chunk)
         chunkAccessSemaphore.signal()
         
         DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else {
+            self?.mapUpdateDelegate?.didGenerate(chunk: chunk)
+        }
+    }
+    
+    /// Evicts chunks from the given ranges, assuming this is called from a background
+    /// thread for performance reasons.
+    private func evictChunksFromBackgroundThread() {
+        chunkAccessSemaphore.wait()
+        // Evict each if we still have too many
+        let keys = chunks.keys
+        var excessChunks = chunks.count - BasicGenerator.maxChunksInMemory
+        chunkAccessSemaphore.signal()
+        
+        for chunk in keys {
+            // Once we reach 0, exit
+            guard excessChunks > 0 else {
                 return
             }
-            strongSelf.chunkAccessSemaphore.wait()
-            strongSelf.chunks[chunk] = tiles
-            strongSelf.generationQueue.removeValue(forKey: chunk)
-            strongSelf.chunkAccessSemaphore.signal()
-            strongSelf.mapUpdateDelegate?.didUpdateTiles(in: chunk)
+            // Make sure we update the count from the current value in the array, and notify when we remove
+            if !chunk.isWithin(paddedVisibleRanges) {
+                chunkAccessSemaphore.wait()
+                chunks.removeValue(forKey: chunk)
+                excessChunks = BasicGenerator.maxChunksInMemory - chunks.count
+                chunkAccessSemaphore.signal()
+                DispatchQueue.main.async { [weak self] in
+                    self?.mapUpdateDelegate?.didDelete(chunk: chunk)
+                }
+            }
         }
+    }
+    
+    /// If we've reached our chunk limit, this starts the loop of evicting them on a background thread
+    private func evictChunksIfNeeded() {
+        guard evictionEventLoop == nil else {
+            return
+        }
+        
+        chunkAccessSemaphore.wait()
+        let excessChunks = chunks.count - BasicGenerator.maxChunksInMemory
+        chunkAccessSemaphore.signal()
+        guard excessChunks > 0 else {
+            evictionEventLoop?.cancel()
+            return
+        }
+        
+        // We have too many chunks - let's evict
+        evictionEventLoop = DispatchQueue.global(qos: .background).schedule(
+            after: DispatchQueue.SchedulerTimeType(.now()),
+            interval: BasicGenerator.evictionEventLoopLength,
+            evictChunksFromBackgroundThread)
     }
     
 }
@@ -131,13 +210,12 @@ extension BasicGenerator: GeneratorProtocol {
         }
     }
     
-    /// Makes sure these chunks are currently generated
+    /// Makes sure these chunks are currently generated, and evict chunks if they're outside our bounds and we're at the limit
     func didUpdateVisibleChunks(_ ranges: (x: Range<Int>, y: Range<Int>)) {
-        let padRange = { (range: Range<Int>) -> Range<Int> in
-            return (range.startIndex - BasicGenerator.visibleChunkPadding ..< range.endIndex + BasicGenerator.visibleChunkPadding)
-        }
-        for x in padRange(ranges.x) {
-            for y in padRange(ranges.y) {
+        let paddedRanges = BasicGenerator.paddedChunkRanges(ranges)
+        evictChunksIfNeeded()
+        for x in paddedRanges.x {
+            for y in paddedRanges.y {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }

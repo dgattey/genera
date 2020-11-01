@@ -9,7 +9,7 @@ import Metal
 import simd
 
 /// A position + type of tile that appears on the map
-class Tile {
+struct Tile {
     
     // MARK: - types
     
@@ -70,7 +70,7 @@ class Tile {
     }
     
     /// An array of xy vertices, with which to draw multiple triangles
-    lazy var vertices: [Float] = {
+    var vertices: [Float] {
         return [
             x, y,
             x + 1, y + 1,
@@ -79,12 +79,12 @@ class Tile {
             x + 1, y + 1,
             x, y,
         ]
-    }()
+    }
     
     /// Color array, one rgba color for each vertex
-    lazy var colors: [Float] = {
+    var colors: [Float] {
         return (0..<Size.verticesPerTile).flatMap({ _ in
             return kind.color
         })
-    }()
+    }
 }
