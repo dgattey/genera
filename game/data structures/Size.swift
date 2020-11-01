@@ -11,7 +11,7 @@ import Foundation
 enum Size {
     
     /// The size in bytes of one datum, used in pointer math, etc
-    static let datum = MemoryLayout<Float>.size
+    static let datum = MemoryLayout<Float>.stride
     
     /// The size of one vertex grouping (x and y only)
     static let vertexGrouping = 2

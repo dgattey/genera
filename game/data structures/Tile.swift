@@ -8,6 +8,7 @@
 import Metal
 import simd
 
+/// A position + type of tile that appears on the map
 class Tile {
     
     // MARK: - types
