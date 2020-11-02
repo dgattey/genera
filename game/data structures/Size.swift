@@ -11,7 +11,7 @@ import Foundation
 enum Size {
     
     /// The size in bytes of one datum, used in pointer math, etc
-    static let datum = MemoryLayout<Float>.size
+    static let datum = MemoryLayout<Float>.stride
     
     /// The size of one vertex grouping (x and y only)
     static let vertexGrouping = 2
@@ -32,7 +32,7 @@ enum Size {
     static let tileWidthInPixels = 24
     
     /// The width or height of a chunk, in number of tiles
-    static let chunk = 32
+    static let chunk = 64
     
     /// The width or height of a chunk, in pixels
     static let chunkInPixels = tileWidthInPixels * chunk

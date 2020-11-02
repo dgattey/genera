@@ -12,7 +12,10 @@ import Metal
 protocol MapUpdateDelegate: NSObject {
 
     /// Called when a chunk has updated tiles to use
-    func didUpdateTiles(in chunk: Chunk) -> Void
+    func didGenerate(chunk: Chunk) -> Void
+    
+    /// Called when a chunk's tiles should be deleted
+    func didDelete(chunk: Chunk) -> Void
     
     /// Called when the user position has changed to a new viewport
     func didUpdateUserPosition(to viewport: MTLViewport) -> Void

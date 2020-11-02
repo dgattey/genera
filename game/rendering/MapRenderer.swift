@@ -181,10 +181,8 @@ extension MapRenderer: MTKViewDelegate {
 
 extension MapRenderer: MapUpdateDelegate {
     
-    /**
-     On a background thread, copies all data to the buffers, then set needs display for the chunk.
-     */
-    func didUpdateTiles(in chunk: Chunk) {
+    /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
+    func didGenerate(chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
         let savedBuffers = vertexAndColorBuffers[chunk]
         let buffers: (MTLBuffer, MTLBuffer)
@@ -235,6 +233,16 @@ extension MapRenderer: MapUpdateDelegate {
             }
         }
         
+    }
+    
+    /// Deletes data for a chunk
+    func didDelete(chunk: Chunk) {
+        // Delete the buffers
+        vertexAndColorBuffers.removeValue(forKey: chunk)
+        drawingSemaphore.signal()
+        // TODO: @dgattey make this a real size - this doesn't work...
+        view.setNeedsDisplay(view.bounds)
+        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
     
     /// Updates viewport buffer data with the new viewport info

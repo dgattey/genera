@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftPriorityQueue",
+        "repositoryURL": "https://github.com/davecom/SwiftPriorityQueue",
+        "state": {
+          "branch": null,
+          "revision": "5e7197be04a157f87dc80380c13d3e8dc65fbee5",
+          "version": "1.3.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
