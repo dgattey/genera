@@ -16,7 +16,7 @@ class BasicGenerator: GeneratorDataDelegate {
     // MARK: constants
     
     /// The length of the event loop where we process evictions
-    private static let evictionEventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
+    private static let evictionEventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .microseconds(200)
     
     /// Pads the given chunk range by the visible chunk padding to compute what's "in range" of generation
     private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>)) -> (x: Range<Int>, y: Range<Int>) {
@@ -261,8 +261,8 @@ extension BasicGenerator: GeneratorProtocol {
     
     /// Makes sure these chunks are currently generated, and evict chunks if they're outside our bounds and we're at the limit
     func didUpdateVisibleChunks(_ ranges: (x: Range<Int>, y: Range<Int>)) {
-        let paddedRanges = BasicGenerator.paddedChunkRanges(ranges)
         evictChunksIfNeeded()
+        let paddedRanges = BasicGenerator.paddedChunkRanges(ranges)
         for x in paddedRanges.x {
             for y in paddedRanges.y {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
