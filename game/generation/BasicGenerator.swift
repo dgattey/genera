@@ -115,6 +115,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         guard chunk.isWithin(paddedVisibleRanges) else {
             chunkAccessSemaphore.wait()
             generationQueue.removeValue(forKey: chunk)
+            debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
             chunkAccessSemaphore.signal()
             return
         }
@@ -122,6 +123,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         // Set state, generate, and set state again
         chunkAccessSemaphore.wait()
         generationQueue[chunk] = (.isGenerating, generationQueue[chunk]?.numRequests ?? 0)
+        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
         chunkAccessSemaphore.signal()
         let tiles = (0 ..< Size.chunk).flatMap { x -> [Tile] in
             return (0 ..< Size.chunk).map { y -> Tile in
@@ -137,6 +139,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         chunkAccessSemaphore.wait()
         chunks[chunk] = tiles
         generationQueue.removeValue(forKey: chunk)
+        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
         let totalChunks = chunks.count
         chunkAccessSemaphore.signal()
         
@@ -168,6 +171,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         }
         // Replace whatever was there with newly-dated data
         recentlyAccessedChunks.push(datedChunk)
+        print("+++ recent\(datedChunk)")
     }
     
     /// Evicts one chunk at a time, assuming this is called on a loop from a background
@@ -225,11 +229,12 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         let excessChunks = chunks.count - maxChunksInMemory
         chunkAccessSemaphore.signal()
         guard excessChunks > 0 else {
+            print("~Evict~ no excess (\(excessChunks))")
             return
         }
         
         // We have too many chunks - let's evict until we have nothing new to evict
-        evictionEventLoop = DispatchQueue.global(qos: .background).schedule(
+        evictionEventLoop = DispatchQueue.global(qos: .utility).schedule(
             after: DispatchQueue.SchedulerTimeType(.now()),
             interval: BasicGenerator.evictionEventLoopInterval,
             evictOldestChunk)
@@ -257,12 +262,14 @@ extension BasicGenerator: GeneratorProtocol {
         chunkAccessSemaphore.wait()
         if generationQueue.keys.contains(chunk) || chunks.keys.contains(chunk) {
             generationQueue[chunk]?.numRequests += 1
+            debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
             chunkAccessSemaphore.signal()
             return
         }
         generationQueue[chunk] = (.needsGeneration, generationQueue[chunk]?.numRequests ?? 0 + 1)
+        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
         chunkAccessSemaphore.signal()
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        DispatchQueue.global(qos: .utility).async { [weak self] in
             self?.generateTiles(for: chunk)
         }
     }

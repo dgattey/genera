@@ -29,7 +29,7 @@ enum Size {
     static let verticesPerChunk = Size.verticesPerTile * Size.chunk * Size.chunk
     
     /// The size of one tile, rendered, in pixels
-    static let tileWidthInPixels = 36
+    static let tileWidthInPixels = 12
     
     /// The width or height of a chunk, in number of tiles
     static let chunk = 128
