@@ -10,7 +10,7 @@ import Foundation
 /// Simple logger, with config
 enum Logger {
 
-    static let shouldLog = false
+    static let shouldLog = true
 
     /// Logs a value if logging is on
     static func log(_ value: Any) {

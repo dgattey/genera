@@ -18,7 +18,7 @@ protocol DebugDelegate: NSObject {
     func didUpdateNumGeneratedChunks(to value: Int) -> Void
     
     /// Called when the generation queue changes
-    func didUpdateGenerationQueue(to value: Int)
+    func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int))
     
     /// Called when user position in the viewport changes
     func didUpdateUserPosition(to value: MTLViewport) -> Void

@@ -34,7 +34,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     }
     
     /// Pad by at least this amount of chunks in any direction
-    private static let minChunkPadAmount = 1
+    private static let minChunkPadAmount = 2
     
     // MARK: - static helpers
     
@@ -63,7 +63,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
         let endY = convertToChunkSpace(viewport.originY + viewport.height)
 
         let pad: (Range<Int>) -> Range<Int> = { range in
-            let distance: Int = max((range.endIndex - range.startIndex) / 5, minChunkPadAmount)
+            let distance: Int = max((range.endIndex - range.startIndex) / 3, minChunkPadAmount)
             return (range.startIndex - distance ..< range.endIndex + distance)
         }
         return (pad(startX..<endX), pad(startY..<endY))

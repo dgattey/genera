@@ -37,7 +37,7 @@ extension GeneraDebugView: DebugDelegate {
         GeneraDebugView.update(numGeneratedChunks, to: value)
     }
     
-    func didUpdateGenerationQueue(to value: Int) {
+    func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int)) {
         GeneraDebugView.update(generationQueue, to: value)
     }
     

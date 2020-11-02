@@ -15,17 +15,8 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
     
     // MARK: constants
     
-    /// The length of the event loop where we process evictions
-    private static let evictionEventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .microseconds(200)
-    
-    /// Pads the given chunk range by the visible chunk padding to compute what's "in range" of generation
-    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>)) -> (x: Range<Int>, y: Range<Int>) {
-        let pad = { (range: Range<Int>) -> Range<Int> in
-            let distance: Int = (range.endIndex - range.startIndex) / 2
-            return (range.startIndex - distance ..< range.endIndex + distance)
-        }
-        return (pad(ranges.x), pad(ranges.y))
-    }
+    /// The length of the event loops where we process evictions + generate
+    private static let eventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
     
     // MARK: variables
     
@@ -39,10 +30,14 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
     /// making this happen multiple times)
     private var evictionEventLoop: Cancellable?
     
+    /// Makes sure we only ever have one event loop running for generation
+    private var generationEventLoop: Cancellable?
     
-    /// TODO: @dgattey replace with priority queue based on request frequency
-    /// The chunks we need to generate and their state
-    private var generationQueue = Dictionary<Chunk,(state: ChunkGenerationState, numRequests: Int) >()
+    /// The chunks we need to generate based on their request count (only generates chunks within visible bounds)
+    private var needsGenerationQueue = PriorityQueue<CountedChunk>(ascending: true)
+    
+    /// The chunks we're currently generating (count doesn't matter)
+    private var inProgressGenerationQueue = Set<Chunk>()
     
     /// Used to update the map itself when generation of a chunk is done
     weak var mapUpdateDelegate: MapUpdateDelegate?
@@ -56,13 +51,16 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
     /// Makes sure only one thing can access the chunks array at once
     private let chunkAccessSemaphore = DispatchSemaphore(value: 1)
     
+    /// Makes sure only one thing can access the generation data structures at once
+    private let generationAccessSemaphore = DispatchSemaphore(value: 1)
+    
     /// Gets all visible chunks and pads it by our constant
     private var paddedVisibleRanges: (x: Range<Int>, y: Range<Int>) {
         guard let ranges = viewportDataDelegate?.visibleChunks else {
             assertionFailure("No visible chunks to use (shouldn't be possible)")
             return ((0..<0), (0..<0))
         }
-        return BasicGenerator.paddedChunkRanges(ranges)
+        return ranges
     }
 
     /// The amount of chunks in memory we allow (based on viewport size)
@@ -108,44 +106,68 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
     
     // MARK: - helper functions
     
-    /// Generates the tiles for a given chunk, then dispatches to the main
-    /// thread. MUST be called for speed from a background thread. Makes sure
-    /// this generation pass is still valid to start
-    private func generateTiles(for chunk: Chunk) {
-        guard chunk.isWithin(paddedVisibleRanges) else {
-            chunkAccessSemaphore.wait()
-            generationQueue.removeValue(forKey: chunk)
-            debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
-            chunkAccessSemaphore.signal()
+    /// Generates the tiles for the next queued chunk, then notifies on the main thread. MUST be called for speed from a background
+    /// thread, ideally an event loop.
+    private func generateClosestTile() {
+        generationAccessSemaphore.wait()
+        guard let chunk = needsGenerationQueue.pop() else {
+            generationAccessSemaphore.signal()
+            // Reached the end of the queue!
+            generationEventLoop?.cancel()
+            generationEventLoop = nil
+            return
+        }
+        Logger.log("*** Generating! \(chunk)")
+        let needsGenerationCount = needsGenerationQueue.count
+        let inProgressCount = inProgressGenerationQueue.count
+        generationAccessSemaphore.signal()
+        
+        // Ensure our chunk is within our visible range, otherwise just discard
+        guard chunk.value.isWithin(paddedVisibleRanges) else {
+            debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationCount, inProgressCount))
             return
         }
         
-        // Set state, generate, and set state again
+        // Make sure we haven't already generated this!
         chunkAccessSemaphore.wait()
-        generationQueue[chunk] = (.isGenerating, generationQueue[chunk]?.numRequests ?? 0)
-        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
+        guard !chunks.keys.contains(chunk.value) else {
+            debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationCount, inProgressCount))
+            chunkAccessSemaphore.signal()
+            return
+        }
         chunkAccessSemaphore.signal()
+        
+        
+        // Add it to our in progress queue and drop the semaphore
+        generationAccessSemaphore.wait()
+        inProgressGenerationQueue.insert(chunk.value)
+        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        generationAccessSemaphore.signal()
+        
+        // Do hard work of generating!
         let tiles = (0 ..< Size.chunk).flatMap { x -> [Tile] in
             return (0 ..< Size.chunk).map { y -> Tile in
-                let tileX = x + chunk.x * Size.chunk
-                let tileY = y + chunk.y * Size.chunk
+                let tileX = x + chunk.value.x * Size.chunk
+                let tileY = y + chunk.value.y * Size.chunk
                 let randomRawTileKind = Int.random(in: (0 ..< Tile.Kind.total))
                 let kind = Tile.Kind(rawValue: randomRawTileKind) ?? .water
                 return Tile(x: tileX, y: tileY, kind: kind)
             }
         }
         
-        // Update the chunks array with the tiles and remove from generation queue
+        // Update the chunks array with the tiles and remove from in generation queue
         chunkAccessSemaphore.wait()
-        chunks[chunk] = tiles
-        generationQueue.removeValue(forKey: chunk)
-        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
-        let totalChunks = chunks.count
+        chunks[chunk.value] = tiles
+        debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
         chunkAccessSemaphore.signal()
         
+        generationAccessSemaphore.wait()
+        inProgressGenerationQueue.remove(chunk.value)
+        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        generationAccessSemaphore.signal()
+        
         DispatchQueue.main.async { [weak self] in
-            self?.mapUpdateDelegate?.didGenerate(chunk: chunk)
-            self?.debugDelegate?.didUpdateNumGeneratedChunks(to: totalChunks)
+            self?.mapUpdateDelegate?.didGenerate(chunk: chunk.value)
         }
     }
     
@@ -178,34 +200,26 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
     /// thread for performance reasons. Cancels the loop if we have nothing new to evict.
     private func evictOldestChunk() {
         chunkAccessSemaphore.wait()
-        let leastRecentChunk = recentlyAccessedChunks.peek()
-        let excessChunks = chunks.count - maxChunksInMemory
+        let leastRecentChunk = recentlyAccessedChunks.pop()
+        let recentCount = recentlyAccessedChunks.count
         
-        // Cancel the runner of this function for perf if there's nothing to evict
-        guard excessChunks > 0, let evictableChunk = leastRecentChunk else {
-            Logger.log("~Evict~ finished evicting: \(excessChunks)")
+        // Stop if nothing to evict
+        guard let evictableChunk = leastRecentChunk else {
             chunkAccessSemaphore.signal()
-            evictionEventLoop?.cancel()
-            evictionEventLoop = nil
+            Logger.log("~Evict~ finished evicting")
             return
         }
         
         // If it's within the visible range, mark as accessed recently (and the element will move
         // so the next iteration of this eviction loop should get a different element)
         guard !evictableChunk.value.isWithin(paddedVisibleRanges) else {
-            Logger.log("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
+            Logger.log("~Evict~ in viewport \(evictableChunk) (recent count: \(recentCount))")
             unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.value)
             chunkAccessSemaphore.signal()
             return
         }
         
-        // Evict the chunk itself! Also make sure to pop recently accessed chunk because we
-        // peeked before. This will be THE SAME because we haven't released the semaphore
-        // and we ALWAYS use the semaphore around access to `recentlyAccessedChunks`.
-        let mostRecentChunk = recentlyAccessedChunks.pop()
-        if evictableChunk.value != mostRecentChunk?.value {
-            assertionFailure("Invariant of recently accessed chunks didn't hold")
-        }
+        // Evict the chunk itself!
         let oldTiles = chunks.removeValue(forKey: evictableChunk.value)
         Logger.log("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(paddedVisibleRanges)")
         debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
@@ -220,24 +234,16 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         
     }
     
-    /// If we've reached our chunk limit, this starts the loop of evicting them on a background thread
-    private func evictChunksIfNeeded() {
+    /// This starts the loop of evicting chunks on a background thread if not started
+    private func evictChunksIfNeeded(outside ranges: (x: Range<Int>, y: Range<Int>)) {
         guard evictionEventLoop == nil else {
             return
         }
         
-        chunkAccessSemaphore.wait()
-        let excessChunks = chunks.count - maxChunksInMemory
-        chunkAccessSemaphore.signal()
-        guard excessChunks > 0 else {
-            Logger.log("~Evict~ no excess (\(excessChunks))")
-            return
-        }
-        
         // We have too many chunks - let's evict until we have nothing new to evict
-        evictionEventLoop = DispatchQueue.global(qos: .utility).schedule(
+        evictionEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
             after: DispatchQueue.SchedulerTimeType(.now()),
-            interval: BasicGenerator.evictionEventLoopInterval,
+            interval: BasicGenerator.eventLoopInterval,
             evictOldestChunk)
     }
     
@@ -259,28 +265,52 @@ extension BasicGenerator: GeneratorProtocol {
     /// Asynchronously generates a chunk of data and notifies our delegate on
     /// the main thread when done. All generation is async and random.
     func generateChunkIfNeeded(_ chunk: Chunk) {
-        // Make sure we're not generating this right now or already have generated
+        // Make sure this chunk's in bounds
+        guard chunk.isWithin(paddedVisibleRanges) else {
+            return
+        }
+        
+        // Make sure we haven't already generated this one
         chunkAccessSemaphore.wait()
-        if generationQueue.keys.contains(chunk) || chunks.keys.contains(chunk) {
-            generationQueue[chunk]?.numRequests += 1
-            debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
+        if chunks.keys.contains(chunk) {
             chunkAccessSemaphore.signal()
             return
         }
-        generationQueue[chunk] = (.needsGeneration, generationQueue[chunk]?.numRequests ?? 0 + 1)
-        debugDelegate?.didUpdateGenerationQueue(to: generationQueue.count)
         chunkAccessSemaphore.signal()
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            self?.generateTiles(for: chunk)
+        
+        // Make sure we're not actively generating!
+        generationAccessSemaphore.wait()
+        if inProgressGenerationQueue.contains(chunk) {
+            generationAccessSemaphore.signal()
+            return
+        }
+        
+        // If it's already in our needs generation queue OR not, push an incremented count. This will
+        // duplicate the object in the first case, but the higher value should ensure we process it first
+        let incremented = viewportDataDelegate?.distanceToUserPositionSquared(fromChunk: chunk)
+        let countedChunk = CountedChunk(chunk, count: Int(incremented ?? 1))
+        // TODO: @dgattey the problem with this count always being 1 si that I don't use the value I REMOVE because it doesn't return (and it's O(n)). Maybe
+        // I need something other than just a priority queue...
+        needsGenerationQueue.remove(countedChunk)
+        needsGenerationQueue.push(countedChunk)
+        Logger.log("~~~ Queued generation of \(countedChunk)")
+        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        generationAccessSemaphore.signal()
+        
+        // Make sure our event loop is running!
+        if (generationEventLoop == nil) {
+            generationEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
+                after: DispatchQueue.SchedulerTimeType(.now()),
+                interval: BasicGenerator.eventLoopInterval,
+                generateClosestTile)
         }
     }
     
     /// Makes sure these chunks are currently generated, and evict chunks if they're outside our bounds and we're at the limit
     func didUpdateVisibleChunks(_ ranges: (x: Range<Int>, y: Range<Int>)) {
-        evictChunksIfNeeded()
-        let paddedRanges = BasicGenerator.paddedChunkRanges(ranges)
-        for x in paddedRanges.x {
-            for y in paddedRanges.y {
+        evictChunksIfNeeded(outside: ranges)
+        for x in ranges.x {
+            for y in ranges.y {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }

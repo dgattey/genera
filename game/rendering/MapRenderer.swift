@@ -200,7 +200,7 @@ extension MapRenderer: MapUpdateDelegate {
         }
         
         // Then dispatch to the background to populate them
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let strongSelf = self else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffers))")
                 return
