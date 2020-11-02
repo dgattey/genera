@@ -19,10 +19,10 @@ class MapRenderer: NSObject {
     // MARK: - constants
     
     // Matches name of vertex shader in SimpleShaders
-    private static let vertexFunction = "simpleVertexShader"
+    private static let vertexFunction = "simplexVertexShader"
     
     // Matches name of fragment shader in SimpleShaders
-    private static let fragmentFunction = "simpleFragmentShader"
+    private static let fragmentFunction = "simplexFragmentShader"
     
     // Just a simple background color
     private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
