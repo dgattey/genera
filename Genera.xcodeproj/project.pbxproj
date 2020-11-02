@@ -17,7 +17,6 @@
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
-		75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B746254B68FB00351DC8 /* GeneraViewController.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
 		75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B749254B68FB00351DC8 /* AppDelegate.swift */; };
 		75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* BasicGenerator.swift */; };
@@ -35,6 +34,7 @@
 		75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D77254D2DFA00A1B409 /* Size.swift */; };
 		75FA6D7C254D35D000A1B409 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7B254D35D000A1B409 /* Color.swift */; };
 		75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */; };
+		75FC2F91254FBA14008ABB3C /* GeneraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FC2F90254FBA14008ABB3C /* GeneraWindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +49,6 @@
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
-		75B2B746254B68FB00351DC8 /* GeneraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneraViewController.swift; sourceTree = "<group>"; };
 		75B2B748254B68FB00351DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75B2B749254B68FB00351DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75B2B74A254B68FB00351DC8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,6 +67,7 @@
 		75FA6D77254D2DFA00A1B409 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		75FA6D7B254D35D000A1B409 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDirection.swift; sourceTree = "<group>"; };
+		75FC2F90254FBA14008ABB3C /* GeneraWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraWindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +115,7 @@
 			children = (
 				75B2B747254B68FB00351DC8 /* Main.storyboard */,
 				75B2B749254B68FB00351DC8 /* AppDelegate.swift */,
-				75B2B746254B68FB00351DC8 /* GeneraViewController.swift */,
+				75FC2F90254FBA14008ABB3C /* GeneraWindowController.swift */,
 				759EFFFB254DE361004CF89F /* GeneraMTLView.swift */,
 				757DF620254F90CB005723D5 /* GeneraDebugView.swift */,
 				75FA6D3C254C06C600A1B409 /* InteractableMTKView.swift */,
@@ -267,7 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */,
-				75B2B74B254B68FB00351DC8 /* GeneraViewController.swift in Sources */,
+				75FC2F91254FBA14008ABB3C /* GeneraWindowController.swift in Sources */,
 				750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */,
 				75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */,
 				75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */,
