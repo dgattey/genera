@@ -208,6 +208,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         }
         let oldTiles = chunks.removeValue(forKey: evictableChunk.value)
         Logger.log("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(paddedVisibleRanges)")
+        debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
         chunkAccessSemaphore.signal()
         
         // Only notify if we actually removed something (as we may have already removed this guy)
