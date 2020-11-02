@@ -20,7 +20,7 @@ struct Chunk: Hashable {
 
 /// Represents a chunk that has a built-in creation date
 struct DatedChunk: Hashable, Comparable {
-    let chunk: Chunk
+    let value: Chunk
     let creationDate: TimeInterval
     
     static func < (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
@@ -33,17 +33,17 @@ struct DatedChunk: Hashable, Comparable {
     }
     
     init(_ chunk: Chunk) {
-        self.chunk = chunk
+        self.value = chunk
         self.creationDate = Date.timeIntervalSinceReferenceDate
     }
     
     /// Two dated chunks are equivalent if their chunks are the same (date doesn't matter)
     static func == (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
-        return lhs.chunk == rhs.chunk
+        return lhs.value == rhs.value
     }
     
     /// Just hash the chunk itself
     func hash(into hasher: inout Hasher) {
-        hasher.combine(chunk)
+        hasher.combine(value)
     }
 }

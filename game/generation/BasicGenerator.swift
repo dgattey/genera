@@ -15,16 +15,14 @@ class BasicGenerator: GeneratorDataDelegate {
     
     // MARK: constants
     
-    /// The amount by which to pad (in chunk units) the visible chunks to smoothly generate
-    private static let visibleChunkPadding = 2
-    
     /// The length of the event loop where we process evictions
     private static let evictionEventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
     
     /// Pads the given chunk range by the visible chunk padding to compute what's "in range" of generation
-    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>), amount: Int = visibleChunkPadding) -> (x: Range<Int>, y: Range<Int>) {
+    private static func paddedChunkRanges(_ ranges: (x: Range<Int>, y: Range<Int>)) -> (x: Range<Int>, y: Range<Int>) {
         let pad = { (range: Range<Int>) -> Range<Int> in
-            return (range.startIndex - visibleChunkPadding ..< range.endIndex + visibleChunkPadding)
+            let distance: Int = (range.endIndex - range.startIndex) / 2
+            return (range.startIndex - distance ..< range.endIndex + distance)
         }
         return (pad(ranges.x), pad(ranges.y))
     }
@@ -64,11 +62,9 @@ class BasicGenerator: GeneratorDataDelegate {
         return BasicGenerator.paddedChunkRanges(ranges)
     }
 
-    /// The amount of chunks in memory we allow (based on viewport size + 10%)
+    /// The amount of chunks in memory we allow (based on viewport size)
     private var maxChunksInMemory: Int {
-        let ranges = paddedVisibleRanges
-        let maxRanges = BasicGenerator.paddedChunkRanges(ranges, amount: Int(ranges.x.count / 10))
-        return maxRanges.x.count * maxRanges.y.count
+        return paddedVisibleRanges.x.count * paddedVisibleRanges.y.count
     }
     
     // MARK: - GeneratorDataDelegate
@@ -181,15 +177,13 @@ class BasicGenerator: GeneratorDataDelegate {
             chunkAccessSemaphore.signal()
             evictionEventLoop?.cancel()
             evictionEventLoop = nil
-            print("~Evict~ finished evicting: \(excessChunks), recentChunk: \(leastRecentChunk)")
             return
         }
         
         // If it's within the visible range, mark as accessed recently (and the element will move
         // so the next iteration of this eviction loop should get a different element)
-        guard !evictableChunk.chunk.isWithin(paddedVisibleRanges) else {
-            unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.chunk)
-            print("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
+        guard !evictableChunk.value.isWithin(paddedVisibleRanges) else {
+            unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.value)
             chunkAccessSemaphore.signal()
             return
         }
@@ -198,17 +192,16 @@ class BasicGenerator: GeneratorDataDelegate {
         // peeked before. This will be THE SAME because we haven't released the semaphore
         // and we ALWAYS use the semaphore around access to `recentlyAccessedChunks`.
         let mostRecentChunk = recentlyAccessedChunks.pop()
-        if evictableChunk.chunk != mostRecentChunk?.chunk {
+        if evictableChunk.value != mostRecentChunk?.value {
             assertionFailure("Invariant of recently accessed chunks didn't hold")
         }
-        let oldTiles = chunks.removeValue(forKey: evictableChunk.chunk)
-        print("~Evict~ removed a chunk: \(evictableChunk.chunk)")
+        let oldTiles = chunks.removeValue(forKey: evictableChunk.value)
         chunkAccessSemaphore.signal()
         
         // Only notify if we actually removed something (as we may have already removed this guy)
         if (oldTiles != nil) {
             DispatchQueue.main.async { [weak self] in
-                self?.mapUpdateDelegate?.didDelete(chunk: evictableChunk.chunk)
+                self?.mapUpdateDelegate?.didDelete(chunk: evictableChunk.value)
             }
         }
         
@@ -224,7 +217,6 @@ class BasicGenerator: GeneratorDataDelegate {
         let excessChunks = chunks.count - maxChunksInMemory
         chunkAccessSemaphore.signal()
         guard excessChunks > 0 else {
-            print("~Evict~ no excess: \(excessChunks)")
             return
         }
         
