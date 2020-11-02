@@ -24,10 +24,10 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private struct ZoomLevel {
         
         /// Minimum zoom supported
-        static let min: Double = 0.2
+        static let min: Double = 0.4
         
         /// Max zoom supported
-        static let max: Double = 1.6
+        static let max: Double = 2.0
         
         /// The multiplier on the zoom amount
         static let multiplier = 0.01
@@ -114,6 +114,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private var userPosition: MTLViewport {
         didSet {
             visibleChunks = ViewportCoordinator.visibleChunks(from: userPosition)
+            debugDelegate?.didUpdateUserPosition(to: userPosition)
         }
     }
     
@@ -121,12 +122,17 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private var currentZoomLevel: Double = 1.0
     
     weak var mapUpdateDelegate: MapUpdateDelegate?
-    var generationDelegate: GeneratorProtocol?
+    weak var debugDelegate: DebugDelegate?
+    weak var generationDelegate: GeneratorProtocol?
     
     // MARK: - ViewportDataDelegate
     
     /// This is the viewport for drawing, not including translation
-    private(set) var currentViewport: MTLViewport
+    private(set) var currentViewport: MTLViewport {
+        didSet {
+            debugDelegate?.didUpdateCurrentViewport(to: userPosition)
+        }
+    }
     
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
     private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition) {

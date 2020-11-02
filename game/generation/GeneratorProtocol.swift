@@ -7,10 +7,13 @@
 
 import Foundation
 
-// A protocol any generator of data must conform to)
-protocol GeneratorProtocol {
+/// A protocol any generator of map data must conform to
+protocol GeneratorProtocol: NSObject {
     
-    /// Starts generating the map itselff
+    /// This should be weakly held - debug delegate for all kinds of updates
+    var debugDelegate: DebugDelegate? { get set }
+    
+    /// Starts generating the map itself
     func startMapGeneration() -> Void
     
     /// Should asynchronously generate a chunk and notify the delegate when done (if needed)

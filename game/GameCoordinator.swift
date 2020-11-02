@@ -22,7 +22,7 @@ class GameCoordinator {
     
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
-    init?(view: GeneraMTLView) {
+    init?(view: GeneraMTLView, debugView: GeneraDebugView?) {
         let generator = BasicGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
               let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {
@@ -33,6 +33,11 @@ class GameCoordinator {
         self.renderer = renderer
         self.generator = generator
         self.viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize)
+        
+        // Setup debug data delegates
+        renderer.debugDelegate = debugView
+        generator.debugDelegate = debugView
+        viewportCoordinator.debugDelegate = debugView
         
         // Link viewport coordinator with the delegates
         view.delegate = renderer
