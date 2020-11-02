@@ -1,5 +1,5 @@
 //
-//  GeneratorProtocol.swift
+//  GeneratorDataDelegate.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/30/20.

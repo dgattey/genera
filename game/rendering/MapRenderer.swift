@@ -31,6 +31,7 @@ class MapRenderer: NSObject {
 
     weak var viewportChangeDelegate: ViewportChangeDelegate?
     weak var viewportDataDelegate: ViewportDataDelegate?
+    weak var debugDelegate: DebugDelegate?
     
     private let view: MTKView
     private let mainDevice: MTLDevice

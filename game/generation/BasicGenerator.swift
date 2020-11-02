@@ -11,7 +11,7 @@ import Combine
 import SwiftPriorityQueue
 
 /// Just generates a totally random map
-class BasicGenerator: GeneratorDataDelegate {
+class BasicGenerator: NSObject, GeneratorDataDelegate {
     
     // MARK: constants
     
@@ -49,6 +49,9 @@ class BasicGenerator: GeneratorDataDelegate {
     
     /// Used to find out what's visible
     weak var viewportDataDelegate: ViewportDataDelegate?
+    
+    /// For debug printing
+    weak var debugDelegate: DebugDelegate?
     
     /// Makes sure only one thing can access the chunks array at once
     private let chunkAccessSemaphore = DispatchSemaphore(value: 1)
@@ -134,10 +137,12 @@ class BasicGenerator: GeneratorDataDelegate {
         chunkAccessSemaphore.wait()
         chunks[chunk] = tiles
         generationQueue.removeValue(forKey: chunk)
+        let totalChunks = chunks.count
         chunkAccessSemaphore.signal()
         
         DispatchQueue.main.async { [weak self] in
             self?.mapUpdateDelegate?.didGenerate(chunk: chunk)
+            self?.debugDelegate?.didUpdateNumGeneratedChunks(to: totalChunks)
         }
     }
     
@@ -174,6 +179,7 @@ class BasicGenerator: GeneratorDataDelegate {
         
         // Cancel the runner of this function for perf if there's nothing to evict
         guard excessChunks > 0, let evictableChunk = leastRecentChunk else {
+            print("~Evict~ finished evicting: \(excessChunks)")
             chunkAccessSemaphore.signal()
             evictionEventLoop?.cancel()
             evictionEventLoop = nil
@@ -183,6 +189,7 @@ class BasicGenerator: GeneratorDataDelegate {
         // If it's within the visible range, mark as accessed recently (and the element will move
         // so the next iteration of this eviction loop should get a different element)
         guard !evictableChunk.value.isWithin(paddedVisibleRanges) else {
+            print("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
             unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.value)
             chunkAccessSemaphore.signal()
             return
@@ -196,6 +203,7 @@ class BasicGenerator: GeneratorDataDelegate {
             assertionFailure("Invariant of recently accessed chunks didn't hold")
         }
         let oldTiles = chunks.removeValue(forKey: evictableChunk.value)
+        print("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(paddedVisibleRanges)")
         chunkAccessSemaphore.signal()
         
         // Only notify if we actually removed something (as we may have already removed this guy)
@@ -268,6 +276,7 @@ extension BasicGenerator: GeneratorProtocol {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }
+        debugDelegate?.didUpdateChunkBounds(to: ranges)
     }
     
 }
