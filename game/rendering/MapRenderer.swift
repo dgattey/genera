@@ -93,7 +93,7 @@ class MapRenderer: NSObject {
         do {
             try stateObject = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Couldn't create render pipeline state object: \(error)")
+            assertionFailure("Couldn't create render pipeline state object: \(error)")
             return nil
         }
         return stateObject
@@ -146,7 +146,7 @@ extension MapRenderer: MTKViewDelegate {
     func draw(in view: MTKView) {
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
               let viewport = viewportDataDelegate?.currentViewport else {
-            print("No command buffer to work with")
+            assertionFailure("No command buffer to work with")
             return
         }
         
@@ -160,7 +160,7 @@ extension MapRenderer: MTKViewDelegate {
         // In the drawing loop below here - be quick!
         guard let descriptor = view.currentRenderPassDescriptor,
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
-            print("Error in drawing stage")
+            assertionFailure("Error in drawing stage")
             return
         }
         

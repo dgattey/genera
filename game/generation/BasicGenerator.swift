@@ -168,10 +168,10 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
             _ = recentlyAccessedChunks.pop()
         } else if recentlyAccessedChunks.contains(datedChunk) {
             recentlyAccessedChunks.remove(datedChunk)
+            Logger.log("+++ replacing \(datedChunk)")
         }
         // Replace whatever was there with newly-dated data
         recentlyAccessedChunks.push(datedChunk)
-        print("+++ recent\(datedChunk)")
     }
     
     /// Evicts one chunk at a time, assuming this is called on a loop from a background
@@ -183,7 +183,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         
         // Cancel the runner of this function for perf if there's nothing to evict
         guard excessChunks > 0, let evictableChunk = leastRecentChunk else {
-            print("~Evict~ finished evicting: \(excessChunks)")
+            Logger.log("~Evict~ finished evicting: \(excessChunks)")
             chunkAccessSemaphore.signal()
             evictionEventLoop?.cancel()
             evictionEventLoop = nil
@@ -193,7 +193,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         // If it's within the visible range, mark as accessed recently (and the element will move
         // so the next iteration of this eviction loop should get a different element)
         guard !evictableChunk.value.isWithin(paddedVisibleRanges) else {
-            print("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
+            Logger.log("~Evict~ in viewport (total \(excessChunks) and \(recentlyAccessedChunks.count)) \(evictableChunk)")
             unsafelyMarkChunkAsRecentlyAccessed(evictableChunk.value)
             chunkAccessSemaphore.signal()
             return
@@ -207,7 +207,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
             assertionFailure("Invariant of recently accessed chunks didn't hold")
         }
         let oldTiles = chunks.removeValue(forKey: evictableChunk.value)
-        print("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(paddedVisibleRanges)")
+        Logger.log("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(paddedVisibleRanges)")
         chunkAccessSemaphore.signal()
         
         // Only notify if we actually removed something (as we may have already removed this guy)
@@ -229,7 +229,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         let excessChunks = chunks.count - maxChunksInMemory
         chunkAccessSemaphore.signal()
         guard excessChunks > 0 else {
-            print("~Evict~ no excess (\(excessChunks))")
+            Logger.log("~Evict~ no excess (\(excessChunks))")
             return
         }
         

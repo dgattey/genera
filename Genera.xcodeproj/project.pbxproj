@@ -22,6 +22,7 @@
 		75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* BasicGenerator.swift */; };
 		75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90870254B747400231E39 /* ViewportCoordinator.swift */; };
 		75B90875254B796A00231E39 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90874254B796A00231E39 /* Tile.swift */; };
+		75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4AF254FE57F00F36372 /* Logger.swift */; };
 		75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */; };
 		75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D33254BF37400A1B409 /* Chunk.swift */; };
 		75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */; };
@@ -55,6 +56,7 @@
 		75B2B763254B71AC00351DC8 /* BasicGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicGenerator.swift; sourceTree = "<group>"; };
 		75B90870254B747400231E39 /* ViewportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportCoordinator.swift; sourceTree = "<group>"; };
 		75B90874254B796A00231E39 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
+		75C4B4AF254FE57F00F36372 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUpdateDelegate.swift; sourceTree = "<group>"; };
 		75FA6D33254BF37400A1B409 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
 		75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorDataDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				75B2B744254B68FB00351DC8 /* macOS */,
 				7503798B254A8537002A0C13 /* metal */,
 				75FA6D5E254CE20300A1B409 /* game */,
+				75C4B4AE254FE56600F36372 /* utility */,
 				75B2B75A254B6F6E00351DC8 /* config */,
 				75037995254A8538002A0C13 /* Products */,
 			);
@@ -141,6 +144,14 @@
 				75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */,
 			);
 			path = rendering;
+			sourceTree = "<group>";
+		};
+		75C4B4AE254FE56600F36372 /* utility */ = {
+			isa = PBXGroup;
+			children = (
+				75C4B4AF254FE57F00F36372 /* Logger.swift */,
+			);
+			path = utility;
 			sourceTree = "<group>";
 		};
 		75FA6D54254CD8B500A1B409 /* generation */ = {
@@ -286,6 +297,7 @@
 				75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */,
+				75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
 				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,
 				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,
