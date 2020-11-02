@@ -10,7 +10,7 @@ import Metal
 /// ViewportCoordinator functions for use with Metal manipulations
 class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
-    // MARK: constants
+    // MARK: - constants
     
     /// The amount by which to translate in pixels when using keyboard or mouse
     private static let translationStep: Double = 20
@@ -32,53 +32,34 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
         /// The multiplier on the zoom amount
         static let multiplier = 0.01
     }
-
-    // MARK: variables
     
-    /// This is the user position, including zooming and translation, which sets visibleChunks on set
-    private(set) var userPosition: MTLViewport {
-        didSet {
-            visibleChunks = ViewportCoordinator.visibleChunks(from: userPosition)
-        }
+    // MARK: - static helpers
+    
+    /// Returns the absolute distance squared from a chunk to a pixel space point. Squared for
+    /// speed because division is slow.
+    static func distanceSquared(fromChunk chunk: Chunk, toPixelSpacePoint point: (x: Double, y: Double)) -> Float {
+        let x1 = Float(chunk.x)
+        let y1 = Float(chunk.y)
+        let x2 = Float(convertToChunkSpace(point.x))
+        let y2 = Float(convertToChunkSpace(point.y))
+        return abs((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
     }
     
-    /// This is the viewport for drawing, not including translation
-    private(set) var currentViewport: MTLViewport
-    
-    /// The current zoom level, within the min and max range
-    private var currentZoomLevel: Double = 1.0
-    
-    weak var mapUpdateDelegate: MapUpdateDelegate?
-    var generationDelegate: GeneratorProtocol?
-    
-    /// A rect dictating which chunks are currently visible (in whole chunk-units)
-    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition) {
-        didSet {
-            generationDelegate?.didUpdateVisibleChunks(visibleChunks)
-        }
-    }
-    
-    /// Initializes the viewports to a size
-    init(initialSize: CGSize) {
-        let initialViewport = ViewportCoordinator.viewport(byResizing: MTLViewport(), to: initialSize)
-        self.userPosition = initialViewport
-        self.currentViewport = initialViewport
+    /// Converts a value to chunk space (rounded up or down depending on which side of zero we're on)
+    private static func convertToChunkSpace(_ value: Double) -> Int {
+        let converted = value / Double(Size.chunkInPixels)
+        return Int(value < 0 ? floor(converted) : ceil(converted))
     }
     
     /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units)
     private static func visibleChunks(from viewport: MTLViewport) -> (x: Range<Int>, y: Range<Int>) {
-        let smartRound = { (value: Double) -> Int in
-            let converted = value / Double(Size.chunkInPixels)
-            return Int(value < 0 ? floor(converted) : ceil(converted))
-        }
-        
-        let startX = smartRound(viewport.originX - viewport.width)
-        let startY = smartRound(viewport.originY - viewport.height)
-        let endX = smartRound(viewport.originX + viewport.width)
-        let endY = smartRound(viewport.originY + viewport.height)
+        let startX = convertToChunkSpace(viewport.originX - viewport.width)
+        let startY = convertToChunkSpace(viewport.originY - viewport.height)
+        let endX = convertToChunkSpace(viewport.originX + viewport.width)
+        let endY = convertToChunkSpace(viewport.originY + viewport.height)
         return ((startX..<endX), (startY..<endY))
     }
-
+    
     /// Convenience function for resizing a viewport to another size
     private static func viewport(byResizing viewport: MTLViewport,
                                  to size: CGSize,
@@ -126,6 +107,51 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
             znear: viewport.znear,
             zfar: viewport.zfar)
     }
+
+    // MARK: - variables
+    
+    /// This is the user position, including zooming and translation, which sets visibleChunks on set
+    private var userPosition: MTLViewport {
+        didSet {
+            visibleChunks = ViewportCoordinator.visibleChunks(from: userPosition)
+        }
+    }
+    
+    /// The current zoom level, within the min and max range
+    private var currentZoomLevel: Double = 1.0
+    
+    weak var mapUpdateDelegate: MapUpdateDelegate?
+    var generationDelegate: GeneratorProtocol?
+    
+    // MARK: - ViewportDataDelegate
+    
+    /// This is the viewport for drawing, not including translation
+    private(set) var currentViewport: MTLViewport
+    
+    /// A rect dictating which chunks are currently visible (in whole chunk-units)
+    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition) {
+        didSet {
+            generationDelegate?.didUpdateVisibleChunks(visibleChunks)
+        }
+    }
+    
+    /// Returns the absolute distance squared from a chunk to the user position. Squared for
+    /// speed because division is slow.
+    func distanceToUserPositionSquared(fromChunk chunk: Chunk) -> Float {
+        let point = (userPosition.originX, userPosition.originY)
+        return ViewportCoordinator.distanceSquared(fromChunk: chunk, toPixelSpacePoint: point)
+    }
+    
+    // MARK: - initialization
+    
+    /// Initializes the viewports to a size
+    init(initialSize: CGSize) {
+        let initialViewport = ViewportCoordinator.viewport(byResizing: MTLViewport(), to: initialSize)
+        self.userPosition = initialViewport
+        self.currentViewport = initialViewport
+    }
+    
+    // MARK: - helpers
     
     /// Function for zooming a viewport in or out of the screen, constrained to levels set in constants
     private func viewport(byZooming viewport: MTLViewport,
@@ -161,6 +187,8 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     }
 
 }
+
+// MARK: - ViewportChangeDelegate
 
 extension ViewportCoordinator: ViewportChangeDelegate {
     

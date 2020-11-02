@@ -15,5 +15,9 @@ protocol ViewportDataDelegate: NSObject {
     
     /// A way to get the ranges of visible chunks onscreen x and y
     var visibleChunks: (x: Range<Int>, y: Range<Int>) { get }
+    
+    /// Returns the absolute distance squared from a chunk to the user position. Squared for
+    /// speed because division is slow.
+    func distanceToUserPositionSquared(fromChunk chunk: Chunk) -> Float
 
 }
