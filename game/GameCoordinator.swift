@@ -23,7 +23,7 @@ class GameCoordinator {
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
     init?(view: GeneraMTLView, debugView: GeneraDebugView?) {
-        let generator = BasicGenerator()
+        let generator = RandomTileGenerator()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
               let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {
             assertionFailure("Game coordinator cannot be initialized")

@@ -92,8 +92,7 @@ float snoise(float2 v) {
     return 130.0 * dot(m, g);
 }
 
-typedef struct
-{
+typedef struct {
     // The [[position]] attribute of this member indicates that this value
     // is the clip space position of the vertex when this structure is
     // returned from the vertex function.
@@ -111,8 +110,7 @@ typedef struct
 vertex ColoredVertex simplexVertexShader(uint vertexID [[vertex_id]],
                                         constant float2 *positions [[buffer(SimpleShaderIndexPositions)]],
                                         constant float4 *colors [[buffer(SimpleShaderIndexColors)]],
-                                        constant float4 *viewport [[buffer(SimpleShaderIndexViewport)]])
-{
+                                        constant float4 *viewport [[buffer(SimpleShaderIndexViewport)]]) {
     float2 pixelSpacePosition = positions[vertexID];
     float2 roundedPixelSpacePosition = round(pixelSpacePosition * 100) / 100;
     float2 viewportOrigin = float2((*viewport).x, (*viewport).y);
@@ -143,7 +141,6 @@ vertex ColoredVertex simplexVertexShader(uint vertexID [[vertex_id]],
 }
 
 // Use the defined color to set tile color
-fragment float4 simplexFragmentShader(ColoredVertex in [[stage_in]])
-{
+fragment float4 simplexFragmentShader(ColoredVertex in [[stage_in]]) {
     return in.color;
 }

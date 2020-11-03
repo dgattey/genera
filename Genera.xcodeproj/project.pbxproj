@@ -19,11 +19,11 @@
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
 		75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B749254B68FB00351DC8 /* AppDelegate.swift */; };
-		75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* BasicGenerator.swift */; };
+		75B2B764254B71AD00351DC8 /* RandomTileGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */; };
 		75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90870254B747400231E39 /* ViewportCoordinator.swift */; };
 		75B90875254B796A00231E39 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90874254B796A00231E39 /* Tile.swift */; };
 		75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4AF254FE57F00F36372 /* Logger.swift */; };
-		75C4B4B62550062600F36372 /* SimplexShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4B52550062600F36372 /* SimplexShaders.metal */; };
+		75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4B52550062600F36372 /* TerrainShaders.metal */; };
 		75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */; };
 		75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D33254BF37400A1B409 /* Chunk.swift */; };
 		75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */; };
@@ -54,11 +54,11 @@
 		75B2B748254B68FB00351DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75B2B749254B68FB00351DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75B2B74A254B68FB00351DC8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		75B2B763254B71AC00351DC8 /* BasicGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicGenerator.swift; sourceTree = "<group>"; };
+		75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomTileGenerator.swift; sourceTree = "<group>"; };
 		75B90870254B747400231E39 /* ViewportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportCoordinator.swift; sourceTree = "<group>"; };
 		75B90874254B796A00231E39 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		75C4B4AF254FE57F00F36372 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		75C4B4B52550062600F36372 /* SimplexShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = SimplexShaders.metal; sourceTree = "<group>"; };
+		75C4B4B52550062600F36372 /* TerrainShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
 		75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUpdateDelegate.swift; sourceTree = "<group>"; };
 		75FA6D33254BF37400A1B409 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
 		75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorDataDelegate.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				7503798C254A8537002A0C13 /* SimpleShaders.metal */,
-				75C4B4B52550062600F36372 /* SimplexShaders.metal */,
+				75C4B4B52550062600F36372 /* TerrainShaders.metal */,
 				7503798E254A8537002A0C13 /* SimpleShaderTypes.h */,
 			);
 			path = metal;
@@ -162,8 +162,8 @@
 			children = (
 				75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */,
 				75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */,
-				75B2B763254B71AC00351DC8 /* BasicGenerator.swift */,
 				757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */,
+				75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */,
 			);
 			path = generation;
 			sourceTree = "<group>";
@@ -293,11 +293,11 @@
 				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
 				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,
 				75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */,
-				75C4B4B62550062600F36372 /* SimplexShaders.metal in Sources */,
+				75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */,
 				75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */,
 				757DF621254F90CB005723D5 /* GeneraDebugView.swift in Sources */,
 				750379A0254A8538002A0C13 /* SimpleShaders.metal in Sources */,
-				75B2B764254B71AD00351DC8 /* BasicGenerator.swift in Sources */,
+				75B2B764254B71AD00351DC8 /* RandomTileGenerator.swift in Sources */,
 				75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */,

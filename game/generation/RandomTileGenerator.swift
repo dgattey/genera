@@ -1,5 +1,5 @@
 //
-//  BasicGenerator.swift
+//  RandomTileGenerator.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/29/20.
@@ -11,7 +11,7 @@ import Combine
 import SwiftPriorityQueue
 
 /// Just generates a totally random map
-class BasicGenerator: NSObject, GeneratorDataDelegate {
+class RandomTileGenerator: NSObject, GeneratorDataDelegate {
     
     // MARK: constants
     
@@ -243,7 +243,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
         // We have too many chunks - let's evict until we have nothing new to evict
         evictionEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
             after: DispatchQueue.SchedulerTimeType(.now()),
-            interval: BasicGenerator.eventLoopInterval,
+            interval: RandomTileGenerator.eventLoopInterval,
             evictOldestChunk)
     }
     
@@ -251,7 +251,7 @@ class BasicGenerator: NSObject, GeneratorDataDelegate {
 
 // MARK: - GenerationDelegate
 
-extension BasicGenerator: GeneratorProtocol {
+extension RandomTileGenerator: GeneratorProtocol {
     
     /// Just generates visible chunks to start with
     func startMapGeneration() {
@@ -301,7 +301,7 @@ extension BasicGenerator: GeneratorProtocol {
         if (generationEventLoop == nil) {
             generationEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
                 after: DispatchQueue.SchedulerTimeType(.now()),
-                interval: BasicGenerator.eventLoopInterval,
+                interval: RandomTileGenerator.eventLoopInterval,
                 generateClosestTile)
         }
     }
