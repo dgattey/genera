@@ -10,6 +10,9 @@ import Foundation
 // A protocol any generator of data must conform to
 protocol GeneratorDataDelegate: GeneratorProtocol {
     
+    /// Which shader names to use in generation
+    var shaders: (vertex: String, fragment: String) { get }
+    
     // Gets vertices for a particular chunk
     func vertices(for chunk: Chunk) -> [Float]
     

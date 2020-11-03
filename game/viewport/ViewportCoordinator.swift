@@ -24,10 +24,10 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private struct ZoomLevel {
         
         /// Minimum zoom supported
-        static let min: Double = 0.4
+        static let min: Double = 0.2
         
         /// Max zoom supported
-        static let max: Double = 2.0
+        static let max: Double = 1.4
         
         /// The multiplier on the zoom amount
         static let multiplier = 0.01
@@ -51,7 +51,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     /// Converts a value to chunk space (rounded up or down depending on which side of zero we're on)
     private static func convertToChunkSpace(_ value: Double) -> Int {
         let converted = value / Double(Size.chunkInPixels)
-        return Int(value < 0 ? floor(converted) : ceil(converted))
+        return Int(round(converted))
     }
     
     /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units, with 10% padding or at least one chunk)

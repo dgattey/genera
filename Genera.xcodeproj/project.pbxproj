@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		750379A0254A8538002A0C13 /* SimpleShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 7503798C254A8537002A0C13 /* SimpleShaders.metal */; };
+		750379A0254A8538002A0C13 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 7503798C254A8537002A0C13 /* GridShaders.metal */; };
 		750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* MapRenderer.swift */; };
-		750379A2254A8538002A0C13 /* SimpleShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SimpleShaderTypes.h */; };
+		750379A2254A8538002A0C13 /* SharedShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SharedShaderTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
 		757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
 		757DF621254F90CB005723D5 /* GeneraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF620254F90CB005723D5 /* GeneraDebugView.swift */; };
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
+		757E14EA255151F50036AEB5 /* Util.metal in Sources */ = {isa = PBXBuildFile; fileRef = 757E14E9255151F50036AEB5 /* Util.metal */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
@@ -40,14 +41,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7503798C254A8537002A0C13 /* SimpleShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimpleShaders.metal; sourceTree = "<group>"; };
+		7503798C254A8537002A0C13 /* GridShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
 		7503798D254A8537002A0C13 /* MapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRenderer.swift; sourceTree = "<group>"; };
-		7503798E254A8537002A0C13 /* SimpleShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleShaderTypes.h; sourceTree = "<group>"; };
+		7503798E254A8537002A0C13 /* SharedShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedShaderTypes.h; sourceTree = "<group>"; };
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkGenerationState.swift; sourceTree = "<group>"; };
 		757DF620254F90CB005723D5 /* GeneraDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraDebugView.swift; sourceTree = "<group>"; };
 		757DF625254FA0FF005723D5 /* DebugDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
+		757E14E9255151F50036AEB5 /* Util.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Util.metal; sourceTree = "<group>"; };
+		757E14EC2551525D0036AEB5 /* Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
@@ -101,9 +104,11 @@
 		7503798B254A8537002A0C13 /* metal */ = {
 			isa = PBXGroup;
 			children = (
-				7503798C254A8537002A0C13 /* SimpleShaders.metal */,
+				757E14EC2551525D0036AEB5 /* Util.h */,
+				757E14E9255151F50036AEB5 /* Util.metal */,
+				7503798E254A8537002A0C13 /* SharedShaderTypes.h */,
+				7503798C254A8537002A0C13 /* GridShaders.metal */,
 				75C4B4B52550062600F36372 /* TerrainShaders.metal */,
-				7503798E254A8537002A0C13 /* SimpleShaderTypes.h */,
 			);
 			path = metal;
 			sourceTree = "<group>";
@@ -269,7 +274,7 @@
 			files = (
 				75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */,
 				750379A3254A8538002A0C13 /* Assets.xcassets in Resources */,
-				750379A2254A8538002A0C13 /* SimpleShaderTypes.h in Resources */,
+				750379A2254A8538002A0C13 /* SharedShaderTypes.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,7 +301,8 @@
 				75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */,
 				75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */,
 				757DF621254F90CB005723D5 /* GeneraDebugView.swift in Sources */,
-				750379A0254A8538002A0C13 /* SimpleShaders.metal in Sources */,
+				750379A0254A8538002A0C13 /* GridShaders.metal in Sources */,
+				757E14EA255151F50036AEB5 /* Util.metal in Sources */,
 				75B2B764254B71AD00351DC8 /* RandomTileGenerator.swift in Sources */,
 				75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
@@ -454,7 +460,7 @@
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = metal/SimpleShaderTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = metal/SharedShaderTypes.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -479,7 +485,7 @@
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = metal/SimpleShaderTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = metal/SharedShaderTypes.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

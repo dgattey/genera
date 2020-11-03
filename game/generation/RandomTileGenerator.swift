@@ -18,6 +18,9 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
     /// The length of the event loops where we process evictions + generate
     private static let eventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
     
+    /// The names of the shaders to use with this generator
+    private static let shaderNames = (vertex: "gridVertexShader", fragment: "gridFragmentShader")
+    
     // MARK: variables
     
     /// Basic dict of chunk -> array of tiles
@@ -69,6 +72,11 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
     }
     
     // MARK: - GeneratorDataDelegate
+    
+    /// Which shader names to use in generation
+    var shaders: (vertex: String, fragment: String) {
+        return RandomTileGenerator.shaderNames
+    }
     
     /// Returns vertices for a particular chunk of data if it exists, or nil (and marks it as recently accessed for use in eviction)
     func vertices(for chunk: Chunk) -> [Float] {

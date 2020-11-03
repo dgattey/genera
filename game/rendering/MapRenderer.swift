@@ -5,26 +5,16 @@
 //  Created by Dylan Gattey on 10/28/20.
 //
 
-// Our platform independent MapRenderer class
-
 import Metal
 import MetalKit
 import simd
 
-/**
- Renders a full map to the main Metal screen, using the SimpleShaders
- */
+/// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
 class MapRenderer: NSObject {
     
     // MARK: - constants
     
-    // Matches name of vertex shader in SimpleShaders
-    private static let vertexFunction = "simplexVertexShader"
-    
-    // Matches name of fragment shader in SimpleShaders
-    private static let fragmentFunction = "simplexFragmentShader"
-    
-    // Just a simple background color
+    /// Light blue background color
     private static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
     
     // MARK: - variables
@@ -53,7 +43,7 @@ class MapRenderer: NSObject {
 
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
-              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device) else {
+              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, generatorDataDelegate: generatorDataDelegate) else {
             return nil
         }
         
@@ -76,18 +66,18 @@ class MapRenderer: NSObject {
     }
     
     /// Builds a render pipeline state object using the current device and our default shaders
-    private static func buildPipelineState(view: MTKView, device: MTLDevice) -> MTLRenderPipelineState? {
+    private static func buildPipelineState(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegate) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: MapRenderer.vertexFunction)
-        let fragmentFunction = library?.makeFunction(name: MapRenderer.fragmentFunction)
+        let vertexFunction = library?.makeFunction(name: generatorDataDelegate.shaders.vertex)
+        let fragmentFunction = library?.makeFunction(name: generatorDataDelegate.shaders.fragment)
 
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
-        descriptor.vertexBuffers[SimpleShaderIndex.positions.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[SimpleShaderIndex.colors.rawValue].mutability = .immutable
-        descriptor.vertexBuffers[SimpleShaderIndex.viewport.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[ShaderIndex.positions.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[ShaderIndex.colors.rawValue].mutability = .immutable
+        descriptor.vertexBuffers[ShaderIndex.viewport.rawValue].mutability = .immutable
         
         var stateObject: MTLRenderPipelineState?
         do {
@@ -123,11 +113,11 @@ class MapRenderer: NSObject {
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(userPositionViewportBuffer, offset: 0, index: SimpleShaderIndex.viewport.rawValue)
+        encoder.setVertexBuffer(userPositionViewportBuffer, offset: 0, index: ShaderIndex.viewport.rawValue)
         
         for (_, (vertexBuffer, colorBuffer)) in vertexAndColorBuffers {
-            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: SimpleShaderIndex.positions.rawValue)
-            encoder.setVertexBuffer(colorBuffer, offset: 0, index: SimpleShaderIndex.colors.rawValue)
+            encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.positions.rawValue)
+            encoder.setVertexBuffer(colorBuffer, offset: 0, index: ShaderIndex.colors.rawValue)
             encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Size.verticesPerChunk )
         }
     }
