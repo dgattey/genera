@@ -29,7 +29,7 @@ class GeneraDebugView: NSView {
 // MARK: - DebugDelegate
 
 extension GeneraDebugView: DebugDelegate {
-    func didUpdateChunkBounds(to value: (x: Range<Int>, y: Range<Int>)) {
+    func didUpdateChunkBounds(to value: ChunkRegion) {
         GeneraDebugView.update(visibleChunkBounds, to: value)
     }
     

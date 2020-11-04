@@ -1,5 +1,5 @@
 //
-//  GeneratorDataDelegate.swift
+//  ChunkDataProvider.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/30/20.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-// A protocol any generator of data must conform to
-protocol GeneratorDataDelegate: GeneratorProtocol {
+// A protocol any provider of chunk data must conform to
+protocol ChunkDataProvider: NSObject {
     
-    /// The type of the vertex in the buffer + used for sizing
-    associatedtype VertexType: VertexProtocol
-    
+    /// The type of data stored in the chunk data
+    associatedtype ChunkDataType: ChunkDataProtocol
+
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) { get }
     
@@ -22,7 +22,7 @@ protocol GeneratorDataDelegate: GeneratorProtocol {
     /// Memory layout stride for the VertexType - can't be done "reflectively"
     var stride: Int { get }
     
-    /// Returns vertex data for a particular chunk in the form of an array
-    func vertices(for chunk: Chunk) -> [VertexType]
+    /// Generates a block of ChunkData to use in some form
+    func generateChunkData(for chunk: Chunk) -> [ChunkDataType]
     
 }

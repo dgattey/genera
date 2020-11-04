@@ -8,7 +8,7 @@
 import Metal
 
 /// ViewportCoordinator functions for use with Metal manipulations
-class ViewportCoordinator: NSObject, ViewportDataDelegate {
+class ViewportCoordinator: NSObject, ViewportDataProvider {
     
     // MARK: - constants
     
@@ -56,7 +56,7 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     
     /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units, with 10% padding or at least one chunk)
     /// on all sides.
-    private static func visibleChunks(from viewport: MTLViewport) -> (x: Range<Int>, y: Range<Int>) {
+    private static func visibleRegion(from viewport: MTLViewport) -> ChunkRegion {
         let startX = convertToChunkSpace(viewport.originX - viewport.width)
         let startY = convertToChunkSpace(viewport.originY - viewport.height)
         let endX = convertToChunkSpace(viewport.originX + viewport.width)
@@ -119,10 +119,11 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 
     // MARK: - variables
     
-    /// This is the user position, including zooming and translation, which sets visibleChunks on set
+    /// This is the user position, including zooming and translation, which sets visibleRegion on set
     private var userPosition: MTLViewport {
         didSet {
-            visibleChunks = ViewportCoordinator.visibleChunks(from: userPosition)
+            visibleRegion = ViewportCoordinator.visibleRegion(from: userPosition)
+            viewportCoordinatorDelegate?.viewportCoordinator(didUpdateUserPositionTo: userPosition)
             debugDelegate?.didUpdateUserPosition(to: userPosition)
         }
     }
@@ -130,11 +131,10 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     /// The current zoom level, within the min and max range
     private var currentZoomLevel: Double = 1.0
     
-    weak var mapUpdateDelegate: MapUpdateDelegate?
+    weak var viewportCoordinatorDelegate: ViewportCoordinatorDelegate?
     weak var debugDelegate: DebugDelegate?
-    weak var generationDelegate: GeneratorProtocol?
     
-    // MARK: - ViewportDataDelegate
+    // MARK: - ViewportDataProvider
     
     /// This is the viewport for drawing, not including translation
     private(set) var currentViewport: MTLViewport {
@@ -144,9 +144,9 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     }
     
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
-    private(set) lazy var visibleChunks: (x: Range<Int>, y: Range<Int>) = ViewportCoordinator.visibleChunks(from: userPosition) {
+    private(set) lazy var visibleRegion: ChunkRegion = ViewportCoordinator.visibleRegion(from: userPosition) {
         didSet {
-            generationDelegate?.didUpdateVisibleChunks(visibleChunks)
+            viewportCoordinatorDelegate?.viewportCoordinator(didUpdateVisibleRegionTo: visibleRegion)
         }
     }
     
@@ -203,26 +203,23 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
 
 }
 
-// MARK: - ViewportChangeDelegate
+// MARK: - UserInteractionDelegate
 
-extension ViewportCoordinator: ViewportChangeDelegate {
+extension ViewportCoordinator: UserInteractionDelegate {
     
     /// Change the user position only, not the actual viewport
-    func panViewport(_ directions: Set<VectoredDirection<Double>>) {
+    func userDidPanViewport(_ directions: Set<VectoredDirection<Double>>) {
         userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, in: directions, atZoom: currentZoomLevel)
-        mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
     
     /// Resize both the user position and the actual viewport
-    func resizeViewport(to size: CGSize) {
+    func userDidResizeViewport(to size: CGSize) {
         userPosition = ViewportCoordinator.viewport(byResizing: userPosition, to: size, atZoom: currentZoomLevel)
         currentViewport = ViewportCoordinator.viewport(byResizing: currentViewport, to: size)
-        mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
     
     /// Zooms both the user position and the actual viewport by a certain amount
-    func zoomViewport(_ direction: ZoomDirection, at point: NSPoint) {
+    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint) {
         userPosition = viewport(byZooming: userPosition, in: direction, at: point)
-        mapUpdateDelegate?.didUpdateUserPosition(to: userPosition)
     }
 }

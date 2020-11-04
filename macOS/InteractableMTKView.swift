@@ -51,7 +51,7 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     
     // MARK: - variables
     
-    weak var viewportDelegate: ViewportChangeDelegate?
+    weak var userInteractionDelegate: UserInteractionDelegate?
     private var keyPressDirections = Set<VectoredDirection<Double>>()
     private var mouseDirections = Set<VectoredDirection<Double>>()
     private var panViewEventLoop: Cancellable?
@@ -82,7 +82,7 @@ class InteractableMTKView: MTKView, GeneraMTLView {
             return
         }
         let amount = Double(event.scrollingDeltaY)
-        viewportDelegate?.zoomViewport(ZoomDirection(amount), at: event.locationInWindow)
+        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount), at: event.locationInWindow)
     }
     
     /// If the key is a direction, add it to our array and start panning in that direction
@@ -157,7 +157,7 @@ class InteractableMTKView: MTKView, GeneraMTLView {
         let directions = mouseDirections.union(keyPressDirections)
         let nonCancellableDirections =  directions.nonCancellable
         if !nonCancellableDirections.isEmpty {
-            viewportDelegate?.panViewport(nonCancellableDirections)
+            userInteractionDelegate?.userDidPanViewport(nonCancellableDirections)
         }
     }
     

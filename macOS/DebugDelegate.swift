@@ -12,7 +12,7 @@ import MetalKit
 protocol DebugDelegate: NSObject {
     
     /// Called when chunk bounds update
-    func didUpdateChunkBounds(to value: (x: Range<Int>, y: Range<Int>)) -> Void
+    func didUpdateChunkBounds(to value: ChunkRegion) -> Void
     
     /// Called when number of generated chunks updates
     func didUpdateNumGeneratedChunks(to value: Int) -> Void

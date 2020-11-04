@@ -11,30 +11,33 @@
 		750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* MapRenderer.swift */; };
 		750379A2254A8538002A0C13 /* SharedTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SharedTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
-		757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
 		757DF621254F90CB005723D5 /* GeneraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF620254F90CB005723D5 /* GeneraDebugView.swift */; };
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
 		757E14EA255151F50036AEB5 /* Util.metal in Sources */ = {isa = PBXBuildFile; fileRef = 757E14E9255151F50036AEB5 /* Util.metal */; };
 		757E151225525B750036AEB5 /* VertexProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E151125525B750036AEB5 /* VertexProtocol.swift */; };
+		757E152025528C5E0036AEB5 /* ChunkDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E151F25528C5E0036AEB5 /* ChunkDataProtocol.swift */; };
+		757E152C2552A6EC0036AEB5 /* DatedChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E152B2552A6EC0036AEB5 /* DatedChunk.swift */; };
+		757E152F2552A7040036AEB5 /* CountedChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E152E2552A7040036AEB5 /* CountedChunk.swift */; };
+		757E15322552A7350036AEB5 /* RandomTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */; };
+		757E15392552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
 		75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B749254B68FB00351DC8 /* AppDelegate.swift */; };
-		75B2B764254B71AD00351DC8 /* RandomTileGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */; };
+		75B2B764254B71AD00351DC8 /* ChunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* ChunkCoordinator.swift */; };
 		75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90870254B747400231E39 /* ViewportCoordinator.swift */; };
 		75B90875254B796A00231E39 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B90874254B796A00231E39 /* Tile.swift */; };
 		75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4AF254FE57F00F36372 /* Logger.swift */; };
 		75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 75C4B4B52550062600F36372 /* TerrainShaders.metal */; };
-		75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */; };
+		75FA6D31254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D30254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift */; };
 		75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D33254BF37400A1B409 /* Chunk.swift */; };
-		75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */; };
+		75FA6D37254BF80D00A1B409 /* ChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D36254BF80D00A1B409 /* ChunkDataProvider.swift */; };
 		75FA6D3D254C06C600A1B409 /* InteractableMTKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3C254C06C600A1B409 /* InteractableMTKView.swift */; };
-		75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */; };
+		75FA6D40254C098500A1B409 /* UserInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D3F254C098500A1B409 /* UserInteractionDelegate.swift */; };
 		75FA6D44254C09F200A1B409 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D43254C09F200A1B409 /* Direction.swift */; };
-		75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */; };
+		75FA6D50254C91CE00A1B409 /* ViewportDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D4F254C91CE00A1B409 /* ViewportDataProvider.swift */; };
 		75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */; };
-		75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */; };
 		75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D77254D2DFA00A1B409 /* Size.swift */; };
 		75FA6D7C254D35D000A1B409 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7B254D35D000A1B409 /* Color.swift */; };
 		75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */; };
@@ -47,7 +50,6 @@
 		7503798E254A8537002A0C13 /* SharedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkGenerationState.swift; sourceTree = "<group>"; };
 		757DF620254F90CB005723D5 /* GeneraDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraDebugView.swift; sourceTree = "<group>"; };
 		757DF625254FA0FF005723D5 /* DebugDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
 		757E14E9255151F50036AEB5 /* Util.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Util.metal; sourceTree = "<group>"; };
@@ -55,26 +57,30 @@
 		757E14FF25523B0D0036AEB5 /* TerrainShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TerrainShaderTypes.h; sourceTree = "<group>"; };
 		757E150025523B210036AEB5 /* GridShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridShaderTypes.h; sourceTree = "<group>"; };
 		757E151125525B750036AEB5 /* VertexProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexProtocol.swift; sourceTree = "<group>"; };
+		757E151F25528C5E0036AEB5 /* ChunkDataProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkDataProtocol.swift; sourceTree = "<group>"; };
+		757E152B2552A6EC0036AEB5 /* DatedChunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatedChunk.swift; sourceTree = "<group>"; };
+		757E152E2552A7040036AEB5 /* CountedChunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountedChunk.swift; sourceTree = "<group>"; };
+		757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomTileChunkDataProvider.swift; sourceTree = "<group>"; };
+		757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportCoordinatorDelegate.swift; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
 		75B2B748254B68FB00351DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75B2B749254B68FB00351DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75B2B74A254B68FB00351DC8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomTileGenerator.swift; sourceTree = "<group>"; };
+		75B2B763254B71AC00351DC8 /* ChunkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkCoordinator.swift; sourceTree = "<group>"; };
 		75B90870254B747400231E39 /* ViewportCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportCoordinator.swift; sourceTree = "<group>"; };
 		75B90874254B796A00231E39 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		75C4B4AF254FE57F00F36372 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		75C4B4B52550062600F36372 /* TerrainShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
-		75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUpdateDelegate.swift; sourceTree = "<group>"; };
+		75FA6D30254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkCoordinatorDelegate.swift; sourceTree = "<group>"; };
 		75FA6D33254BF37400A1B409 /* Chunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
-		75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorDataDelegate.swift; sourceTree = "<group>"; };
+		75FA6D36254BF80D00A1B409 /* ChunkDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkDataProvider.swift; sourceTree = "<group>"; };
 		75FA6D3C254C06C600A1B409 /* InteractableMTKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractableMTKView.swift; sourceTree = "<group>"; };
-		75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportChangeDelegate.swift; sourceTree = "<group>"; };
+		75FA6D3F254C098500A1B409 /* UserInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInteractionDelegate.swift; sourceTree = "<group>"; };
 		75FA6D43254C09F200A1B409 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
-		75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataDelegate.swift; sourceTree = "<group>"; };
+		75FA6D4F254C91CE00A1B409 /* ViewportDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataProvider.swift; sourceTree = "<group>"; };
 		75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
-		75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratorProtocol.swift; sourceTree = "<group>"; };
 		75FA6D77254D2DFA00A1B409 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		75FA6D7B254D35D000A1B409 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDirection.swift; sourceTree = "<group>"; };
@@ -127,6 +133,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		757E15482552BE540036AEB5 /* generation */ = {
+			isa = PBXGroup;
+			children = (
+				75FA6D7B254D35D000A1B409 /* Color.swift */,
+				75B90874254B796A00231E39 /* Tile.swift */,
+				757E151125525B750036AEB5 /* VertexProtocol.swift */,
+				757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */,
+			);
+			path = generation;
+			sourceTree = "<group>";
+		};
 		75B2B744254B68FB00351DC8 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,13 +168,13 @@
 			path = config;
 			sourceTree = "<group>";
 		};
-		75B2B761254B70C100351DC8 /* rendering */ = {
+		75B2B761254B70C100351DC8 /* render */ = {
 			isa = PBXGroup;
 			children = (
 				7503798D254A8537002A0C13 /* MapRenderer.swift */,
-				75FA6D30254BF07A00A1B409 /* MapUpdateDelegate.swift */,
+				757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */,
 			);
-			path = rendering;
+			path = render;
 			sourceTree = "<group>";
 		};
 		75C4B4AE254FE56600F36372 /* utility */ = {
@@ -168,37 +185,36 @@
 			path = utility;
 			sourceTree = "<group>";
 		};
-		75FA6D54254CD8B500A1B409 /* generation */ = {
+		75FA6D54254CD8B500A1B409 /* chunks */ = {
 			isa = PBXGroup;
 			children = (
-				75FA6D72254CEB0400A1B409 /* GeneratorProtocol.swift */,
-				75FA6D36254BF80D00A1B409 /* GeneratorDataDelegate.swift */,
-				757DF60B254F26EE005723D5 /* ChunkGenerationState.swift */,
-				75B2B763254B71AC00351DC8 /* RandomTileGenerator.swift */,
+				75FA6D33254BF37400A1B409 /* Chunk.swift */,
+				757E152B2552A6EC0036AEB5 /* DatedChunk.swift */,
+				757E152E2552A7040036AEB5 /* CountedChunk.swift */,
+				757E151F25528C5E0036AEB5 /* ChunkDataProtocol.swift */,
+				75FA6D36254BF80D00A1B409 /* ChunkDataProvider.swift */,
+				75FA6D30254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift */,
+				75B2B763254B71AC00351DC8 /* ChunkCoordinator.swift */,
 			);
-			path = generation;
+			path = chunks;
 			sourceTree = "<group>";
 		};
-		75FA6D55254CD95400A1B409 /* data structures */ = {
+		75FA6D55254CD95400A1B409 /* data */ = {
 			isa = PBXGroup;
 			children = (
 				75FA6D77254D2DFA00A1B409 /* Size.swift */,
-				75FA6D33254BF37400A1B409 /* Chunk.swift */,
-				75B90874254B796A00231E39 /* Tile.swift */,
-				75FA6D43254C09F200A1B409 /* Direction.swift */,
-				759E0009254E16FC004CF89F /* VectoredDirection.swift */,
-				75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */,
-				75FA6D7B254D35D000A1B409 /* Color.swift */,
-				757E151125525B750036AEB5 /* VertexProtocol.swift */,
 			);
-			path = "data structures";
+			path = data;
 			sourceTree = "<group>";
 		};
 		75FA6D58254CDB6A00A1B409 /* viewport */ = {
 			isa = PBXGroup;
 			children = (
-				75FA6D3F254C098500A1B409 /* ViewportChangeDelegate.swift */,
-				75FA6D4F254C91CE00A1B409 /* ViewportDataDelegate.swift */,
+				75FA6D43254C09F200A1B409 /* Direction.swift */,
+				759E0009254E16FC004CF89F /* VectoredDirection.swift */,
+				75FA6D7F254D3D7200A1B409 /* ZoomDirection.swift */,
+				75FA6D3F254C098500A1B409 /* UserInteractionDelegate.swift */,
+				75FA6D4F254C91CE00A1B409 /* ViewportDataProvider.swift */,
 				75B90870254B747400231E39 /* ViewportCoordinator.swift */,
 			);
 			path = viewport;
@@ -208,10 +224,11 @@
 			isa = PBXGroup;
 			children = (
 				75FA6D5F254CE2A300A1B409 /* GameCoordinator.swift */,
-				75FA6D55254CD95400A1B409 /* data structures */,
-				75FA6D54254CD8B500A1B409 /* generation */,
+				75FA6D55254CD95400A1B409 /* data */,
+				757E15482552BE540036AEB5 /* generation */,
+				75FA6D54254CD8B500A1B409 /* chunks */,
 				75FA6D58254CDB6A00A1B409 /* viewport */,
-				75B2B761254B70C100351DC8 /* rendering */,
+				75B2B761254B70C100351DC8 /* render */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -296,30 +313,33 @@
 				75FC2F91254FBA14008ABB3C /* GeneraWindowController.swift in Sources */,
 				750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */,
 				75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */,
-				75FA6D37254BF80D00A1B409 /* GeneratorDataDelegate.swift in Sources */,
+				75FA6D37254BF80D00A1B409 /* ChunkDataProvider.swift in Sources */,
 				75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */,
 				75FA6D3D254C06C600A1B409 /* InteractableMTKView.swift in Sources */,
 				759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */,
+				757E152F2552A7040036AEB5 /* CountedChunk.swift in Sources */,
 				757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */,
+				757E152C2552A6EC0036AEB5 /* DatedChunk.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
-				75FA6D50254C91CE00A1B409 /* ViewportDataDelegate.swift in Sources */,
-				75FA6D40254C098500A1B409 /* ViewportChangeDelegate.swift in Sources */,
+				75FA6D50254C91CE00A1B409 /* ViewportDataProvider.swift in Sources */,
+				75FA6D40254C098500A1B409 /* UserInteractionDelegate.swift in Sources */,
 				75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */,
 				75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */,
-				75FA6D31254BF07A00A1B409 /* MapUpdateDelegate.swift in Sources */,
+				75FA6D31254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift in Sources */,
+				757E15392552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift in Sources */,
 				757DF621254F90CB005723D5 /* GeneraDebugView.swift in Sources */,
 				750379A0254A8538002A0C13 /* GridShaders.metal in Sources */,
 				757E14EA255151F50036AEB5 /* Util.metal in Sources */,
-				75B2B764254B71AD00351DC8 /* RandomTileGenerator.swift in Sources */,
-				75FA6D73254CEB0400A1B409 /* GeneratorProtocol.swift in Sources */,
+				75B2B764254B71AD00351DC8 /* ChunkCoordinator.swift in Sources */,
+				757E15322552A7350036AEB5 /* RandomTileChunkDataProvider.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
-				757DF60C254F26EE005723D5 /* ChunkGenerationState.swift in Sources */,
 				75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */,
 				757E151225525B750036AEB5 /* VertexProtocol.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
 				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,
 				75FA6D44254C09F200A1B409 /* Direction.swift in Sources */,
 				75FA6D7C254D35D000A1B409 /* Color.swift in Sources */,
+				757E152025528C5E0036AEB5 /* ChunkDataProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

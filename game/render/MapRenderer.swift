@@ -18,14 +18,13 @@ private enum MapRendererConstant {
 }
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
-class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, MTKViewDelegate {
+class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
     
     // MARK: - delegates
 
-    weak var viewportChangeDelegate: ViewportChangeDelegate?
-    weak var viewportDataDelegate: ViewportDataDelegate?
+    weak var userInteractionDelegate: UserInteractionDelegate?
+    weak var viewportDataProvider: ViewportDataProvider?
     weak var debugDelegate: DebugDelegate?
-    private weak var generatorDataDelegate: GeneratorDataDelegateType?
     
     // MARK: - variables
     
@@ -50,14 +49,22 @@ class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, M
     /// Keeps track of current viewport data, passed into rendering
     private var viewportBufferData: [Float] = []
     
+    /// Provides most data for this renderer
+    private weak var dataProvider: DataProvider?
+    
+    /// Provides chunk data for this renderer
+    private weak var chunkCoordinator: ChunkCoordinator<DataProvider>?
+    
     // MARK: - initialization
     
     /// If the command queue or pipeline state fails to get created, this will fail
-    init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegateType?) {
+    init?(view: MTKView,
+          device: MTLDevice,
+          dataProvider: DataProvider,
+          chunkCoordinator: ChunkCoordinator<DataProvider>) {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
-              let dataDelegate = generatorDataDelegate,
-              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, generatorDataDelegate: dataDelegate) else {
+              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, shaders: dataProvider.shaders) else {
             return nil
         }
         
@@ -68,16 +75,17 @@ class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, M
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
-        self.generatorDataDelegate = generatorDataDelegate
+        self.dataProvider = dataProvider
+        self.chunkCoordinator = chunkCoordinator
         
         super.init()
     }
     
     /// Builds a render pipeline state object using the current device and our default shaders
-    private static func buildPipelineState<T: GeneratorDataDelegate>(view: MTKView, device: MTLDevice, generatorDataDelegate: T) -> MTLRenderPipelineState? {
+    private static func buildPipelineState(view: MTKView, device: MTLDevice, shaders: (vertex: String, fragment: String)) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
-        let vertexFunction = library?.makeFunction(name: generatorDataDelegate.shaders.vertex)
-        let fragmentFunction = library?.makeFunction(name: generatorDataDelegate.shaders.fragment)
+        let vertexFunction = library?.makeFunction(name: shaders.vertex)
+        let fragmentFunction = library?.makeFunction(name: shaders.fragment)
 
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
@@ -129,13 +137,13 @@ class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, M
     
     /// Tell our change delegate we've resized
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        viewportChangeDelegate?.resizeViewport(to: size)
+        userInteractionDelegate?.userDidResizeViewport(to: size)
     }
     
     /// Updates map state and draws it to the screen
     func draw(in view: MTKView) {
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
-              let viewport = viewportDataDelegate?.currentViewport else {
+              let viewport = viewportDataProvider?.currentViewport else {
             assertionFailure("No command buffer to work with")
             return
         }
@@ -168,20 +176,20 @@ class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, M
     }
 }
 
-// MARK: - MapUpdateDelegate
+// MARK: - ChunkCoordinatorDelegate
 
-extension MapRenderer: MapUpdateDelegate {
+extension MapRenderer: ChunkCoordinatorDelegate {
     
     /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
-    func didGenerate(chunk: Chunk) {
+    func chunkCoordinator(didGenerate chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
         let savedBuffer = vertexBuffers[chunk]
         let buffer: MTLBuffer
         if let savedBuffer = savedBuffer {
             buffer = savedBuffer
         } else {
-            guard let size = generatorDataDelegate?.verticesBufferSize,
-                  let vertexBuffer = mainDevice.makeBuffer(length: size, options: .storageModeManaged) else {
+            guard let length = dataProvider?.verticesBufferSize,
+                  let vertexBuffer = mainDevice.makeBuffer(length: length, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
             }
@@ -192,8 +200,8 @@ extension MapRenderer: MapUpdateDelegate {
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let strongSelf = self,
-                  let vertices = strongSelf.generatorDataDelegate?.vertices(for: chunk),
-                  let stride = strongSelf.generatorDataDelegate?.stride else {
+                  let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk),
+                  let stride = strongSelf.dataProvider?.stride else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffer))")
                 return
             }
@@ -216,22 +224,31 @@ extension MapRenderer: MapUpdateDelegate {
                 _ = strongSelf.drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
             }
         }
-        
     }
     
-    /// Deletes data for a chunk
-    func didDelete(chunk: Chunk) {
+    /// Deletes data for the chunk
+    func chunkCoordinator(didDelete chunk: Chunk) {
         // Delete the buffer
         vertexBuffers.removeValue(forKey: chunk)
         drawingSemaphore.signal()
-        // TODO: @dgattey make this a real size - this doesn't work...
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
     
+}
+
+// MARK: - ViewportCoordinatorDelegate
+
+extension MapRenderer: ViewportCoordinatorDelegate {
+    
     /// Updates viewport buffer data with the new viewport info
-    func didUpdateUserPosition(to viewport: MTLViewport) {
+    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport) {
         updateUserViewportBufferData(to: viewport)
+    }
+    
+    /// Forwards to the chunk coordinator
+    func viewportCoordinator(didUpdateVisibleRegionTo visibleRegion: (x: Range<Int>, y: Range<Int>)) {
+        chunkCoordinator?.handle(updatedVisibleRegion: visibleRegion)
     }
     
 }

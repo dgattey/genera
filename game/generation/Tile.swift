@@ -9,7 +9,7 @@ import Metal
 import simd
 
 /// A position + type of tile that appears on the map
-struct Tile {
+struct Tile: ChunkDataProtocol {
     
     // MARK: - types
     
