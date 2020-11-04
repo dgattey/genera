@@ -78,7 +78,8 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     
     /// Use the y axis's scrolling delta to zoom the viewport in or out
     override func scrollWheel(with event: NSEvent) {
-        guard event.phase == .changed else {
+        // Trackpad is changed phase, mouse wheel is empty phase
+        guard event.phase == .changed || event.phase == [] else {
             return
         }
         let amount = Double(event.scrollingDeltaY)
