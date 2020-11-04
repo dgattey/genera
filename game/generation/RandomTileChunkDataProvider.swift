@@ -15,14 +15,13 @@ class RandomTileChunkDataProvider: NSObject, ChunkDataProvider {
     private static let shaderNames = (vertex: "gridVertexShader", fragment: "gridFragmentShader")
     
     /// Size of a memory layout stride for the vertex type
-    private static let strideBufferSize = MemoryLayout<VertexType>.stride
+    private static let strideBufferSize = MemoryLayout<ChunkDataType.VertexType>.stride
     
     /// Size of an array of all vertices for one chunk
     private static let chunkVerticesBufferSize = Size.verticesPerTile * strideBufferSize * Size.chunk * Size.chunk
     
     // MARK: - ChunkDataProvider
     
-    typealias VertexType = GridVertex
     typealias ChunkDataType = Tile
     
     /// Which shader names to use in generation
