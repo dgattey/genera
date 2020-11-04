@@ -18,19 +18,30 @@ private enum MapRendererConstant {
 }
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
-class MapRenderer<GeneratorDataType: GeneratorDataDelegate>: NSObject, MTKViewDelegate {
+class MapRenderer<GeneratorDataDelegateType: GeneratorDataDelegate>: NSObject, MTKViewDelegate {
     
-    // MARK: - variables
+    // MARK: - delegates
 
     weak var viewportChangeDelegate: ViewportChangeDelegate?
     weak var viewportDataDelegate: ViewportDataDelegate?
     weak var debugDelegate: DebugDelegate?
+    private weak var generatorDataDelegate: GeneratorDataDelegateType?
     
+    // MARK: - variables
+    
+    /// The view we're drawing into
     private let view: MTKView
+    
+    /// Main device we're using to draw
     private let mainDevice: MTLDevice
+    
+    /// Our list of drawing commands
     private let commandQueue: MTLCommandQueue
+    
+    /// Render pipeline we reuse every draw loop
     private let renderPipelineState: MTLRenderPipelineState
-    private let generatorDataDelegate: GeneratorDataType
+    
+    /// This locks in reverse so we wait until the GPU has finished
     private let drawingSemaphore = DispatchSemaphore(value: 1)
     
     /// This keeps track of vertices for a given chunk
@@ -42,10 +53,11 @@ class MapRenderer<GeneratorDataType: GeneratorDataDelegate>: NSObject, MTKViewDe
     // MARK: - initialization
     
     /// If the command queue or pipeline state fails to get created, this will fail
-    init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataType) {
+    init?(view: MTKView, device: MTLDevice, generatorDataDelegate: GeneratorDataDelegateType?) {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
-              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, generatorDataDelegate: generatorDataDelegate) else {
+              let dataDelegate = generatorDataDelegate,
+              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, generatorDataDelegate: dataDelegate) else {
             return nil
         }
         
@@ -168,7 +180,8 @@ extension MapRenderer: MapUpdateDelegate {
         if let savedBuffer = savedBuffer {
             buffer = savedBuffer
         } else {
-            guard let vertexBuffer = mainDevice.makeBuffer(length: generatorDataDelegate.verticesBufferSize, options: .storageModeManaged) else {
+            guard let size = generatorDataDelegate?.verticesBufferSize,
+                  let vertexBuffer = mainDevice.makeBuffer(length: size, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
             }
@@ -178,14 +191,16 @@ extension MapRenderer: MapUpdateDelegate {
         
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let strongSelf = self else {
+            guard let strongSelf = self,
+                  let vertices = strongSelf.generatorDataDelegate?.vertices(for: chunk),
+                  let stride = strongSelf.generatorDataDelegate?.stride else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffer))")
                 return
             }
             var vertexPointer = buffer.contents()
-            for item in strongSelf.generatorDataDelegate.vertices(for: chunk) {
+            for item in vertices {
                 vertexPointer.storeBytes(of: item, as: type(of: item))
-                vertexPointer = vertexPointer + strongSelf.generatorDataDelegate.stride
+                vertexPointer = vertexPointer + stride
             }
             
             DispatchQueue.main.async { [weak self] in
