@@ -89,12 +89,12 @@ float simplexNoise(float2 v) {
 // Uses 4 octaves and 0.7 amp changes
 float fractalBrownianMotion(float2 uv) {
     float sum = 0;
-    float amp = 0.7;
-    for(int i = 0; i < 4; ++i)
+    float amp = 0.6;
+    for(int i = 0; i < 19; ++i)
     {
         sum += simplexNoise(uv) * amp;
-        uv += uv * 1.2;
-        amp *= 0.4;
+        uv += uv * 1.5;
+        amp *= 0.7;
     }
     return sum;
 }
