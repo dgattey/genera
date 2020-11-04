@@ -56,7 +56,17 @@ struct Tile: ChunkDataProtocol {
         }
     }
     
-    // MARK: - variables
+    // MARK: - ChunkDataProtocol
+    
+    /// Size of one tile in pixels
+    static var tileSize: Int {
+        return 12
+    }
+    
+    /// Size of one chunk in # of tiles
+    static var chunkSize: Int {
+        return 64
+    }
     
     let x: Int
     let y: Int
@@ -71,25 +81,7 @@ struct Tile: ChunkDataProtocol {
     
     /// Returns all vertices for this tile, with positions and colors!
     var vertices: [GridVertex] {
-        return positions.map { GridVertex(position: $0, color: color) }
-    }
-    
-    /// An array of xy vertices, with which to draw multiple triangles, sized to pixels
-    private var positions: [simd_float2] {
-        let vector: (Int, Int) -> simd_float2 = { (x, y) in
-            return simd_float2(Float(x * Size.tileWidthInPixels), Float(y * Size.tileWidthInPixels))
-        }
-        let triangle1: [simd_float2] = [
-            vector(x, y),
-            vector(x + 1, y + 1),
-            vector(x + 1, y)
-        ]
-        let triangle2: [simd_float2] = [
-            vector(x, y + 1),
-            vector(x + 1, y + 1),
-            vector(x, y),
-        ]
-        return triangle1 + triangle2
+        return triangles.map { GridVertex(position: $0, color: color) }
     }
     
     /// Color array, one rgba color for each vertex

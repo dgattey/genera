@@ -130,7 +130,7 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
 
         for (_, vertexBuffer) in vertexBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.vertices.rawValue)
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Size.verticesPerChunk )
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: DataProvider.ChunkDataType.verticesPerChunk )
         }
     }
 
@@ -189,8 +189,8 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         if let savedBuffer = savedBuffer {
             buffer = savedBuffer
         } else {
-            guard let length = dataProvider?.verticesBufferSize,
-                  let vertexBuffer = mainDevice.makeBuffer(length: length, options: .storageModeManaged) else {
+            let length = DataProvider.ChunkDataType.verticesBufferSize
+            guard let vertexBuffer = mainDevice.makeBuffer(length: length, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
             }
@@ -200,9 +200,9 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let stride = DataProvider.ChunkDataType.stride
             guard let strongSelf = self,
-                  let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk),
-                  let stride = strongSelf.dataProvider?.stride else {
+                  let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk) else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffer))")
                 return
             }

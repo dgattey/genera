@@ -11,7 +11,15 @@ import simd
 /// A positioned tile that appears on the map for terrain
 struct TerrainTile: ChunkDataProtocol {
     
-    // MARK: - variables
+    /// Size of one tile in pixels
+    static var tileSize: Int {
+        return 1024
+    }
+    
+    /// Size of one chunk in # of tiles - one chunk only has one tile for terrain for speed
+    static var chunkSize: Int {
+        return 1
+    }
     
     let x: Int
     let y: Int
@@ -23,24 +31,7 @@ struct TerrainTile: ChunkDataProtocol {
     
     /// Returns all vertices for this tile, with positions
     var vertices: [TerrainVertex] {
-        return positions.map { TerrainVertex(position: $0) }
+        return triangles.map { TerrainVertex(position: $0) }
     }
-    
-    /// An array of xy vertices, with which to draw multiple triangles, sized to pixels
-    private var positions: [simd_float2] {
-        let vector: (Int, Int) -> simd_float2 = { (x, y) in
-            return simd_float2(Float(x * Size.tileWidthInPixels), Float(y * Size.tileWidthInPixels))
-        }
-        let triangle1: [simd_float2] = [
-            vector(x, y),
-            vector(x + 1, y + 1),
-            vector(x + 1, y)
-        ]
-        let triangle2: [simd_float2] = [
-            vector(x, y + 1),
-            vector(x + 1, y + 1),
-            vector(x, y),
-        ]
-        return triangle1 + triangle2
-    }
+
 }
