@@ -11,7 +11,7 @@ import MetalKit
 class GameCoordinator {
     
     /// This determines which type of map we're generating
-    typealias DataProvider = RandomTileChunkDataProvider
+    typealias DataProvider = TerrainChunkDataProvider
     
     // MARK: variables
     

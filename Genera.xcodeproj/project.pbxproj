@@ -21,6 +21,8 @@
 		757E152F2552A7040036AEB5 /* CountedChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E152E2552A7040036AEB5 /* CountedChunk.swift */; };
 		757E15322552A7350036AEB5 /* RandomTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */; };
 		757E15392552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */; };
+		757E154D2552C0130036AEB5 /* TerrainChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E154C2552C0130036AEB5 /* TerrainChunkDataProvider.swift */; };
+		757E1550255331290036AEB5 /* TerrainTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E154F255331290036AEB5 /* TerrainTile.swift */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* GeneraMTLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* GeneraMTLView.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
@@ -62,6 +64,8 @@
 		757E152E2552A7040036AEB5 /* CountedChunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountedChunk.swift; sourceTree = "<group>"; };
 		757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomTileChunkDataProvider.swift; sourceTree = "<group>"; };
 		757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportCoordinatorDelegate.swift; sourceTree = "<group>"; };
+		757E154C2552C0130036AEB5 /* TerrainChunkDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainChunkDataProvider.swift; sourceTree = "<group>"; };
+		757E154F255331290036AEB5 /* TerrainTile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainTile.swift; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
@@ -138,8 +142,10 @@
 			children = (
 				75FA6D7B254D35D000A1B409 /* Color.swift */,
 				75B90874254B796A00231E39 /* Tile.swift */,
+				757E154F255331290036AEB5 /* TerrainTile.swift */,
 				757E151125525B750036AEB5 /* VertexProtocol.swift */,
 				757E15312552A7350036AEB5 /* RandomTileChunkDataProvider.swift */,
+				757E154C2552C0130036AEB5 /* TerrainChunkDataProvider.swift */,
 			);
 			path = generation;
 			sourceTree = "<group>";
@@ -317,10 +323,12 @@
 				75FA6D78254D2DFA00A1B409 /* Size.swift in Sources */,
 				75FA6D3D254C06C600A1B409 /* InteractableMTKView.swift in Sources */,
 				759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */,
+				757E1550255331290036AEB5 /* TerrainTile.swift in Sources */,
 				757E152F2552A7040036AEB5 /* CountedChunk.swift in Sources */,
 				757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */,
 				757E152C2552A6EC0036AEB5 /* DatedChunk.swift in Sources */,
 				75B90875254B796A00231E39 /* Tile.swift in Sources */,
+				757E154D2552C0130036AEB5 /* TerrainChunkDataProvider.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataProvider.swift in Sources */,
 				75FA6D40254C098500A1B409 /* UserInteractionDelegate.swift in Sources */,
 				75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */,
