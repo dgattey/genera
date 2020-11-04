@@ -38,7 +38,7 @@ struct Tile {
         static let total = 6
         
         /// The corresponding tile color, expressed as a 4 item float array from 0...1
-        var color: [Float] {
+        var color: simd_float4 {
             switch self {
             case .water:
                 return Color.components(from: #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1))
@@ -58,33 +58,42 @@ struct Tile {
     
     // MARK: - variables
     
-    let x: Float
-    let y: Float
+    let x: Int
+    let y: Int
     let kind: Kind
     
     init(x: Int, y: Int, kind: Kind = .water) {
-        self.x = Float(x)
-        self.y = Float(y)
+        self.x = x
+        self.y = y
         self.kind = kind
         
     }
     
-    /// An array of xy vertices, with which to draw multiple triangles
-    var vertices: [Float] {
-        return [
-            x, y,
-            x + 1, y + 1,
-            x + 1, y,
-            x, y + 1,
-            x + 1, y + 1,
-            x, y,
+    /// Returns all vertices for this tile, with positions and colors!
+    var vertices: [GridVertex] {
+        return positions.map { GridVertex(position: $0, color: color) }
+    }
+    
+    /// An array of xy vertices, with which to draw multiple triangles, sized to pixels
+    private var positions: [simd_float2] {
+        let vector: (Int, Int) -> simd_float2 = { (x, y) in
+            return simd_float2(Float(x * Size.tileWidthInPixels), Float(y * Size.tileWidthInPixels))
+        }
+        let triangle1: [simd_float2] = [
+            vector(x, y),
+            vector(x + 1, y + 1),
+            vector(x + 1, y)
         ]
+        let triangle2: [simd_float2] = [
+            vector(x, y + 1),
+            vector(x + 1, y + 1),
+            vector(x, y),
+        ]
+        return triangle1 + triangle2
     }
     
     /// Color array, one rgba color for each vertex
-    var colors: [Float] {
-        return (0..<Size.verticesPerTile).flatMap({ _ in
-            return kind.color
-        })
+    private var color: simd_float4 {
+        return kind.color
     }
 }

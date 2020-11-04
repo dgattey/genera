@@ -11,9 +11,24 @@ import Combine
 import SwiftPriorityQueue
 
 /// Just generates a totally random map
-class RandomTileGenerator: NSObject, GeneratorDataDelegate {
+class RandomTileGenerator: NSObject, GeneratorDataDelegate, GeneratorProtocol {    
     
-    // MARK: constants
+    // MARK: - types
+    
+    /// A collection of buffer sizes for this generator
+    enum BufferSize {
+        
+        /// Size of an array of all vertices for one tile using size of VertexType
+        private static let vertices = Size.verticesPerTile * stride
+        
+        /// Size of a memory layout stride for the vertex type
+        static let stride = MemoryLayout<VertexType>.stride
+        
+        /// Size of an array of all vertices for one chunk
+        static let chunkVertices = vertices * Size.chunk * Size.chunk
+    }
+    
+    // MARK: - constants
     
     /// The length of the event loops where we process evictions + generate
     private static let eventLoopInterval: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(1)
@@ -21,7 +36,7 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
     /// The names of the shaders to use with this generator
     private static let shaderNames = (vertex: "gridVertexShader", fragment: "gridFragmentShader")
     
-    // MARK: variables
+    // MARK: - variables
     
     /// Basic dict of chunk -> array of tiles
     private var chunks = Dictionary<Chunk, [Tile]>()
@@ -65,21 +80,28 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
         }
         return ranges
     }
-
-    /// The amount of chunks in memory we allow (based on viewport size)
-    private var maxChunksInMemory: Int {
-        return paddedVisibleRanges.x.count * paddedVisibleRanges.y.count
-    }
     
     // MARK: - GeneratorDataDelegate
+    
+    typealias VertexType = GridVertex
     
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) {
         return RandomTileGenerator.shaderNames
     }
     
+    /// Size of all vertices in one chunk
+    var verticesBufferSize: Int {
+        return BufferSize.chunkVertices
+    }
+    
+    /// Stride of the vertex type we're using
+    var stride: Int {
+        return MemoryLayout<VertexType>.stride
+    }
+    
     /// Returns vertices for a particular chunk of data if it exists, or nil (and marks it as recently accessed for use in eviction)
-    func vertices(for chunk: Chunk) -> [Float] {
+    func vertices(for chunk: Chunk) -> [VertexType] {
         chunkAccessSemaphore.wait()
         unsafelyMarkChunkAsRecentlyAccessed(chunk)
         
@@ -89,27 +111,8 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
             return []
         }
         chunkAccessSemaphore.signal()
-        let tileWidth = Float(Size.tileWidthInPixels)
-        return tiles.flatMap { tile in
-            return tile.vertices.map { vertex in
-                return vertex * tileWidth
-            }
-        }
-    }
-    
-    /// Returns colors for a particular chunk of data if it exists, or nil
-    func colors(for chunk: Chunk) -> [Float] {
-        chunkAccessSemaphore.wait()
-        guard let tiles = chunks[chunk] else {
-            chunkAccessSemaphore.signal()
-            return []
-        }
-        chunkAccessSemaphore.signal()
-        return tiles.flatMap { tile in
-            return tile.colors.map { colorValue in
-                return colorValue
-            }
-        }
+
+        return tiles.flatMap { $0.vertices }
     }
     
     // MARK: - helper functions
@@ -255,11 +258,7 @@ class RandomTileGenerator: NSObject, GeneratorDataDelegate {
             evictOldestChunk)
     }
     
-}
-
-// MARK: - GenerationDelegate
-
-extension RandomTileGenerator: GeneratorProtocol {
+    // MARK: - GeneratorProtocol
     
     /// Just generates visible chunks to start with
     func startMapGeneration() {
