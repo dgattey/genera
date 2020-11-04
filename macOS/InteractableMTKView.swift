@@ -156,7 +156,7 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     /// directions take precedent over key press directions (as they have magnitude)
     private func panView() {
         let directions = mouseDirections.union(keyPressDirections)
-        let nonCancellableDirections =  directions.nonCancellable
+        let nonCancellableDirections = (VectoredDirection<Double>).nonCancelledDirections(from: directions)
         if !nonCancellableDirections.isEmpty {
             userInteractionDelegate?.userDidPanViewport(nonCancellableDirections)
         }
