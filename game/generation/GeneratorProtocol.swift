@@ -13,6 +13,9 @@ protocol GeneratorProtocol: NSObject {
     /// This should be weakly held - debug delegate for all kinds of updates
     var debugDelegate: DebugDelegate? { get set }
     
+    /// This should be weakly held - used to find out what's visible
+    var viewportDataDelegate: ViewportDataDelegate? { get set }
+    
     /// Starts generating the map itself
     func startMapGeneration() -> Void
     

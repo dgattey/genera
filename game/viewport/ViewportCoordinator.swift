@@ -24,14 +24,17 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     private struct ZoomLevel {
         
         /// Minimum zoom supported
-        static let min: Double = 0.4
+        static let min: Double = 0.2
         
         /// Max zoom supported
-        static let max: Double = 2.0
+        static let max: Double = 1.4
         
         /// The multiplier on the zoom amount
         static let multiplier = 0.01
     }
+    
+    /// Pad by at least this amount of chunks in any direction
+    private static let minChunkPadAmount = 2
     
     // MARK: - static helpers
     
@@ -48,16 +51,22 @@ class ViewportCoordinator: NSObject, ViewportDataDelegate {
     /// Converts a value to chunk space (rounded up or down depending on which side of zero we're on)
     private static func convertToChunkSpace(_ value: Double) -> Int {
         let converted = value / Double(Size.chunkInPixels)
-        return Int(value < 0 ? floor(converted) : ceil(converted))
+        return Int(round(converted))
     }
     
-    /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units)
+    /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units, with 10% padding or at least one chunk)
+    /// on all sides.
     private static func visibleChunks(from viewport: MTLViewport) -> (x: Range<Int>, y: Range<Int>) {
         let startX = convertToChunkSpace(viewport.originX - viewport.width)
         let startY = convertToChunkSpace(viewport.originY - viewport.height)
         let endX = convertToChunkSpace(viewport.originX + viewport.width)
         let endY = convertToChunkSpace(viewport.originY + viewport.height)
-        return ((startX..<endX), (startY..<endY))
+
+        let pad: (Range<Int>) -> Range<Int> = { range in
+            let distance: Int = max((range.endIndex - range.startIndex) / 3, minChunkPadAmount)
+            return (range.startIndex - distance ..< range.endIndex + distance)
+        }
+        return (pad(startX..<endX), pad(startY..<endY))
     }
     
     /// Convenience function for resizing a viewport to another size

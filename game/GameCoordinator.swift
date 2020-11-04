@@ -7,23 +7,24 @@
 
 import MetalKit
 
-/**
- Coordinates all of the game generation, rendering, and viewports
- */
+/// Coordinates all of the game generation, rendering, and viewports
 class GameCoordinator {
+    
+    /// This determines which type of map we're generating
+    typealias GeneratorType = RandomTileGenerator
     
     // MARK: variables
     
-    private let generator: GeneratorProtocol & GeneratorDataDelegate
+    private let generator: GeneratorType
     private let viewportCoordinator: ViewportCoordinator
-    private let renderer: MapRenderer
+    private let renderer: MapRenderer<GeneratorType>
     
     // MARK: initialization
     
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
     init?(view: GeneraMTLView, debugView: GeneraDebugView?) {
-        let generator = BasicGenerator()
+        let generator = GeneratorType()
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
               let renderer = MapRenderer(view: view, device: defaultDevice, generatorDataDelegate: generator) else {
             assertionFailure("Game coordinator cannot be initialized")

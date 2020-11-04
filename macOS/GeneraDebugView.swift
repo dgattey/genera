@@ -14,6 +14,7 @@ class GeneraDebugView: NSView {
     
     @IBOutlet var visibleChunkBounds: NSTextField!
     @IBOutlet var numGeneratedChunks: NSTextField!
+    @IBOutlet var generationQueue: NSTextField!
     @IBOutlet var userPosition: NSTextField!
     @IBOutlet var currentViewport: NSTextField!
 
@@ -34,6 +35,10 @@ extension GeneraDebugView: DebugDelegate {
     
     func didUpdateNumGeneratedChunks(to value: Int) {
         GeneraDebugView.update(numGeneratedChunks, to: value)
+    }
+    
+    func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int)) {
+        GeneraDebugView.update(generationQueue, to: value)
     }
     
     func didUpdateUserPosition(to value: MTLViewport) {
