@@ -19,7 +19,7 @@ class GameCoordinator {
     private let dataProvider: DataProvider
     
     /// Handles user changes to the viewport/translations/visibility of chunks
-    private let viewportCoordinator: ViewportCoordinator
+    private let viewportCoordinator: ViewportCoordinator<DataProvider>
     
     /// Coordinates loading and deleting chunks in response to user moving around. Also contains
     /// actual vertex data for use in rendering
@@ -34,7 +34,7 @@ class GameCoordinator {
     /// created correctly. Otherwise, sets everything up.
     init?(view: GeneraMTLView, debugView: GeneraDebugView?) {
         let dataProvider = DataProvider()
-        let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize)
+        let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
               let renderer = MapRenderer(view: view, device: defaultDevice, dataProvider: dataProvider, chunkCoordinator: chunkCoordinator) else {

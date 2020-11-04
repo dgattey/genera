@@ -60,11 +60,12 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
     /// If the command queue or pipeline state fails to get created, this will fail
     init?(view: MTKView,
           device: MTLDevice,
-          dataProvider: DataProvider,
+          dataProvider: DataProvider?,
           chunkCoordinator: ChunkCoordinator<DataProvider>) {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
-              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, shaders: dataProvider.shaders) else {
+              let shaders = dataProvider?.shaders,
+              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, shaders: shaders) else {
             return nil
         }
         

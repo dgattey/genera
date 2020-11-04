@@ -7,21 +7,19 @@
 
 import Metal
 
-/// ViewportCoordinator functions for use with Metal manipulations
-class ViewportCoordinator: NSObject, ViewportDataProvider {
-    
-    // MARK: - constants
+/// Private static constants for the viewport coordinator
+private enum ViewportCoordinatorConstant {
     
     /// The amount by which to translate in pixels when using keyboard or mouse
-    private static let translationStep: Double = 20
+    static let translationStep: Double = 20
     
     /// The amount by which to translate on a diagonal in pixels when using keyboard
     /// or mouse, resulting in the same diagonal movement when applied to both the
     /// horizontal and the vertical translation
-    private static let diagonalTranslationStep: Double = translationStep * sin(45)
+    static let diagonalTranslationStep: Double = translationStep * sin(45)
     
     /// All zoom levels
-    private struct ZoomLevel {
+    struct ZoomLevel {
         
         /// Minimum zoom supported
         static let min: Double = 0.2
@@ -34,7 +32,15 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
     }
     
     /// Pad by at least this amount of chunks in any direction
-    private static let minChunkPadAmount = 2
+    static let minChunkPadAmount = 2
+}
+
+/// ViewportCoordinator functions for use with Metal manipulations
+class ViewportCoordinator<DataProvider: ChunkDataProvider>: NSObject, ViewportDataProvider {
+    
+    // MARK: - constants
+    
+    
     
     // MARK: - static helpers
     
@@ -63,7 +69,7 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
         let endY = convertToChunkSpace(viewport.originY + viewport.height)
 
         let pad: (Range<Int>) -> Range<Int> = { range in
-            let distance: Int = max((range.endIndex - range.startIndex) / 3, minChunkPadAmount)
+            let distance: Int = max((range.endIndex - range.startIndex) / 3, ViewportCoordinatorConstant.minChunkPadAmount)
             return (range.startIndex - distance ..< range.endIndex + distance)
         }
         return (pad(startX..<endX), pad(startY..<endY))
@@ -95,7 +101,7 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
         var y = viewport.originY
         
         // Normalize by number of directions we're moving in, otherwise diagonal move amount is too much
-        let amount = directions.count == 2 ? diagonalTranslationStep : translationStep
+        let amount = directions.count == 2 ? ViewportCoordinatorConstant.diagonalTranslationStep : ViewportCoordinatorConstant.translationStep
         for value in directions {
             switch value.direction {
             case .east:
@@ -131,6 +137,9 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
     /// The current zoom level, within the min and max range
     private var currentZoomLevel: Double = 1.0
     
+    // MARK: - delegates
+    
+    weak var dataProvider: DataProvider?
     weak var viewportCoordinatorDelegate: ViewportCoordinatorDelegate?
     weak var debugDelegate: DebugDelegate?
     
@@ -159,11 +168,12 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
     
     // MARK: - initialization
     
-    /// Initializes the viewports to a size
-    init(initialSize: CGSize) {
+    /// Initializes the viewports to a size and saves the data provider
+    init(initialSize: CGSize, dataProvider: DataProvider?) {
         let initialViewport = ViewportCoordinator.viewport(byResizing: MTLViewport(), to: initialSize)
         self.userPosition = initialViewport
         self.currentViewport = initialViewport
+        self.dataProvider = dataProvider
     }
     
     // MARK: - helpers
@@ -176,12 +186,12 @@ class ViewportCoordinator: NSObject, ViewportDataProvider {
         var changeAmount = 1.0
         switch direction {
         case .in(let amount):
-            changeAmount -= amount * ZoomLevel.multiplier
+            changeAmount -= amount * ViewportCoordinatorConstant.ZoomLevel.multiplier
         case .out(let amount):
-            changeAmount += amount * ZoomLevel.multiplier
+            changeAmount += amount * ViewportCoordinatorConstant.ZoomLevel.multiplier
         }
         let prevZoom = currentZoomLevel
-        currentZoomLevel = max(ZoomLevel.min, min(ZoomLevel.max, currentZoomLevel * changeAmount))
+        currentZoomLevel = max(ViewportCoordinatorConstant.ZoomLevel.min, min(ViewportCoordinatorConstant.ZoomLevel.max, currentZoomLevel * changeAmount))
         
         // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center)
         // TODO: @dgattey this assumes pixel density of screen is 2x, figure out how to find that.

@@ -69,7 +69,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
     }
     
     /// Saves the generation function for use later
-    init(dataProvider: DataProvider) {
+    init(dataProvider: DataProvider?) {
         self.dataProvider = dataProvider
     }
     
