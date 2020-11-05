@@ -11,7 +11,7 @@ import Metal
 private enum ViewportCoordinatorConstant {
     
     /// The amount by which to translate in pixels when using keyboard or mouse
-    static let translationStep: Double = 20
+    static let translationStep: Double = 50
     
     /// The amount by which to translate on a diagonal in pixels when using keyboard
     /// or mouse, resulting in the same diagonal movement when applied to both the

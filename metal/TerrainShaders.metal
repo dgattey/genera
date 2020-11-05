@@ -67,22 +67,60 @@ float clampedMix(float base, float color, float amount, float min = 0.0, float m
     return returned;
 }
 
+constant float3 ice = float3(.95, .95, .94);
+constant float iceH = .92;
+constant float3 mtn = float3(.3, .34, .2);
+constant float mtnH = .76;
+constant float3 grass = float3(.1, .55, .14);
+constant float grassH = .4;
+constant float3 sand = float3(.7, .7, .1);
+constant float sandH = .35;
+constant float3 water = float3(.1, .1, .42);
+constant float waterH = .22;
+constant float3 deepwater = float3(.1, .1, .3);
+constant float blendThreshold = .08;
+constant float variationAmount = .1;
+
+float4 color(float3 base, float3 vars) {
+    float colorR = clampedMix(base.r, vars.r, variationAmount);
+    float colorG = clampedMix(base.g, vars.g, variationAmount);
+    float colorB = clampedMix(base.b, vars.b, variationAmount);
+    return float4(colorR, colorG, colorB, 1.0);
+}
+
+float4 blendColors(float3 color1, float3 color2, float threshold, float height, float3 vars, float blendSize = blendThreshold) {
+    float4 a = color(color1, vars);
+    float4 b = color(color2, vars);
+    float percentOfThreshold = (threshold - height + blendSize)/blendSize - 0.5 * blendSize;
+    return mix(a, b, max(min(percentOfThreshold, 1.0), 0.0));
+}
+
+float3 variations(float2 xy, float height) {
+    float2 varPos = xy * .0001;
+    float amtHeight = 0.78;
+    float var1 = mix(fractalBrownianMotion(varPos + 17.4), height, amtHeight);
+    float var2 = mix(fractalBrownianMotion(varPos + 71.), height, amtHeight);
+    float var3 = mix(fractalBrownianMotion(varPos + 27.2), height, amtHeight);
+    return float3(var1, var2, var3);
+}
+
 // Use some blended fractal brownian motion to generate a modulated color
 fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]]) {
     float2 pos = float2(in.colorPosition.xy) * 0.0001;
-    float3 color = float3(fractalBrownianMotion(pos), fractalBrownianMotion(pos - 20.0), fractalBrownianMotion(pos + 0.791));
+    float height = fractalBrownianMotion(pos);
+    float3 vars = variations(in.colorPosition, height);
     
-    if (color.r > 0.8 && color.g > 0.6) {
-        // "Sandy" color
-        return float4(clampedMix(0.7, color.r, 0.4), clampedMix(0.7, color.g, 0.4), color.b, 1.0);
-    } else if (color.r > 0.8 || color.g > 0.8) {
-        // "Ice" color
-        float3 mixed = clampedMix(0.97, color.b, 0.3);
-        return float4(mixed, 1.0);
-    } else if (color.b > 0.5) {
-        // "Water" color
-        float mixed = clampedMix(0.4, color.b, 0.3, 0.5, 0.8);
-        return float4(0.2, 0.3, mixed, 1.0);
+    if (height > iceH) {
+        return blendColors(ice, mtn, iceH, height, vars);
+    } else if (height > mtnH) {
+        return blendColors(mtn, grass, mtnH, height, vars);
+    } else if (height > grassH) {
+        return blendColors(grass, sand, grassH, height, vars);
+    } else if (height > sandH) {
+        return blendColors(sand, water, sandH, height, vars, blendThreshold * 0.4);
+    } else if (height > waterH) {
+        return blendColors(water, deepwater, waterH, height, vars);
+    } else {
+        return color(deepwater, vars);
     }
-    return float4(color, 1.0);
 }
