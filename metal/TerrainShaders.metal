@@ -44,62 +44,75 @@ vertex FragmentVertex terrainVertexShader(uint vertexID [[vertex_id]],
 
 constant const Biome peak = (Biome){
     .color = { .95, .95, .94 },
-    .height = .82,
+    .elevation = .9,
     .blendRange = .04,
 };
+constant const Biome highDesert = (Biome){
+    .color = { .65, .7, .5 },
+    .elevation = .84,
+    .blendRange = .06,
+};
 constant const Biome mountainside = (Biome){
-    .color = { .2, .24, .1 },
-    .height = .73,
+    .color = { .35, .38, .1 },
+    .elevation = .73,
     .blendRange = .08,
+};
+constant const Biome jungle = (Biome){
+    .color = { .12, .28, .16 },
+    .elevation = .5,
+    .blendRange = .11,
 };
 constant const Biome plains = (Biome){
     .color = { .16, .48, .16 },
-    .height = .62,
+    .elevation = .36,
     .blendRange = .04,
 };
 constant const Biome shore = (Biome){
     .color = { .82, .85, .2 },
-    .height = .6,
+    .elevation = .34,
     .blendRange = .02,
 };
 constant const Biome shallowWater = (Biome){
     .color = { .1, .15, .38 },
-    .height = .41,
+    .elevation = .3,
     .blendRange = .35,
 };
 constant const Biome deepWater = (Biome){
     .color = { .08, .12, .27 },
-    .height = 0,
+    .elevation = 0,
     .blendRange = 0.,
 };
 
 /// Collects all biomes, high to low
-constant const Biome allBiomes[] = { peak, mountainside, plains, shore, shallowWater, deepWater };
+constant const Biome allBiomes[] = { peak, highDesert, mountainside, jungle, plains, shore, shallowWater, deepWater };
 
 /// Total number of biomes we're using
 constant const int biomeCount = sizeof(allBiomes);
 
-/// Returns a color, mixing the base color with height a bit by a constant amount
-float4 color(Biome biome, float height, float heightWeight = 0) {
-    float colorR = clampedMix(biome.color.r, height, heightWeight);
-    float colorG = clampedMix(biome.color.g, height, heightWeight);
-    float colorB = clampedMix(biome.color.b, height, heightWeight);
+/// Returns a color, mixing the base color with elevation a bit by a constant amount
+float4 color(Biome biome, float elevation, float elevationWeight = 0) {
+    float colorR = clampedMix(biome.color.r, elevation, elevationWeight);
+    float colorG = clampedMix(biome.color.g, elevation, elevationWeight);
+    float colorB = clampedMix(biome.color.b, elevation, elevationWeight);
     return float4(colorR, colorG, colorB, 1.0);
 }
 
-/// Provides a color by blending two biome's colors in relation to a given height. Returns values in relation to the upper biome
+/// Provides a color by blending two biome's colors in relation to a given elevation. Returns values in relation to the upper biome
 /// i.e. if a solid color, it's the upper biome's color.
-float4 blend(Biome upperBiome, Biome lowerBiome, float height) {
-    float4 a = color(upperBiome, height);
-    float4 b = color(lowerBiome, height);
-    float percentOfThreshold = (upperBiome.height - height + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
+float4 blend(Biome upperBiome, Biome lowerBiome, float elevation) {
+    float4 a = color(upperBiome, elevation);
+    float4 b = color(lowerBiome, elevation);
+    float percentOfThreshold = (upperBiome.elevation - elevation + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
     return mix(a, b, max(min(percentOfThreshold, 1.0), 0.0));
 }
 
 // Generates noise within 0, 1, then turns that into blended biomes
 fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]]) {
     float2 pos = float2(in.colorPosition.xy);
-    float height = fractalBrownianMotion(pos, 14, 0.71, 0.0001, 0, 1);
+    float noise = fractalBrownianMotion(pos, 14, 0.71, 0.0001, 0, 1);
+    
+    // Makes some valleys & high peaks instead of being super spiky
+    float elevation = pow(noise, 1.8) + 0.2;
     
     // The biomes for the boundaries
     Biome upperBiome;
@@ -110,12 +123,12 @@ fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]]) {
     while (index + 1 < biomeCount) {
         upperBiome = allBiomes[index];
         lowerBiome = allBiomes[index + 1];
-        if (height > upperBiome.height) {
+        if (elevation > upperBiome.elevation) {
             index = biomeCount;
         }
         index++;
     }
     
     // We didn't blend anything so return the base color
-    return blend(upperBiome, lowerBiome, height);
+    return blend(upperBiome, lowerBiome, elevation);
 }

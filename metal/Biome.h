@@ -17,17 +17,17 @@
 
 #include <simd/simd.h>
 
-/// Defines a biome, consisting of a height and color that defines a particular biome
+/// Defines a biome, consisting of a elevation and color that defines a particular biome
 typedef struct Biome {
     
-    /// The color defining this biome
+    /// The color defining the core of this biome
     vector_float3 color;
     
-    /// The height where this biome sits
-    float height;
+    /// The elevation above which this biome sits
+    float elevation;
     
-    /// Biomes blend within this height range around the height (i.e. a biome defined at
-    /// height 0.6 will range from 0.6-blendRange/2 to 0.6+blendRange/2).
+    /// Biomes blend within this elevation range around the elevation (i.e. a biome defined at
+    /// elevation 0.6 will range from 0.6-blendRange/2 to 0.6+blendRange/2).
     float blendRange;
     
 } Biome;
