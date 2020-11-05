@@ -41,17 +41,17 @@ struct Tile: ChunkDataProtocol {
         var color: simd_float4 {
             switch self {
             case .water:
-                return Color.components(from: #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1))
             case .deepWater:
-                return Color.components(from: #colorLiteral(red: 0.01003021654, green: 0.3346161246, blue: 0.715423286, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0.01003021654, green: 0.3346161246, blue: 0.715423286, alpha: 1))
             case .sand:
-                return Color.components(from: #colorLiteral(red: 0.7593135834, green: 0.7986099124, blue: 0.6198268533, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0.7593135834, green: 0.7986099124, blue: 0.6198268533, alpha: 1))
             case .grass:
-                return Color.components(from: #colorLiteral(red: 0, green: 0.7016168237, blue: 0.1941453218, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0, green: 0.7016168237, blue: 0.1941453218, alpha: 1))
             case .tree:
-                return Color.components(from: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1))
             case .snow:
-                return Color.components(from: #colorLiteral(red: 0.9536334872, green: 0.957352221, blue: 1, alpha: 1))
+                return BiomeType.components(from: #colorLiteral(red: 0.9536334872, green: 0.957352221, blue: 1, alpha: 1))
             }
         }
     }

@@ -9,7 +9,7 @@ import Cocoa
 import simd
 
 /// Useful color function manipulations
-enum Color {
+extension BiomeType {
     
     /// Converts a color into its components, as a simd_float4
     static func components(from color: NSColor) -> simd_float4 {

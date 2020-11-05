@@ -484,6 +484,7 @@
 				CODE_SIGN_ENTITLEMENTS = config/GeneraMacOS.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = config/Info.plist;
@@ -492,6 +493,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_MODULES = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -509,6 +511,7 @@
 				CODE_SIGN_ENTITLEMENTS = config/GeneraMacOS.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = config/Info.plist;
@@ -517,6 +520,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_MODULES = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
