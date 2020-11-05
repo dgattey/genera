@@ -12,8 +12,8 @@ import simd
 /// Constants for this map renderer
 private enum MapRendererConstant {
     
-    /// Light blue background color
-    static let backgroundColor = MTLClearColorMake(0.0, 0.5, 1.0, 1.0)
+    /// Dark blue background color
+    static let backgroundColor = MTLClearColorMake(0.1, 0.1, 0.3, 1.0)
     
 }
 

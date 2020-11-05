@@ -13,7 +13,7 @@ struct TerrainTile: ChunkDataProtocol {
     
     /// Size of one tile in pixels
     static var tileSize: Int {
-        return 2056
+        return 4096
     }
     
     /// Size of one chunk in # of tiles - one chunk only has one tile for terrain for speed

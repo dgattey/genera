@@ -5,9 +5,6 @@
 //  Created by Dylan Gattey on 10/28/20.
 //
 
-//
-//  Header containing types and enum constants shared between Metal shaders and Swift/ObjC source
-//
 #ifndef SharedTypes_h
 #define SharedTypes_h
 
@@ -18,19 +15,13 @@
 #import <Foundation/Foundation.h>
 #endif
 
+//  This all gets imported into both Swift/ObjC code & Metal shaders, so it must be safe for both.
+
 #include <simd/simd.h>
 #import "GridShaderTypes.h"
 #import "TerrainShaderTypes.h"
-
-/// An index for buffer indices when passing data to Metal from the app
-typedef NS_ENUM(NSInteger, ShaderIndex)
-{
-    /// Data for the vertices themselves
-    ShaderIndexVertices = 0,
-    
-    /// Data for the viewport bounds to use in calculating normaliized positions
-    ShaderIndexViewport = 1,
-};
+#import "ShaderIndex.h"
+#import "Biome.h"
 
 #endif /* SharedTypes_h */
 

@@ -86,15 +86,41 @@ float simplexNoise(float2 v) {
     return 130.0 * dot(m, g);
 }
 
-// Uses 4 octaves and 0.7 amp changes
-float fractalBrownianMotion(float2 uv) {
-    float sum = 0;
-    float amp = 0.55;
-    for(int i = 0; i < 10; ++i)
+/// Implements fractal Brownian motion with multiple octaves, persistence, and scale
+float fractalBrownianMotion(float2 xy, int octaves, float persistence, float scale, float lowerBound, float upperBound) {
+    float maxAmp = 0;
+    float amp = 1;
+    float freq = scale;
+    float noise = 0;
+    for(int i = 0; i < octaves; ++i)
     {
-        sum += simplexNoise(uv) * amp;
-        uv += uv * 1.2;
-        amp *= 0.6;
+        noise += simplexNoise(xy * freq) * amp;
+        freq *= 2;
+        maxAmp += amp;
+        amp *= persistence;
     }
-    return sum;
+    noise /= maxAmp;
+    return noise * (upperBound - lowerBound) / 2 + (upperBound + lowerBound) / 2;
+}
+
+/// Overload with float3s. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
+float3 clampedMix(float3 base, float3 color, float amount, float min, float max) {
+    return float3(clampedMix(base, color, amount, min, max));
+}
+
+/// Overload with float3, and float for base. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
+float3 clampedMix(float base, float3 color, float amount, float min, float max) {
+    return float3(clampedMix(float3(base), color, amount, min, max));
+}
+
+/// Overload with float3, and float for color. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
+float3 clampedMix(float3 base, float color, float amount, float min, float max) {
+    return float3(clampedMix(color, float3(base), amount, min, max));
+}
+
+/// Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
+float clampedMix(float base, float color, float amount, float min, float max) {
+    float mixed = base + color * amount;
+    float returned = metal::max(min, metal::min(max, mixed));
+    return returned;
 }

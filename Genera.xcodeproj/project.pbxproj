@@ -65,6 +65,8 @@
 		757E15382552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportCoordinatorDelegate.swift; sourceTree = "<group>"; };
 		757E154C2552C0130036AEB5 /* TerrainChunkDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainChunkDataProvider.swift; sourceTree = "<group>"; };
 		757E154F255331290036AEB5 /* TerrainTile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainTile.swift; sourceTree = "<group>"; };
+		757E15562553C1650036AEB5 /* ShaderIndex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderIndex.h; sourceTree = "<group>"; };
+		757E15572553C1890036AEB5 /* Biome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Biome.h; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* GeneraMTLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneraMTLView.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
@@ -118,6 +120,8 @@
 			children = (
 				757E14EC2551525D0036AEB5 /* Util.h */,
 				757E14E9255151F50036AEB5 /* Util.metal */,
+				757E15562553C1650036AEB5 /* ShaderIndex.h */,
+				757E15572553C1890036AEB5 /* Biome.h */,
 				7503798E254A8537002A0C13 /* SharedTypes.h */,
 				757E150025523B210036AEB5 /* GridShaderTypes.h */,
 				7503798C254A8537002A0C13 /* GridShaders.metal */,

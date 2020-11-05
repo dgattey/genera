@@ -11,7 +11,7 @@ import Metal
 private enum ViewportCoordinatorConstant {
     
     /// The amount by which to translate in pixels when using keyboard or mouse
-    static let translationStep: Double = 50
+    static let translationStep: Double = 30
     
     /// The amount by which to translate on a diagonal in pixels when using keyboard
     /// or mouse, resulting in the same diagonal movement when applied to both the
@@ -32,7 +32,7 @@ private enum ViewportCoordinatorConstant {
     }
     
     /// Pad by at least this amount of chunks in any direction
-    static let minChunkPadAmount = 2
+    static let minChunkPadAmount = 1
 }
 
 /// ViewportCoordinator functions for use with Metal manipulations
