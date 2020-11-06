@@ -9,8 +9,9 @@
 
 #include <metal_stdlib>
 #include <simd/simd.h>
-#import "SharedTypes.h"
-#import "Util.h"
+#import "../SharedTypes.h"
+#import "../util/Color.h"
+#import "../util/SimplexNoise.h"
 
 using namespace metal;
 
@@ -213,9 +214,9 @@ constant const int biomeCount = sizeof(allBiomes);
 
 /// Returns a color, mixing the base color with elevation a bit by a constant amount
 float4 color(Biome biome, float elevation, float elevationWeight = 0) {
-    float colorR = clampedMix(biome.color.r, elevation, elevationWeight);
-    float colorG = clampedMix(biome.color.g, elevation, elevationWeight);
-    float colorB = clampedMix(biome.color.b, elevation, elevationWeight);
+    float colorR = mixColors(biome.color.r, elevation, elevationWeight);
+    float colorG = mixColors(biome.color.g, elevation, elevationWeight);
+    float colorB = mixColors(biome.color.b, elevation, elevationWeight);
     return float4(colorR, colorG, colorB, 1.0);
 }
 

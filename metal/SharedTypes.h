@@ -8,20 +8,14 @@
 #ifndef SharedTypes_h
 #define SharedTypes_h
 
-#ifdef __METAL_VERSION__
-#define NS_ENUM(_type, _name) enum _name : _type _name; enum _name : _type
-#define NSInteger metal::int32_t
-#else
-#import <Foundation/Foundation.h>
-#endif
-
 //  This all gets imported into both Swift/ObjC code & Metal shaders, so it must be safe for both.
-
 #include <simd/simd.h>
-#import "GridShaderTypes.h"
-#import "TerrainShaderTypes.h"
+#import "NSEnum.h"
 #import "ShaderIndex.h"
-#import "Biome.h"
+#import "grid/GridShaderTypes.h"
+#import "terrain/TerrainShaderTypes.h"
+#import "terrain/BiomeType.h"
+#import "terrain/Biome.h"
 
 #endif /* SharedTypes_h */
 

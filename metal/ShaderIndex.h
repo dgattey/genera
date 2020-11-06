@@ -8,6 +8,8 @@
 #ifndef ShaderIndex_h
 #define ShaderIndex_h
 
+#import "NSEnum.h"
+
 /// An index for buffer indices when passing data to Metal from the app
 typedef NS_ENUM(NSInteger, ShaderIndex)
 {

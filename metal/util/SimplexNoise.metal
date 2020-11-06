@@ -1,15 +1,15 @@
 //
-//  Util.metal
+//  SimplexNoise.metal
 //  Genera
 //
 //  Created by Dylan Gattey on 11/2/20.
 //
 
-// Has all util functions defined (make sure the Util.h file includes these defs)
+// Has all simplex noise functions defined (make sure the SimplexNoise.h file includes these defs)
 
 #include <metal_stdlib>
 #include <simd/simd.h>
-#include "Util.h"
+#include "SimplexNoise.h"
 
 using namespace metal;
 
@@ -101,26 +101,4 @@ float fractalBrownianMotion(float2 xy, int octaves, float persistence, float sca
     }
     noise /= maxAmp;
     return noise * (upperBound - lowerBound) / 2 + (upperBound + lowerBound) / 2;
-}
-
-/// Overload with float3s. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
-float3 clampedMix(float3 base, float3 color, float amount, float min, float max) {
-    return float3(clampedMix(base, color, amount, min, max));
-}
-
-/// Overload with float3, and float for base. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
-float3 clampedMix(float base, float3 color, float amount, float min, float max) {
-    return float3(clampedMix(float3(base), color, amount, min, max));
-}
-
-/// Overload with float3, and float for color. Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
-float3 clampedMix(float3 base, float color, float amount, float min, float max) {
-    return float3(clampedMix(color, float3(base), amount, min, max));
-}
-
-/// Mixes base with the amount of color specified, clamping to 0 and 1 or specifed defaults
-float clampedMix(float base, float color, float amount, float min, float max) {
-    float mixed = base + color * amount;
-    float returned = metal::max(min, metal::min(max, mixed));
-    return returned;
 }

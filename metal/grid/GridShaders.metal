@@ -9,10 +9,10 @@
 
 #include <metal_stdlib>
 #include <simd/simd.h>
-
-// Including header shared between this Metal shader code and Swift/C code executing Metal API commands
-#import "SharedTypes.h"
-#import "Util.h"
+#import "../NSEnum.h"
+#import "../SharedTypes.h"
+#import "../util/Color.h"
+#import "../util/SimplexNoise.h"
 
 using namespace metal;
 
