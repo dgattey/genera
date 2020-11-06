@@ -8,7 +8,7 @@
 import Foundation
 import Metal
 
-/// A Delegate for changes that occur in the viewport
+/// A delegate for changes that occur in the viewport
 protocol ViewportCoordinatorDelegate: NSObject {
     
     /// Called when the user position has changed to a new viewport

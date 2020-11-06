@@ -276,7 +276,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
         
         // Make sure our event loop is running!
         if (generationEventLoop == nil) {
-            generationEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
+            generationEventLoop = DispatchQueue.global(qos: .userInitiated).schedule(
                 after: DispatchQueue.SchedulerTimeType(.now()),
                 interval: ChunkCoordinatorConstant.eventLoopInterval,
                 generateClosestChunk)

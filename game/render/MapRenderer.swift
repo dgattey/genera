@@ -9,14 +9,6 @@ import Metal
 import MetalKit
 import simd
 
-/// Constants for this map renderer
-private enum MapRendererConstant {
-    
-    /// Dark blue background color
-    static let backgroundColor = MTLClearColorMake(0.1, 0.1, 0.3, 1.0)
-    
-}
-
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
 class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
     
@@ -104,10 +96,14 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
         return stateObject
     }
     
-    //. Configures the view itself once with everything it needs to start to render
+    //. Configures the view itself once with everything it needs to start to render - uses Dark Mode background color
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
-        view.clearColor = MapRendererConstant.backgroundColor
+        view.clearColor = MTLClearColor(
+            red: 56 / 255,
+            green: 57 / 255,
+            blue:  58 / 255,
+            alpha: 1)
         view.enableSetNeedsDisplay = true
     }
     
