@@ -10,7 +10,7 @@ import Cocoa
 import Combine
 
 /// A subclass of MTKView that handles key presses + mouse movements to update the viewport
-class InteractableMTKView: MTKView, GeneraMTLView {
+class InteractableMTKView: MTKView, InteractableViewProtocol {
     
     // MARK: - constants
     
@@ -51,9 +51,16 @@ class InteractableMTKView: MTKView, GeneraMTLView {
     
     // MARK: - variables
     
+    /// Called in response to user interaction
     weak var userInteractionDelegate: UserInteractionDelegate?
+    
+    /// The directions key presses are currently sending us
     private var keyPressDirections = Set<VectoredDirection<Double>>()
+    
+    /// The directions the mouse drag is currently sending us
     private var mouseDirections = Set<VectoredDirection<Double>>()
+    
+    /// Runs the processer for pans to notify the viewport
     private var panViewEventLoop: Cancellable?
     
     /// Makes sure we can zooms and key presses

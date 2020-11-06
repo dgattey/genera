@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Provides giant 1-tile chunks for use in generation of terrain
 class TerrainChunkDataProvider: NSObject, ChunkDataProvider {
 
     typealias ChunkDataType = TerrainTile
@@ -18,7 +19,7 @@ class TerrainChunkDataProvider: NSObject, ChunkDataProvider {
     
     /// Do the hard work of generating a chunk of data with random tile types
     func generateChunkData(for chunk: Chunk) -> [ChunkDataType] {
-        return [TerrainTile(x: chunk.x * ChunkDataType.chunkSize, y: chunk.y * ChunkDataType.chunkSize)]
+        return [TerrainTile(x: chunk.x, y: chunk.y)]
     }
     
 }

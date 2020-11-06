@@ -7,11 +7,8 @@
 
 import MetalKit
 
-/// Coordinates the game, created from a Metal view and an optional debug view
-class GameCoordinator {
-    
-    /// This determines which type of map we're generating
-    typealias DataProvider = TerrainChunkDataProvider
+/// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
+class GameCoordinator<DataProvider: ChunkDataProvider> {
     
     // MARK: variables
     
@@ -32,7 +29,7 @@ class GameCoordinator {
     
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
-    init?(view: GeneraMTLView, debugView: GeneraDebugView?) {
+    init?(view: InteractableViewProtocol, debugDelegate: DebugDelegate?) {
         let dataProvider = DataProvider()
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
@@ -46,7 +43,7 @@ class GameCoordinator {
         self.dataProvider = dataProvider
         self.viewportCoordinator = viewportCoordinator
         
-        setupDelegates(with: view, debugDelegate: debugView)
+        setupDelegates(with: view, debugDelegate: debugDelegate)
         
         // Resize the renderer's view to make sure we're ready before map generation
         renderer.mtkView(view, drawableSizeWillChange: view.drawableSize)
@@ -55,7 +52,8 @@ class GameCoordinator {
         DispatchQueue.global(qos: .utility).async(execute: chunkCoordinator.startMapGeneration)
     }
     
-    private func setupDelegates(with view: GeneraMTLView, debugDelegate: DebugDelegate?) {
+    private func setupDelegates(with view: InteractableViewProtocol,
+                                debugDelegate: DebugDelegate?) {
         // User interaction delegates first
         view.delegate = renderer
         view.userInteractionDelegate = viewportCoordinator
