@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Conforms BiomeType to string convertible so it can print properly
 extension BiomeType: CustomStringConvertible {
     
     public var description: String {

@@ -69,6 +69,7 @@ class ScrollableStackView: NSView {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.hasVerticalScroller = true
         scrollView.drawsBackground = false
+        scrollView.borderType = .noBorder
         scrollView.contentView = clipView
         scrollView.documentView = underlyingStackView
         

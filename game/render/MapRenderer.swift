@@ -10,7 +10,8 @@ import MetalKit
 import simd
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
-class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
+class MapRenderer<DataProvider: ChunkDataProvider,
+                  ShaderDataProviderType: ShaderDataProvider>: NSObject, MTKViewDelegate {
     
     // MARK: - delegates
 
@@ -43,6 +44,9 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
     
     /// Provides most data for this renderer
     private weak var dataProvider: DataProvider?
+    
+    /// For querying for data from the shader data provider (comes from another source)
+    weak var shaderDataProvider: ShaderDataProviderType?
     
     /// Provides chunk data for this renderer
     private weak var chunkCoordinator: ChunkCoordinator<DataProvider>?
@@ -109,6 +113,12 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
     
     // MARK: - drawing functions
     
+    func configDidUpdate() {
+        drawingSemaphore.signal()
+        view.setNeedsDisplay(view.bounds)
+        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
+    }
+    
     /// Makes sure bytes are stored for the new user position viewport
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
         viewportBufferData = [
@@ -122,12 +132,26 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBytes(&viewportBufferData, length: viewportBufferData.count * MemoryLayout<Float>.stride, index: ShaderIndex.viewport.rawValue)
+        encoder.setVertexBytes(&viewportBufferData,
+                               length: viewportBufferData.count * MemoryLayout<Float>.stride,
+                               index: ShaderIndex.viewport.rawValue)
 
         for (_, vertexBuffer) in vertexBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.vertices.rawValue)
             encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: DataProvider.ChunkDataType.verticesPerChunk )
         }
+    }
+    
+    /// Adds `shaderDataProvider` content to the encoder
+    private func addShaderConfigData(to encoder: MTLRenderCommandEncoder) {
+        var shaderConfigBufferData = shaderDataProvider?.configData
+        var shaderBiomeBufferData = shaderDataProvider?.allBiomes ?? []
+        encoder.setFragmentBytes(&shaderConfigBufferData,
+                                 length: MemoryLayout<ShaderDataProviderType.ShaderConfigDataType>.stride,
+                                 index: ShaderIndex.configData.rawValue)
+        encoder.setFragmentBytes(&shaderBiomeBufferData,
+                                 length: shaderBiomeBufferData.count * MemoryLayout<Biome>.stride,
+                                 index: ShaderIndex.biomeData.rawValue)
     }
 
     // MARK: - MTKViewDelegate
@@ -162,6 +186,7 @@ class MapRenderer<DataProvider: ChunkDataProvider>: NSObject, MTKViewDelegate {
         // Configure the encoder & draw to it
         encoder.setViewport(viewport)
         encoder.setRenderPipelineState(renderPipelineState)
+        addShaderConfigData(to: encoder)
         drawShapes(to: encoder)
         encoder.endEncoding()
         

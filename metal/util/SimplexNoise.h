@@ -10,10 +10,27 @@
 #ifndef SimplexNoise_h
 #define SimplexNoise_h
 
+#include <simd/simd.h>
+#import "../NSEnum.h"
+
+/// Fractal Brownian Motion input data for use in shaders
+struct FBMData {
+    
+    /// Octaves of noise to use
+    int octaves;
+    
+    /// Amount to multiply amplitude by every iteration
+    float persistence;
+    
+    /// Frequency of the noise
+    float scale;
+    
+};
+
 /// Creates one value of simplex noise from a 2d point
-float simplexNoise(float2 v);
+float simplexNoise(simd_float2 v);
 
 /// Implements fractal Brownian motion with multiple octaves, persistence, and scale
-float fractalBrownianMotion(float2 xy, int octaves, float persistence, float scale, float lowerBound, float upperBound);
+float fractalBrownianMotion(simd_float2 xy, struct FBMData data, float lowerBound, float upperBound);
 
 #endif /* SimplexNoise_h */

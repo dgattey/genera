@@ -22,10 +22,9 @@ class GeneraWindowController: NSWindowController {
         }
         
         gameViewController.debugDelegate = sidePanelViewController.debugView
-        
+        gameViewController.shaderConfigDataProvider = sidePanelViewController.terrainConfigView
+        sidePanelViewController.terrainConfigView.updateDelegate = gameViewController
         DispatchQueue.main.async {
-            self.window?.toolbar?.insertItem(withItemIdentifier: .flexibleSpace, at: 0)
-            self.window?.toolbar?.insertItem(withItemIdentifier: .toggleSidebar, at: 1)
             gameViewController.start()
         }
     }
@@ -44,4 +43,53 @@ class GeneraWindowController: NSWindowController {
         return nil
     }
     
+}
+
+// MARK: - NSToolbarDelegate
+
+extension GeneraWindowController: NSToolbarDelegate {
+
+    /// The identifer for the window's label
+    private static let appTitleID = "appTitle"
+    
+    /// Default items
+    private static let defaultToolbarIDs: [NSToolbarItem.Identifier] = [
+        NSToolbarItem.Identifier(appTitleID),
+        .flexibleSpace,
+        .toggleSidebar
+    ]
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return GeneraWindowController.defaultToolbarIDs
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return GeneraWindowController.defaultToolbarIDs
+    }
+    
+    func toolbar(_ toolbar: NSToolbar,
+                 itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
+                 willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        switch itemIdentifier {
+        case NSToolbarItem.Identifier(GeneraWindowController.appTitleID):
+            let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier)
+            toolbarItem.view = GeneraWindowController.buildAppLabel()
+            return toolbarItem
+        default:
+            return NSToolbarItem(itemIdentifier: itemIdentifier)
+        }
+    }
+    
+    /// Builds a view of labels for the title of the app
+    private static func buildAppLabel() -> NSView {
+        let view = NSStackView()
+        view.distribution = .equalSpacing
+        view.alignment = .centerY
+        
+        let titleView: NSTextField = LabeledView.createLabel(from: "Genera", style: .appBold)
+        view.addView(titleView, in: .center)
+        
+        titleView.heightAnchor.constraint(equalToConstant: LabeledView.HeaderStyle.appBold.font.pointSize * 0.88).isActive = true
+        return view
+    }
 }

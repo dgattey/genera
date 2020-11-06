@@ -13,9 +13,10 @@
 #import "NSEnum.h"
 #import "ShaderIndex.h"
 #import "grid/GridShaderTypes.h"
-#import "terrain/TerrainShaderTypes.h"
 #import "terrain/BiomeType.h"
 #import "terrain/Biome.h"
+#import "terrain/TerrainShaderConfigData.h"
+#import "terrain/TerrainShaderTypes.h"
 
 #endif /* SharedTypes_h */
 

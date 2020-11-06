@@ -15,6 +15,9 @@ enum LabeledView {
     /// Styles of headers (labels) we can create
     enum HeaderStyle {
         
+        /// Represents the bolded toolbar label for the whole app
+        case appBold
+        
         /// Represents a full section with a big header
         case section
         
@@ -24,20 +27,24 @@ enum LabeledView {
         /// The font for this type of header (sized and weighted appropriately)
         var font: NSFont {
             switch self {
+            case .appBold:
+                return NSFont.systemFont(ofSize: 100, weight: .heavy)
             case .section:
-                return NSFont.boldSystemFont(ofSize: 24.0)
+                return NSFont.systemFont(ofSize: 30, weight: .heavy)
             case .field:
-                return NSFont.systemFont(ofSize: 14.0, weight: .medium)
+                return NSFont.systemFont(ofSize: 14, weight: .medium)
             }
         }
         
         /// The spacing that appears around this header in a stack (total: half above, half below)
         var spacing: CGFloat {
             switch self {
+            case .appBold:
+                return 0
             case .section:
-                return 32.0
+                return 32
             case .field:
-                return 16.0
+                return 16
             }
         }
     }
@@ -47,7 +54,8 @@ enum LabeledView {
     /// Creates a label text field with string and font size
     static func createLabel(from text: String, style: HeaderStyle) -> NSTextField {
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: style.font
+            .font: style.font,
+            .foregroundColor: NSColor.windowBackgroundColor,
         ]
         let string = NSAttributedString(string: text, attributes: attributes)
         let field = NSTextField(labelWithAttributedString: string)

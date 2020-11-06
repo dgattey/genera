@@ -23,8 +23,8 @@ class SidePanelViewController: NSViewController {
     /// Debug view for the whole app
     let debugView: DebugView = DebugView()
     
-    /// Config view for the game
-    let configView = ConfigView()
+    /// Config view for the terrain generator
+    let terrainConfigView = TerrainConfigView()
     
     /// MARK: - functions
     
@@ -58,8 +58,8 @@ class SidePanelViewController: NSViewController {
     override func viewDidLoad() {
         view.translatesAutoresizingMaskIntoConstraints = false
         let stackView = SidePanelViewController.addScrollableStackView(to: view)
-        stackView.underlyingStackView.addView(configView, in: .top)
         stackView.underlyingStackView.addView(debugView, in: .top)
+        stackView.underlyingStackView.addView(terrainConfigView, in: .top)
     }
 
 }

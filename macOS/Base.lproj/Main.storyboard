@@ -122,6 +122,9 @@
                         <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="small" id="Jul-at-Bb0">
                             <allowedToolbarItems/>
                             <defaultToolbarItems/>
+                            <connections>
+                                <outlet property="delegate" destination="Tc3-vS-wKE" id="mGU-Sb-AIU"/>
+                            </connections>
                         </toolbar>
                         <connections>
                             <outlet property="delegate" destination="Tc3-vS-wKE" id="JbV-lO-2EJ"/>
@@ -142,7 +145,7 @@
                 <splitViewController id="cXq-wP-lTF" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem holdingPriority="260" id="nFi-vW-mEA"/>
-                        <splitViewItem canCollapse="YES" behavior="sidebar" separatorStyle="none" id="mma-QM-U96"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" separatorStyle="none" id="mma-QM-U96"/>
                     </splitViewItems>
                     <splitView key="splitView" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6us-nn-m3P">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
