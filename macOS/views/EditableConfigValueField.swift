@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/7/20.
 //
 
-import Cocoa
+import AppKit
 
 /// A field with associated value type for use later in delegate methods
 class EditableConfigValueField: NSTextField {

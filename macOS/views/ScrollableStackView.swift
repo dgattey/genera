@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// Because Apple makes this hard, creates a scrollable stack view using a custom clip view.
 /// Configurable in a certain direction, using the constructor.

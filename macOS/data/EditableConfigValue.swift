@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// A config value, containing the text field used to display the value, plus a default fallback
 class EditableConfigValue<T: LosslessStringConvertible> {

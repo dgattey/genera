@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// All the views that appear in our side panel, within a scrollable stack view
 class SidePanelViewController: NSViewController {

@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// Contains a bunch of static funcs to create views with associated labels in stacks
 enum LabeledView {

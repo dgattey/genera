@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {
