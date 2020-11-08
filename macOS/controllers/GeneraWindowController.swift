@@ -11,6 +11,12 @@ import MetalKit
 /// Owns the views in the app and starts the game controller after an event loop on app start
 class GeneraWindowController: NSWindowController {
     
+    /// The controller running the game - should always exist but optional for safety
+    private var gameViewController: GameViewController?
+    
+    /// The controller in charge of the sidebar - should always exist but optional for safety
+    private var sidePanelViewController: SidePanelViewController?
+    
     /// Sets up whole app, using the next run loop to make sure the window has resized at least once before creating the coordinator
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -20,13 +26,10 @@ class GeneraWindowController: NSWindowController {
             assertionFailure("Views incorrectly set up")
             return
         }
-        
-        // TODO: @dgattey fix this up
+        self.gameViewController = gameViewController
+        self.sidePanelViewController = sidePanelViewController
         gameViewController.debugDelegate = sidePanelViewController.debugDelegate
-        let configView = TerrainConfigView()
-        configView.updateDelegate = gameViewController
-        gameViewController.shaderConfigDataProvider = configView
-        sidePanelViewController.add(configView: configView)
+        gameViewController.gameControllerDelegate = self
         
         DispatchQueue.main.async {
             gameViewController.start()
@@ -45,6 +48,18 @@ class GeneraWindowController: NSWindowController {
         }
         
         return nil
+    }
+    
+}
+
+// MARK: - GameControllerDelegate
+
+extension GeneraWindowController: GameControllerDelegate {
+    
+    /// Adds the new config view to the sidebar
+    func gameControllerDidAdd<T>(configView: T) where T : ConfigView {
+        sidePanelViewController?.add(configView: configView)
+        configView.updateDelegate = gameViewController
     }
     
 }

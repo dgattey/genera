@@ -34,11 +34,7 @@ class GameViewController: NSViewController {
     }
     
     /// Shader config data provider passthrough
-    weak var shaderConfigDataProvider: ShaderDataProviderType? {
-        didSet {
-            coordinator?.shaderDataProvider = shaderConfigDataProvider
-        }
-    }
+    weak var gameControllerDelegate: GameControllerDelegate?
     
     /// Starts the game by creating the coordinator, then kicking it off
     func start() {
@@ -48,9 +44,13 @@ class GameViewController: NSViewController {
         }
         self.coordinator = coordinator
         
+        // Create the config view too
+        let configView = ShaderDataProviderType()
+        gameControllerDelegate?.gameControllerDidAdd(configView: configView)
+        
         // Set up the right data and start the coordination
         coordinator.debugDelegate = debugDelegate
-        coordinator.shaderDataProvider = shaderConfigDataProvider
+        coordinator.shaderDataProvider = configView
         coordinator.start()
     }
     

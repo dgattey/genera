@@ -8,7 +8,7 @@
 import AppKit
 
 /// Represents a view we can use for configuration
-protocol ConfigView: NSView {
+protocol ConfigView: NSView, ShaderDataProvider {
     
     /// Weakly held update delegate for use with sending updates out
     var updateDelegate: ConfigUpdateDelegate? { get set }
