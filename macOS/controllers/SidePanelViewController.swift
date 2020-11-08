@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// All the views that appear in our side panel, within a scrollable stack view
 class SidePanelViewController: NSViewController {
@@ -13,10 +13,10 @@ class SidePanelViewController: NSViewController {
     // MARK: - constants
     
     /// Min width of the view owned here
-    private static let minWidth: CGFloat = 250
+    private static let minWidth: CGFloat = 380
     
     /// The spacing between subviews
-    private static let interItemSpacing = LabeledView.HeaderStyle.section.spacing * 1.5
+    static let interItemSpacing = LabeledView.HeaderStyle.section.spacing * 1.5
     
     // MARK: - variables
     

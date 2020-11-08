@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// The game's view controller - owns the coordinator and kicks off the game itself
 class GameViewController: NSViewController {

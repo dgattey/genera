@@ -13,8 +13,9 @@
 
 using namespace metal;
 
-float3 mod289(float3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-float2 mod289(float2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+// 0.003460207612 is ~ 1/289
+float3 mod289(float3 x) { return x - floor(x * (1.0 * 0.003460207612)) * 289.0; }
+float2 mod289(float2 x) { return x - floor(x * (1.0 * 0.003460207612)) * 289.0; }
 float3 permute(float3 x) { return mod289(((x*34.0)+1.0)*x); }
 
 //
@@ -30,14 +31,12 @@ float3 permute(float3 x) { return mod289(((x*34.0)+1.0)*x); }
 float simplexNoise(float2 v) {
     
     // Precompute values for skewed triangular grid
-    const float4 C = float4(0.211324865405187,
-                                          // (3.0-sqrt(3.0))/6.0
-                                          0.366025403784439,
-                                          // 0.5*(sqrt(3.0)-1.0)
-                                          -0.577350269189626,
-                                          // -1.0 + 2.0 * C.x
-                                          0.024390243902439);
-                                          // 1.0 / 41.0
+    const float4 C = float4(
+        0.211324865405187, // (3.0-sqrt(3.0))/6.0
+        0.366025403784439, // 0.5*(sqrt(3.0)-1.0)
+        -0.577350269189626, // -1.0 + 2.0 * C.x
+        0.024390243902439); // 1.0 / 41.0
+        
     
     // First corner (x0)
     float2 i  = floor(v + dot(v, C.yy));
@@ -86,19 +85,20 @@ float simplexNoise(float2 v) {
     return 130.0 * dot(m, g);
 }
 
-/// Implements fractal Brownian motion with multiple octaves, persistence, and scale
-float fractalBrownianMotion(float2 xy, FBMData data, float lowerBound, float upperBound) {
+/// Implements fractal Brownian motion with multiple octaves, persistence, scale, frequency, and compression + a seed
+float fractalBrownianMotion(float2 xy, FBMData data) {
     float maxAmp = 0;
     float amp = 1;
     float freq = data.scale;
     float noise = 0;
+    float modSeed = float(data.seed % 4096);
     for(int i = 0; i < data.octaves; ++i)
     {
-        noise += simplexNoise(xy * freq) * amp;
-        freq *= 2;
+        noise += simplexNoise(xy * freq + modSeed) * amp;
+        freq *= 2.0;
         maxAmp += amp;
         amp *= data.persistence;
     }
     noise /= maxAmp;
-    return noise * (upperBound - lowerBound) / 2 + (upperBound + lowerBound) / 2;
+    return noise * data.compression;
 }

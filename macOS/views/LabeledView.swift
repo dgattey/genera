@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Cocoa
+import AppKit
 
 /// Contains a bunch of static funcs to create views with associated labels in stacks
 enum LabeledView {
@@ -53,9 +53,10 @@ enum LabeledView {
     
     /// Creates a label text field with string and font size
     static func createLabel(from text: String, style: HeaderStyle) -> NSTextField {
+        let color = NSColor.windowBackgroundColor.blended(withFraction: 0.65, of: NSColor.windowFrameColor)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: style.font,
-            .foregroundColor: NSColor.windowBackgroundColor,
+            .foregroundColor: color ?? NSColor.windowFrameColor,
         ]
         let string = NSAttributedString(string: text, attributes: attributes)
         let field = NSTextField(labelWithAttributedString: string)

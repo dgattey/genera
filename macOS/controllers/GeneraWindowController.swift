@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/1/20.
 //
 
-import Cocoa
+import AppKit
 import MetalKit
 
 /// Owns the views in the app and starts the game controller after an event loop on app start

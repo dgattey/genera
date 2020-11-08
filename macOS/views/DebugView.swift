@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Cocoa
+import AppKit
 
 // MARK: - DebugView
 
@@ -44,7 +44,7 @@ class DebugView: NSStackView {
         orientation = .vertical
         alignment = .leading
         distribution = .fill
-        LabeledView.addLabel("Debug Data", style: .section, toStack: self)
+        LabeledView.addLabel("Debug Info", style: .section, toStack: self)
         LabeledView.addView(visibleChunkBounds, labeledWith: "Visible chunk bounds", toStack: self)
         LabeledView.addView(numGeneratedChunks, labeledWith: "Generated chunks", toStack: self)
         LabeledView.addView(generationQueue, labeledWith: "Generation queue", toStack: self)

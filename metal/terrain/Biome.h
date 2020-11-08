@@ -11,7 +11,7 @@
 #include <simd/simd.h>
 
 /// Defines a biome, consisting of a elevation and color that defines a particular biome
-typedef struct Biome {
+struct Biome {
     
     /// The color defining the core of this biome
     vector_float3 color;
@@ -29,6 +29,6 @@ typedef struct Biome {
     /// elevation 0.6 will range from 0.6-blendRange/2 to 0.6+blendRange/2).
     float blendRange;
     
-} Biome;
+};
 
 #endif /* Biome_h */

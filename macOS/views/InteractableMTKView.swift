@@ -6,7 +6,7 @@
 //
 
 import MetalKit
-import Cocoa
+import AppKit
 import Combine
 
 /// A subclass of MTKView that handles key presses + mouse movements to update the viewport
@@ -74,12 +74,6 @@ class InteractableMTKView: MTKView, InteractableViewProtocol {
     }
     
     // MARK: - initialization
-    
-    /// Make sure that as soon as this view appears, it grabs first responder status
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        becomeFirstResponder()
-    }
     
     // MARK: - handle events
     
