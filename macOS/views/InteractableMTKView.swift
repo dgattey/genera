@@ -75,12 +75,6 @@ class InteractableMTKView: MTKView, InteractableViewProtocol {
     
     // MARK: - initialization
     
-    /// Make sure that as soon as this view appears, it grabs first responder status
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        becomeFirstResponder()
-    }
-    
     // MARK: - handle events
     
     /// Use the y axis's scrolling delta to zoom the viewport in or out
