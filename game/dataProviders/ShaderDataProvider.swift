@@ -8,7 +8,7 @@
 import Foundation
 
 // A protocol any provider of shader config data must conform to
-protocol ShaderDataProvider: NSObject {
+protocol ShaderDataProvider: class {
     
     /// The type of data stored in by this provider
     associatedtype ShaderConfigDataType: ShaderConfigDataProtocol
