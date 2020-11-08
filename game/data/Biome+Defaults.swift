@@ -14,7 +14,7 @@ extension Biome {
         return Biome(
             color: vector_float3(0.2188037932, 0.210770309, 0.3924256861),
             minElevation: -Float.infinity,
-            maxElevation: 0.07,
+            maxElevation: 0.05,
             maxMoisture: Float.infinity,
             blendRange: 0.02
         )
@@ -33,8 +33,8 @@ extension Biome {
     private static var shore: Biome {
         return Biome(
             color: vector_float3(0.6381754875, 0.5679113269, 0.4531891346),
-            minElevation: 0.12,
-            maxElevation: 0.22,
+            minElevation: 0.1,
+            maxElevation: 0.12,
             maxMoisture: 0.97,
             blendRange: 0.02
         )
@@ -75,7 +75,7 @@ extension Biome {
             color: vector_float3(0.8708811402, 0.8700690866, 0.9006112814),
             minElevation: 0.8,
             maxElevation: Float.infinity,
-            maxMoisture: 0.1,
+            maxMoisture: Float.infinity,
             blendRange: 0.02
         )
     }
@@ -153,9 +153,9 @@ extension Biome {
     private static var subtropicalDesert: Biome {
         return Biome(
             color: vector_float3(0.8410642147, 0.7242162228, 0.5193104148),
-            minElevation: 0.4,
-            maxElevation: 0.4,
-            maxMoisture: 0.4,
+            minElevation: 0,
+            maxElevation: Float.infinity,
+            maxMoisture: 0.16,
             blendRange: 0.02
         )
     }
@@ -163,8 +163,8 @@ extension Biome {
     private static var grassland2: Biome {
         return Biome(
             color: vector_float3(0.4925258756, 0.6802223325, 0.2770718932),
-            minElevation: 0.22,
-            maxElevation: 0.3,
+            minElevation: 0,
+            maxElevation: Float.infinity,
             maxMoisture: 0.33,
             blendRange: 0.02
         )
@@ -173,8 +173,8 @@ extension Biome {
     private static var tropicalSeasonalForest: Biome {
         return Biome(
             color: vector_float3(0.2234450281, 0.6123558879, 0.2096185088),
-            minElevation: 0.22,
-            maxElevation: 0.3,
+            minElevation: 0,
+            maxElevation: Float.infinity,
             maxMoisture: 0.66,
             blendRange: 0.02
         )
@@ -183,8 +183,8 @@ extension Biome {
     private static var tropicalRainforest: Biome {
         return Biome(
             color: vector_float3(0, 0.476154685, 0.32167539),
-            minElevation: 0.22,
-            maxElevation: 0.3,
+            minElevation: 0,
+            maxElevation: Float.infinity,
             maxMoisture: Float.infinity,
             blendRange: 0.02
         )

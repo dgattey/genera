@@ -13,7 +13,7 @@ enum DefaultTerrainData {
     static let seed: String = "puppy"
     
     /// In the shader, this scales all coordinates
-    static let globalScalar: Float = 0.0005
+    static let globalScalar: Float = 0.03
     
     /// The offset from 0 the sea level should have
     static let seaLevelOffset: Float = -0.82
@@ -29,18 +29,18 @@ enum DefaultTerrainData {
     
     /// Defaults for FBMData for elevation noise generation
     static let elevationFMB = FBMData(
-        octaves: 4,
-        persistence: 0.75,
-        scale: 1,
-        compression: 1.7)
+        octaves: 11,
+        persistence: 0.55,
+        scale: 0.01,
+        compression: 0.3,
         seed: 0)
     
     /// Defaults for FBMData for moisture noise generation
     static let moistureFMB = FBMData(
-        octaves: 1,
-        persistence: 0,
-        scale: 0.0,
-        compression: 0)
+        octaves: 9,
+        persistence: 0.6,
+        scale: 0.03,
+        compression: 2,
         seed: 0)
     
     /// Default amount to weight elevation in color generation [0-1]
