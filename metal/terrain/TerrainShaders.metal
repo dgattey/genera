@@ -43,34 +43,38 @@ vertex FragmentVertex terrainVertexShader(uint vertexID [[vertex_id]],
     return out;
 }
 
-/// Returns a color, mixing the base color with elevation a bit by a constant amount
-float4 color(Biome biome, float elevation, float elevationWeight = 0) {
-    float colorR = mixColors(biome.color.r, elevation, elevationWeight);
-    float colorG = mixColors(biome.color.g, elevation, elevationWeight);
-    float colorB = mixColors(biome.color.b, elevation, elevationWeight);
+/// Returns a color, mixing the base color with noise a bit by a given amount
+float4 color(Biome biome, float noise, float weight) {
+    float colorR = mixColors(biome.color.r, noise, weight);
+    float colorG = mixColors(biome.color.g, noise, weight);
+    float colorB = mixColors(biome.color.b, noise, weight);
     return float4(colorR, colorG, colorB, 1.0);
 }
 
 /// TODO: @dgattey use this again!
 /// Provides a color by blending two biome's colors in relation to a given elevation. Returns values in relation to the upper biome
 /// i.e. if a solid color, it's the upper biome's color.
-float4 blend(Biome upperBiome, Biome lowerBiome, float elevation) {
-    float4 a = color(upperBiome, elevation);
-    float4 b = color(lowerBiome, elevation);
-    float percentOfThreshold = (upperBiome.minElevation - elevation + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
-    return mix(a, b, max(min(percentOfThreshold, 1.0), 0.0));
+float4 blend(Biome upperBiome, Biome lowerBiome, float elevation, float moisture, constant TerrainShaderConfigData *configData) {
+    float4 elevationColorA = color(upperBiome, elevation, (*configData).elevationColorWeight);
+    float4 elevationColorB = color(lowerBiome, elevation, (*configData).elevationColorWeight);
+    float4 moistureColorA = color(upperBiome, moisture, (*configData).moistureColorWeight);
+    float4 moistureColorB = color(lowerBiome, moisture, (*configData).moistureColorWeight);
+    float percentOfElevationThreshold = (upperBiome.minElevation - elevation + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
+    /// TODO: @dgattey is this right at all?
+    float percentOfMoistureThreshold = (upperBiome.maxMoisture - moisture + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
+    return mix(elevationColorA, elevationColorB, max(min(percentOfElevationThreshold, 1.0), 0.0));
 }
 
 // Generates noise within 0, 1, then turns that into blended biomes
 fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]],
                                       constant TerrainShaderConfigData *configData [[buffer(ShaderIndexConfigData)]],
                                       constant Biome *allBiomes [[buffer(ShaderIndexBiomeData)]]) {
-    float2 pos = float2(in.colorPosition.xy);
-    float elevation = fractalBrownianMotion(pos, (*configData).elevationGenerator, 0, 1);
-    float moisture = fractalBrownianMotion(pos, (*configData).moistureGenerator, 0, 1);
+    float2 pos = float2(in.colorPosition.xy) * (*configData).globalScalar;
+    float elevation = fractalBrownianMotion(pos, (*configData).elevationGenerator);
+    float moisture = fractalBrownianMotion(pos, (*configData).moistureGenerator);
     
     // Makes some valleys & high peaks instead of being super spiky
-//    float elevation = max(0.0, min(1.0, pow(noise, 1.8) + 0.2));
+    elevation = max(0.0, min(1.0, pow(elevation, 1.8) + 0.2));
     
     // Search for the biome matching this moisture + heightmap
     Biome biome;
@@ -91,6 +95,6 @@ fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]],
         index++;
     }
     
-    // We didn't blend anything so return the base color
-    return color(biome, elevation);
+    // Base color mixed with moisture a little
+    return color(biome, moisture, (*configData).moistureColorWeight);
 }

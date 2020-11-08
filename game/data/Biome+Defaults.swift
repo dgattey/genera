@@ -13,7 +13,7 @@ extension Biome {
     private static var ocean: Biome {
         return Biome(
             color: vector_float3(0.2188037932, 0.210770309, 0.3924256861),
-            minElevation: 0,
+            minElevation: -Float.infinity,
             maxElevation: 0.07,
             maxMoisture: Float.infinity,
             blendRange: 0.02

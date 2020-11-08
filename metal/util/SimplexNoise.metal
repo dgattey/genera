@@ -86,8 +86,8 @@ float simplexNoise(float2 v) {
     return 130.0 * dot(m, g);
 }
 
-/// Implements fractal Brownian motion with multiple octaves, persistence, and scale
-float fractalBrownianMotion(float2 xy, FBMData data, float lowerBound, float upperBound) {
+/// Implements fractal Brownian motion with multiple octaves, persistence, scale, frequency, and compression
+float fractalBrownianMotion(float2 xy, FBMData data) {
     float maxAmp = 0;
     float amp = 1;
     float freq = data.scale;
@@ -95,10 +95,10 @@ float fractalBrownianMotion(float2 xy, FBMData data, float lowerBound, float upp
     for(int i = 0; i < data.octaves; ++i)
     {
         noise += simplexNoise(xy * freq) * amp;
-        freq *= 2;
+        freq *= data.frequency;
         maxAmp += amp;
         amp *= data.persistence;
     }
     noise /= maxAmp;
-    return noise * (upperBound - lowerBound) / 2 + (upperBound + lowerBound) / 2;
+    return tanh(noise * data.compression);
 }
