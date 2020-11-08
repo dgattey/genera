@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		750348D225589A750057D6A9 /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750348D125589A750057D6A9 /* ConfigView.swift */; };
 		750379A0254A8538002A0C13 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 7503798C254A8537002A0C13 /* GridShaders.metal */; };
 		750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* MapRenderer.swift */; };
 		750379A2254A8538002A0C13 /* SharedTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SharedTypes.h */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		750348D125589A750057D6A9 /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		7503798C254A8537002A0C13 /* GridShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
 		7503798D254A8537002A0C13 /* MapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRenderer.swift; sourceTree = "<group>"; };
 		7503798E254A8537002A0C13 /* SharedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				7528BD4C255522F3008038A3 /* EditableConfigValue.swift */,
 				750F62D425577289004C9370 /* EditableFBMConfigValues.swift */,
 				750F62D025577005004C9370 /* EditableValuesStackView.swift */,
+				750348D125589A750057D6A9 /* ConfigView.swift */,
 			);
 			path = editableConfig;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				750379A0254A8538002A0C13 /* GridShaders.metal in Sources */,
 				757E14EA255151F50036AEB5 /* Color.metal in Sources */,
 				75B2B764254B71AD00351DC8 /* ChunkCoordinator.swift in Sources */,
+				750348D225589A750057D6A9 /* ConfigView.swift in Sources */,
 				75D897AC25552C1A00EEDC00 /* ShaderConfigDataProtocol.swift in Sources */,
 				757E15322552A7350036AEB5 /* GridTileChunkDataProvider.swift in Sources */,
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,

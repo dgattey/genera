@@ -21,9 +21,13 @@ class GeneraWindowController: NSWindowController {
             return
         }
         
+        // TODO: @dgattey fix this up
         gameViewController.debugDelegate = sidePanelViewController.debugDelegate
-        gameViewController.shaderConfigDataProvider = sidePanelViewController.shaderConfigDataProvider
-        sidePanelViewController.updateDelegate = gameViewController
+        let configView = TerrainConfigView()
+        configView.updateDelegate = gameViewController
+        gameViewController.shaderConfigDataProvider = configView
+        sidePanelViewController.add(configView: configView)
+        
         DispatchQueue.main.async {
             gameViewController.start()
         }

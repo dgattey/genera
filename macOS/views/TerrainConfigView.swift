@@ -8,7 +8,7 @@
 import AppKit
 
 /// A stack view containing text fields for certain configurable data
-class TerrainConfigView: NSStackView {
+class TerrainConfigView: NSStackView, ConfigView {
     
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {
@@ -55,15 +55,6 @@ class TerrainConfigView: NSStackView {
     private let moistureColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
-    
-    init(updateDelegate: ConfigUpdateDelegate?) {
-        self.updateDelegate = updateDelegate
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     /// Adds a nested stack view with equal widths
     private func addView(_ view: EditableValuesStackView) {
