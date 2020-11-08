@@ -13,7 +13,7 @@ class EditableConfigValue<T: LosslessStringConvertible> {
     // MARK: - EditableConfigValue
     
     /// The text field where the user can edit the value
-    let field: NSTextField
+    let field: EditableConfigValueField
     
     /// The label for this value
     let label: String
@@ -27,7 +27,7 @@ class EditableConfigValue<T: LosslessStringConvertible> {
     }
     
     /// Saves the field, configures it, and saves fallback and label
-    private init(field: NSTextField, fallback: T, label: String) {
+    private init(field: EditableConfigValueField, fallback: T, label: String) {
         field.placeholderString = String(describing: fallback)
         field.bezelStyle = .roundedBezel
         self.field = field

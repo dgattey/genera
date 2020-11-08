@@ -8,19 +8,21 @@
 import AppKit
 
 /// A stack view containing text fields for certain configurable data
-class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
+class EditableValuesStackView: NSStackView {
     
-    /// For use in checking values for int strings
-    private static let integerSet = NSCharacterSet(charactersIn: "-1234567890").inverted
-    
-    /// For use in checking values for float strings
-    private static let floatSet = NSCharacterSet(charactersIn: "-1234567890.").inverted
+    // MARK: - variables
     
     /// The title of this stack
     private let title: String
     
-    /// Called when we update a value
-    weak var updateDelegate: TerrainConfigUpdateDelegate?
+    /// Called when we update the delegate - and all nested fields need their values updated too
+    weak var updateDelegate: TerrainConfigUpdateDelegate? {
+        didSet {
+            setNestedDelegates(in: self)
+        }
+    }
+    
+    // MARK: - initialization
     
     init(title: String) {
         self.title = title
@@ -32,7 +34,6 @@ class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// Add our views!
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         orientation = .vertical
@@ -40,10 +41,22 @@ class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
         distribution = .fill
     }
     
-    /// Adds the text field from the value to this stack view
+    // MARK: - API
+    
+    /// Adds the text field and optional stepper from the value to this stack view
     func addValue<T>(_ value: EditableConfigValue<T>) {
-        value.field.delegate = self
-        LabeledView.addView(value.field, labeledWith: value.label, toStack: self)
+        value.field.delegate = value.field
+        value.field.updateDelegate = updateDelegate
+        let stack = NSStackView()
+        LabeledView.addView(value.field, labeledWith: value.label, toStack: stack)
+        
+        // Make sure to setup the action properly
+        if let stepper = value.field.stepper {
+            stepper.target = value.field
+            stepper.action = #selector(EditableConfigValueField.updateValue)
+            stack.addView(stepper, in: .trailing)
+        }
+        addView(stack, in: .bottom)
     }
     
     /// Convenience function for adding editable FBM data to this view
@@ -54,44 +67,18 @@ class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
         addValue(values.compression)
     }
     
-    /// Makes sure we got a text field, then update
-    func controlTextDidChange(_ obj: Notification) {
-        guard let textField = obj.object as? EditableConfigValueField else {
-            return
-        }
-        defer {
-            updateDelegate?.configDidUpdate()
-        }
-        
-        switch textField.valueType {
-        case .decimalNumber:
-            // Restrict it to only one . and integers
-            let chars = textField.stringValue.components(
-                separatedBy: EditableValuesStackView.floatSet)
-            var stringValue = chars.joined()
-            
-            // Remove extra . if we have them
-            let chunks = stringValue.components(separatedBy: ".")
-            switch chunks.count {
-            case 0:
-                stringValue = ""
-            case 1:
-                stringValue = "\(chunks[0])"
-            default:
-                stringValue = "\(chunks[0]).\(chunks[1])"
+    // MARK: - private help
+    
+    /// Used in updating nested delegates
+    private func setNestedDelegates(in stack: NSStackView) {
+        for view in stack.views {
+            if let field = view as? EditableConfigValueField {
+                field.updateDelegate = updateDelegate
             }
-            
-            textField.stringValue = stringValue
-        case .wholeNumber:
-            // Restrict it to whole values
-            let chars = textField.stringValue.components(
-                separatedBy: EditableValuesStackView.integerSet)
-            textField.stringValue = chars.joined()
-        case .string:
-            // This is anything you want it to be
-            break
+            if let substack = view as? NSStackView {
+                setNestedDelegates(in: substack)
+            }
         }
-        
     }
-
+    
 }
