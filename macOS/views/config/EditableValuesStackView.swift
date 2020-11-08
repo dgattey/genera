@@ -10,6 +10,12 @@ import Cocoa
 /// A stack view containing text fields for certain configurable data
 class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
     
+    /// For use in checking values for int strings
+    private static let integerSet = NSCharacterSet(charactersIn: "-1234567890").inverted
+    
+    /// For use in checking values for float strings
+    private static let floatSet = NSCharacterSet(charactersIn: "-1234567890.").inverted
+    
     /// The title of this stack
     private let title: String
     
@@ -50,10 +56,42 @@ class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
     
     /// Makes sure we got a text field, then update
     func controlTextDidChange(_ obj: Notification) {
-        guard (obj.object as? NSTextField) != nil else {
+        guard let textField = obj.object as? EditableConfigValueField else {
             return
         }
-        updateDelegate?.configDidUpdate()
+        defer {
+            updateDelegate?.configDidUpdate()
+        }
+        
+        switch textField.valueType {
+        case .decimalNumber:
+            // Restrict it to only one . and integers
+            let chars = textField.stringValue.components(
+                separatedBy: EditableValuesStackView.floatSet)
+            var stringValue = chars.joined()
+            
+            // Remove extra . if we have them
+            let chunks = stringValue.components(separatedBy: ".")
+            switch chunks.count {
+            case 0:
+                stringValue = ""
+            case 1:
+                stringValue = "\(chunks[0])"
+            default:
+                stringValue = "\(chunks[0]).\(chunks[1])"
+            }
+            
+            textField.stringValue = stringValue
+        case .wholeNumber:
+            // Restrict it to whole values
+            let chars = textField.stringValue.components(
+                separatedBy: EditableValuesStackView.integerSet)
+            textField.stringValue = chars.joined()
+        case .string:
+            // This is anything you want it to be
+            break
+        }
+        
     }
 
 }

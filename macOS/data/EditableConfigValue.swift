@@ -8,7 +8,9 @@
 import Cocoa
 
 /// A config value, containing the text field used to display the value, plus a default fallback
-class EditableConfigValue<T: LosslessStringConvertible>: NSCoding {
+class EditableConfigValue<T: LosslessStringConvertible> {
+    
+    // MARK: - EditableConfigValue
     
     /// The text field where the user can edit the value
     let field: NSTextField
@@ -19,38 +21,35 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSCoding {
     /// The fallback value
     private let fallback: T
     
-    /// Saves the fallback value for use later
-    init(fallback: T, label: String) {
-        self.field = NSTextField(string: String(describing: fallback))
-        self.fallback = fallback
-        self.label = label
-    }
-    
     /// Returns the value of the field as a casted optional value or the saved fallback value
     var value: T {
         return T.init(field.stringValue) ?? fallback
     }
     
-    // MARK: - NSCoding
-    
-    /// For encoding + decoding
-    private enum Keys: String {
-        case fallback
-        case label
+    /// Saves the field, configures it, and saves fallback and label
+    private init(field: NSTextField, fallback: T, label: String) {
+        field.placeholderString = String(describing: fallback)
+        field.bezelStyle = .roundedBezel
+        self.field = field
+        self.fallback = fallback
+        self.label = label
     }
     
-    /// Encodes fallback and label
-    func encode(with coder: NSCoder) {
-        coder.encode(fallback, forKey: Keys.fallback.rawValue)
-        coder.encode(label, forKey: Keys.label.rawValue)
+    /// For use in creating an .wholeNumber field
+    convenience init(fallback: T, label: String) where T: BinaryInteger {
+        let field = EditableConfigValueField(fallback)
+        self.init(field: field, fallback: fallback, label: label)
     }
     
-    /// Decodes fallback and label
-    required convenience init?(coder: NSCoder) {
-        guard let fallback = coder.decodeObject(forKey: Keys.fallback.rawValue) as? T,
-              let label = coder.decodeObject(forKey: Keys.label.rawValue) as? String else {
-            return nil
-        }
-        self.init(fallback: fallback, label: label)
+    /// For use in creating a .decimalNumber field
+    convenience init(fallback: T, label: String) where T: BinaryFloatingPoint {
+        let field = EditableConfigValueField(fallback)
+        self.init(field: field, fallback: fallback, label: label)
+    }
+    
+    /// For use in creating a .string field
+    convenience init(fallback: T, label: String) where T: StringProtocol {
+        let field = EditableConfigValueField(fallback)
+        self.init(field: field, fallback: fallback, label: label)
     }
 }
