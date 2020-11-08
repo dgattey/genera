@@ -11,7 +11,7 @@
 		750379A1254A8538002A0C13 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503798D254A8537002A0C13 /* MapRenderer.swift */; };
 		750379A2254A8538002A0C13 /* SharedTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = 7503798E254A8537002A0C13 /* SharedTypes.h */; };
 		750379A3254A8538002A0C13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7503798F254A8538002A0C13 /* Assets.xcassets */; };
-		750F62C8255560C5004C9370 /* TerrainConfigUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F62C7255560C5004C9370 /* TerrainConfigUpdateDelegate.swift */; };
+		750F62C8255560C5004C9370 /* ConfigUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F62C7255560C5004C9370 /* ConfigUpdateDelegate.swift */; };
 		750F62D125577005004C9370 /* EditableValuesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F62D025577005004C9370 /* EditableValuesStackView.swift */; };
 		750F62D525577289004C9370 /* EditableFBMConfigValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750F62D425577289004C9370 /* EditableFBMConfigValues.swift */; };
 		7528BCFD255472B4008038A3 /* TerrainConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BCFC255472B4008038A3 /* TerrainConfigView.swift */; };
@@ -24,7 +24,6 @@
 		7528BD44255514E0008038A3 /* BiomeType+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BD43255514E0008038A3 /* BiomeType+Swift.swift */; };
 		7528BD4925551D58008038A3 /* DefaultTerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BD4825551D58008038A3 /* DefaultTerrainData.swift */; };
 		7528BD4D255522F3008038A3 /* EditableConfigValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BD4C255522F3008038A3 /* EditableConfigValue.swift */; };
-		7544D3BE2557D12C00099397 /* EditableConfigValueField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7544D3BD2557D12C00099397 /* EditableConfigValueField.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
 		757DF621254F90CB005723D5 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF620254F90CB005723D5 /* DebugView.swift */; };
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
@@ -66,7 +65,7 @@
 		7503798E254A8537002A0C13 /* SharedTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		7503798F254A8538002A0C13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		750F62C7255560C5004C9370 /* TerrainConfigUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainConfigUpdateDelegate.swift; sourceTree = "<group>"; };
+		750F62C7255560C5004C9370 /* ConfigUpdateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigUpdateDelegate.swift; sourceTree = "<group>"; };
 		750F62D025577005004C9370 /* EditableValuesStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableValuesStackView.swift; sourceTree = "<group>"; };
 		750F62D425577289004C9370 /* EditableFBMConfigValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableFBMConfigValues.swift; sourceTree = "<group>"; };
 		7528BCFC255472B4008038A3 /* TerrainConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainConfigView.swift; sourceTree = "<group>"; };
@@ -82,7 +81,6 @@
 		7528BD462555162E008038A3 /* BiomeType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BiomeType.h; sourceTree = "<group>"; };
 		7528BD4825551D58008038A3 /* DefaultTerrainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTerrainData.swift; sourceTree = "<group>"; };
 		7528BD4C255522F3008038A3 /* EditableConfigValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableConfigValue.swift; sourceTree = "<group>"; };
-		7544D3BD2557D12C00099397 /* EditableConfigValueField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableConfigValueField.swift; sourceTree = "<group>"; };
 		757DF620254F90CB005723D5 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		757DF625254FA0FF005723D5 /* DebugDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
 		757E14E9255151F50036AEB5 /* Color.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
@@ -170,17 +168,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		750F62CF25576FDF004C9370 /* config */ = {
-			isa = PBXGroup;
-			children = (
-				750F62C7255560C5004C9370 /* TerrainConfigUpdateDelegate.swift */,
-				7528BCFC255472B4008038A3 /* TerrainConfigView.swift */,
-				750F62D425577289004C9370 /* EditableFBMConfigValues.swift */,
-				750F62D025577005004C9370 /* EditableValuesStackView.swift */,
-			);
-			path = config;
-			sourceTree = "<group>";
-		};
 		7528BD122554E865008038A3 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,11 +181,10 @@
 		7528BD152554E87C008038A3 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				750F62CF25576FDF004C9370 /* config */,
 				757DF620254F90CB005723D5 /* DebugView.swift */,
+				7528BCFC255472B4008038A3 /* TerrainConfigView.swift */,
 				759EFFFB254DE361004CF89F /* InteractableViewProtocol.swift */,
 				75FA6D3C254C06C600A1B409 /* InteractableMTKView.swift */,
-				7544D3BD2557D12C00099397 /* EditableConfigValueField.swift */,
 				7528BD08255489D4008038A3 /* LabeledView.swift */,
 				7528BD0E2554E033008038A3 /* ScrollableStackView.swift */,
 			);
@@ -246,12 +232,15 @@
 			path = util;
 			sourceTree = "<group>";
 		};
-		7528BD5025552315008038A3 /* data */ = {
+		7528BD5025552315008038A3 /* editableConfig */ = {
 			isa = PBXGroup;
 			children = (
+				750F62C7255560C5004C9370 /* ConfigUpdateDelegate.swift */,
 				7528BD4C255522F3008038A3 /* EditableConfigValue.swift */,
+				750F62D425577289004C9370 /* EditableFBMConfigValues.swift */,
+				750F62D025577005004C9370 /* EditableValuesStackView.swift */,
 			);
-			path = data;
+			path = editableConfig;
 			sourceTree = "<group>";
 		};
 		757E15482552BE540036AEB5 /* gridGen */ = {
@@ -269,9 +258,9 @@
 				75B2B747254B68FB00351DC8 /* Main.storyboard */,
 				75B2B749254B68FB00351DC8 /* AppDelegate.swift */,
 				757DF625254FA0FF005723D5 /* DebugDelegate.swift */,
-				7528BD5025552315008038A3 /* data */,
 				7528BD122554E865008038A3 /* controllers */,
 				7528BD152554E87C008038A3 /* views */,
+				7528BD5025552315008038A3 /* editableConfig */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -465,14 +454,13 @@
 				7528BD0C25549013008038A3 /* SidePanelViewController.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataProvider.swift in Sources */,
 				75FA6D40254C098500A1B409 /* UserInteractionDelegate.swift in Sources */,
-				750F62C8255560C5004C9370 /* TerrainConfigUpdateDelegate.swift in Sources */,
+				750F62C8255560C5004C9370 /* ConfigUpdateDelegate.swift in Sources */,
 				7528BCFD255472B4008038A3 /* TerrainConfigView.swift in Sources */,
 				75FA6D80254D3D7200A1B409 /* ZoomDirection.swift in Sources */,
 				75C4B4B62550062600F36372 /* TerrainShaders.metal in Sources */,
 				75FA6D31254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift in Sources */,
 				7528BD41255512A1008038A3 /* Biome+Defaults.swift in Sources */,
 				757E15392552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift in Sources */,
-				7544D3BE2557D12C00099397 /* EditableConfigValueField.swift in Sources */,
 				757DF621254F90CB005723D5 /* DebugView.swift in Sources */,
 				750379A0254A8538002A0C13 /* GridShaders.metal in Sources */,
 				757E14EA255151F50036AEB5 /* Color.metal in Sources */,

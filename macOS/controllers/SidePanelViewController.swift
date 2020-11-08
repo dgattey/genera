@@ -10,6 +10,8 @@ import AppKit
 /// All the views that appear in our side panel, within a scrollable stack view
 class SidePanelViewController: NSViewController {
     
+    typealias ShaderDataProviderType = TerrainConfigView
+    
     // MARK: - constants
     
     /// Min width of the view owned here
@@ -21,10 +23,27 @@ class SidePanelViewController: NSViewController {
     // MARK: - variables
     
     /// Debug view for the whole app
-    let debugView: DebugView = DebugView()
+    private lazy var debugView: DebugView = DebugView()
     
     /// Config view for the terrain generator
-    let terrainConfigView = TerrainConfigView()
+    private lazy var terrainConfigView = TerrainConfigView(updateDelegate: updateDelegate)
+    
+    /// Debug delegate passthrough
+    weak var debugDelegate: DebugDelegate? {
+        return debugView
+    }
+    
+    /// Shader config data provider passthrough
+    weak var shaderConfigDataProvider: ShaderDataProviderType? {
+        return terrainConfigView
+    }
+    
+    /// Used in sending updates through
+    weak var updateDelegate: ConfigUpdateDelegate? {
+        didSet {
+            terrainConfigView.updateDelegate = updateDelegate
+        }
+    }
     
     /// MARK: - functions
     

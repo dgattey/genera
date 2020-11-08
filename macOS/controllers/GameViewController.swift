@@ -59,10 +59,12 @@ class GameViewController: NSViewController {
     }
 }
 
-extension GameViewController: TerrainConfigUpdateDelegate {
+/// Passes through to the coordinator
+extension GameViewController: ConfigUpdateDelegate {
     
-    func configDidUpdate() {
-        coordinator?.configDidUpdate()
+    /// Called when a value changes to another value
+    func configDidUpdate<T>(from: T?, to: T?) {
+        coordinator?.configDidUpdate(from: from, to: to)
     }
     
 }

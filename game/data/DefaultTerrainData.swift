@@ -32,7 +32,7 @@ enum DefaultTerrainData {
         octaves: 11,
         persistence: 0.55,
         scale: 0.01,
-        compression: 0.3,
+        compression: 0.33,
         seed: 0)
     
     /// Defaults for FBMData for moisture noise generation

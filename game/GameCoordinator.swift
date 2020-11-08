@@ -99,9 +99,10 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
     }
 }
 
-extension GameCoordinator: TerrainConfigUpdateDelegate {
+/// Just re-renders the renderer, no matter what value updated
+extension GameCoordinator: ConfigUpdateDelegate {
     
-    func configDidUpdate() {
+    func configDidUpdate<T>(from: T?, to: T?) {
         renderer.configDidUpdate()
     }
     

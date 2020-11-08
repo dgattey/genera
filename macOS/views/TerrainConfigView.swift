@@ -10,15 +10,23 @@ import AppKit
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {
     
-    weak var updateDelegate: TerrainConfigUpdateDelegate? {
+    /// Update delegate, needs to be set for ALLLL the values. This is tedious
+    weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
-            sharedView.updateDelegate = updateDelegate
-            elevationView.updateDelegate = updateDelegate
-            moistureView.updateDelegate = updateDelegate
+            moistureValues.updateDelegate = updateDelegate
+            seed.updateDelegate = updateDelegate
+            globalScalar.updateDelegate = updateDelegate
+            elevationValues.updateDelegate = updateDelegate
+            seaLevelOffset.updateDelegate = updateDelegate
+            elevationDistribution.updateDelegate = updateDelegate
+            elevationColorWeight.updateDelegate = updateDelegate
+            moistureValues.updateDelegate = updateDelegate
+            aridness.updateDelegate = updateDelegate
+            moistureDistribution.updateDelegate = updateDelegate
+            moistureColorWeight.updateDelegate = updateDelegate
         }
     }
     
-    private lazy var sharedView = EditableValuesStackView(title: "Global Config")
     private let seed = EditableConfigValue(
         fallback: DefaultTerrainData.seed,
         label: "Terrain seed")
@@ -26,7 +34,6 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.globalScalar,
         label: "Global scalar")
     
-    private lazy var elevationView = EditableValuesStackView(title: "Elevation Config")
     private let elevationValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFMB)
     private let seaLevelOffset = EditableConfigValue(
         fallback: DefaultTerrainData.seaLevelOffset,
@@ -38,7 +45,6 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.elevationColorWeight,
         label: "Color weight")
     
-    private lazy var moistureView = EditableValuesStackView(title: "Moisture Config")
     private let moistureValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFMB)
     private let aridness = EditableConfigValue(
         fallback: DefaultTerrainData.aridness,
@@ -50,9 +56,17 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
     
+    init(updateDelegate: ConfigUpdateDelegate?) {
+        self.updateDelegate = updateDelegate
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     /// Adds a nested stack view with equal widths
     private func addView(_ view: EditableValuesStackView) {
-        view.updateDelegate = updateDelegate
         addView(view, in: .bottom)
         NSLayoutConstraint.activate([
             view.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -68,17 +82,20 @@ class TerrainConfigView: NSStackView {
         distribution = .fill
         spacing = SidePanelViewController.interItemSpacing
         
+        let sharedView = EditableValuesStackView(title: "Global Config")
         sharedView.addValue(seed)
         sharedView.addValue(globalScalar)
         addView(sharedView)
         
-        elevationView.addFBMValues(elevationValues)
+        let elevationView = EditableValuesStackView(title: "Elevation Config")
+        elevationValues.addValues(to: elevationView)
         elevationView.addValue(seaLevelOffset)
         elevationView.addValue(elevationDistribution)
         elevationView.addValue(elevationColorWeight)
         addView(elevationView)
         
-        moistureView.addFBMValues(moistureValues)
+        let moistureView = EditableValuesStackView(title: "Moisture Config")
+        moistureValues.addValues(to: moistureView)
         moistureView.addValue(aridness)
         moistureView.addValue(moistureDistribution)
         moistureView.addValue(moistureColorWeight)
