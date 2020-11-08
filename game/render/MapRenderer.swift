@@ -144,8 +144,12 @@ class MapRenderer<DataProvider: ChunkDataProvider,
     
     /// Adds `shaderDataProvider` content to the encoder
     private func addShaderConfigData(to encoder: MTLRenderCommandEncoder) {
-        var shaderConfigBufferData = shaderDataProvider?.configData
-        var shaderBiomeBufferData = shaderDataProvider?.allBiomes ?? []
+        guard let shaderDataProvider = shaderDataProvider else {
+            // No data if we have no provider for it
+            return
+        }
+        var shaderConfigBufferData = shaderDataProvider.configData
+        var shaderBiomeBufferData = shaderDataProvider.allBiomes
         encoder.setFragmentBytes(&shaderConfigBufferData,
                                  length: MemoryLayout<ShaderDataProviderType.ShaderConfigDataType>.stride,
                                  index: ShaderIndex.configData.rawValue)
