@@ -74,27 +74,22 @@ fragment float4 terrainFragmentShader(FragmentVertex in [[stage_in]],
     float moisture = fractalBrownianMotion(pos, (*configData).moistureGenerator);
     
     // Makes some valleys & high peaks instead of being super spiky
-    elevation = max(0.0, min(1.0, pow(elevation, 1.8) + 0.2));
+    elevation = max(0.0, min(1.0, pow(elevation - (*configData).seaLevelOffset, (*configData).elevationDistribution)));
     
-    // Search for the biome matching this moisture + heightmap
+    // Fits moisture levels to a curve
+    moisture = max(0.0, min(1.0, pow(moisture - (*configData).aridness, (*configData).moistureDistribution)));
+    
+    // Search for the biome matching this moisture + elevation
     Biome biome;
     int index = 0;
     while (index + 1 < (*configData).numBiomes) {
-        // TODO: @dgattey use this again
-//        upperBiome = allBiomes[index];
-//        lowerBiome = allBiomes[index + 1];
-//        if (elevation > upperBiome.elevation) {
-//            index = biomeCount;
-//        }
-        
         biome = allBiomes[index];
         if (elevation >= biome.minElevation && elevation < biome.maxElevation && moisture < biome.maxMoisture) {
             index = (*configData).numBiomes;
         }
-        
         index++;
     }
     
-    // Base color mixed with moisture a little
-    return color(biome, moisture, (*configData).moistureColorWeight);
+    // Simple color
+    return float4(biome.color, 1);
 }

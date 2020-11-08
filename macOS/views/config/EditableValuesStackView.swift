@@ -42,11 +42,10 @@ class EditableValuesStackView: NSStackView, NSTextFieldDelegate {
     
     /// Convenience function for adding editable FBM data to this view
     func addFBMValues(_ values: EditableFBMConfigValues) {
-        addValue(values.scale)
-        addValue(values.compression)
         addValue(values.octaves)
         addValue(values.persistence)
-        addValue(values.frequency)
+        addValue(values.scale)
+        addValue(values.compression)
     }
     
     /// Makes sure we got a text field, then update

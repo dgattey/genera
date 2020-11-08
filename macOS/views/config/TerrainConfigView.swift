@@ -19,18 +19,33 @@ class TerrainConfigView: NSStackView {
     }
     
     private lazy var sharedView = EditableValuesStackView(title: "Global Config")
+    private let seed = EditableConfigValue(
+        fallback: DefaultTerrainData.seed,
+        label: "Terrain seed")
     private let globalScalar = EditableConfigValue(
         fallback: DefaultTerrainData.globalScalar,
         label: "Global scalar")
     
     private lazy var elevationView = EditableValuesStackView(title: "Elevation Config")
     private let elevationValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFMB)
+    private let seaLevelOffset = EditableConfigValue(
+        fallback: DefaultTerrainData.seaLevelOffset,
+        label: "Sea level offset")
+    private let elevationDistribution = EditableConfigValue(
+        fallback: DefaultTerrainData.elevationDistribution,
+        label: "Elevation distribution")
     private let elevationColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.elevationColorWeight,
         label: "Color weight")
     
     private lazy var moistureView = EditableValuesStackView(title: "Moisture Config")
     private let moistureValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFMB)
+    private let aridness = EditableConfigValue(
+        fallback: DefaultTerrainData.aridness,
+        label: "Aridness")
+    private let moistureDistribution = EditableConfigValue(
+        fallback: DefaultTerrainData.moistureDistribution,
+        label: "Moisture distribution")
     private let moistureColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
@@ -53,14 +68,19 @@ class TerrainConfigView: NSStackView {
         distribution = .fill
         spacing = SidePanelViewController.interItemSpacing
         
+        sharedView.addValue(seed)
         sharedView.addValue(globalScalar)
         addView(sharedView)
         
         elevationView.addFBMValues(elevationValues)
+        elevationView.addValue(seaLevelOffset)
+        elevationView.addValue(elevationDistribution)
         elevationView.addValue(elevationColorWeight)
         addView(elevationView)
         
         moistureView.addFBMValues(moistureValues)
+        moistureView.addValue(aridness)
+        moistureView.addValue(moistureDistribution)
         moistureView.addValue(moistureColorWeight)
         addView(moistureView)
     }
@@ -78,19 +98,23 @@ extension TerrainConfigView: ShaderDataProvider {
             octaves: elevationValues.octaves.value,
             persistence: elevationValues.persistence.value,
             scale: elevationValues.scale.value,
-            frequency: elevationValues.frequency.value,
-            compression: elevationValues.compression.value)
+            compression: elevationValues.compression.value,
+            seed: uint(truncating: NSNumber(value: seed.value.hashValue)))
         let moistureGenerator = FBMData(
             octaves: moistureValues.octaves.value,
             persistence: moistureValues.persistence.value,
             scale: moistureValues.scale.value,
-            frequency: moistureValues.frequency.value,
-            compression: moistureValues.compression.value)
+            compression: moistureValues.compression.value,
+            seed: uint(truncating: NSNumber(value: seed.value.hashValue)))
         return TerrainShaderConfigData(
             numBiomes: Int32(allBiomes.count),
             elevationColorWeight: elevationColorWeight.value,
             moistureColorWeight: moistureColorWeight.value,
             globalScalar: globalScalar.value,
+            seaLevelOffset: seaLevelOffset.value,
+            elevationDistribution: elevationDistribution.value,
+            aridness: aridness.value,
+            moistureDistribution: moistureDistribution.value,
             elevationGenerator: elevationGenerator,
             moistureGenerator: moistureGenerator)
     }

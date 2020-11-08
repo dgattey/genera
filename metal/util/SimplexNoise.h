@@ -27,18 +27,17 @@ struct FBMData {
     /// Frequency of the noise at the beginning
     float scale;
     
-    /// Frequency of the noise (change at every step)
-    float frequency;
-    
     /// How closely the values are distributed around 0-1
     float compression;
     
+    /// A seed to use in generating random offset
+    uint seed;
 };
 
 /// Creates one value of simplex noise from a 2d point
 float simplexNoise(simd_float2 v);
 
-/// Implements fractal Brownian motion with multiple octaves, persistence, scale, frequency, and compression
+/// Implements fractal Brownian motion with multiple octaves, persistence, scale, frequency, and compression, with a seed in [0..<4096]
 float fractalBrownianMotion(simd_float2 xy, struct FBMData data);
 
 #endif /* SimplexNoise_h */

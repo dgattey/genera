@@ -25,6 +25,18 @@ struct TerrainShaderConfigData {
     /// Multiplied by the color position to change the scale of anything
     float globalScalar;
     
+    /// The sea level offset from zero for elevation change
+    float seaLevelOffset;
+    
+    /// How spiky the elevation should be (higher values create higher peaks/flatter valleys)
+    float elevationDistribution;
+    
+    /// The offset from 0 the moisture level should have
+    float aridness;
+    
+    /// How spiky/distributed the moisture should be (higher values create more extremes)
+    float moistureDistribution;
+    
     /// The elevation data for FBM generation
     const struct FBMData elevationGenerator;
     
