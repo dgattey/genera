@@ -99,13 +99,13 @@ extension TerrainConfigView: ShaderDataProvider {
             persistence: elevationValues.persistence.value,
             scale: elevationValues.scale.value,
             compression: elevationValues.compression.value,
-            seed: uint(truncating: NSNumber(value: seed.value.hashValue)))
+            seed: Self.seed(from: seed.value))
         let moistureGenerator = FBMData(
             octaves: moistureValues.octaves.value,
             persistence: moistureValues.persistence.value,
             scale: moistureValues.scale.value,
             compression: moistureValues.compression.value,
-            seed: uint(truncating: NSNumber(value: seed.value.hashValue)))
+            seed: Self.seed(from: seed.value))
         return TerrainShaderConfigData(
             numBiomes: Int32(allBiomes.count),
             elevationColorWeight: elevationColorWeight.value,

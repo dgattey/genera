@@ -20,3 +20,15 @@ protocol ShaderDataProvider: NSObject {
     var allBiomes: [Biome] { get }
     
 }
+
+extension ShaderDataProvider {
+    
+    /// Deterministically turns a seed into a uint for use with creation of config data
+    static func seed(from seed: String) -> uint {
+        let scalars = seed.unicodeScalars.map { $0.value }
+        return scalars.reduce(83761) { (scalar, result) in
+            (scalar << 5) &+ scalar &+ uint(result)
+        }
+    }
+    
+}

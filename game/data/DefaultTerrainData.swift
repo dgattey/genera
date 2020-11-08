@@ -33,7 +33,7 @@ enum DefaultTerrainData {
         persistence: 0.75,
         scale: 1,
         compression: 1.7)
-        seed: uint(truncating: NSNumber(value: seed.hash)))
+        seed: 0)
     
     /// Defaults for FBMData for moisture noise generation
     static let moistureFMB = FBMData(
@@ -41,7 +41,7 @@ enum DefaultTerrainData {
         persistence: 0,
         scale: 0.0,
         compression: 0)
-        seed: uint(truncating: NSNumber(value: seed.hash)))
+        seed: 0)
     
     /// Default amount to weight elevation in color generation [0-1]
     static let elevationColorWeight: Float = 0.0
