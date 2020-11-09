@@ -34,6 +34,7 @@ class EditableValuesStackView: NSStackView {
     func addValue<T>(_ value: EditableConfigValue<T>) {
         value.field.delegate = value
         let stack = NSStackView()
+        stack.distribution = .fill
         LabeledView.addView(value.field, labeledWith: value.label, toStack: stack)
         
         // Make sure to setup the stepper and its action properly

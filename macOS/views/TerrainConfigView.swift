@@ -10,6 +10,8 @@ import AppKit
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {
     
+    // MARK: - variables
+    
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
@@ -27,34 +29,53 @@ class TerrainConfigView: NSStackView {
         }
     }
     
+    /// Seed for generation of the map (string)
     private let seed = EditableConfigValue(
         fallback: DefaultTerrainData.seed,
         label: "Terrain seed")
+    
+    /// Scaling constant for all coordinates on the map
     private let globalScalar = EditableConfigValue(
         fallback: DefaultTerrainData.globalScalar,
         label: "Global scalar")
     
+    /// FMB values for elevation noise generation
     private let elevationValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFMB)
+    
+    /// As a float, how far off of zero we should make sea level
     private let seaLevelOffset = EditableConfigValue(
         fallback: DefaultTerrainData.seaLevelOffset,
         label: "Sea level offset")
+    
+    /// The distribution of values (spiky or not) for elevation
     private let elevationDistribution = EditableConfigValue(
         fallback: DefaultTerrainData.elevationDistribution,
         label: "Elevation distribution")
+    
+    /// How much elevation contributes to color of the biome
     private let elevationColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.elevationColorWeight,
         label: "Color weight")
     
+    /// FMB values for moisture noise generation
     private let moistureValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFMB)
+    
+    /// How dry "default" is on the map
     private let aridness = EditableConfigValue(
         fallback: DefaultTerrainData.aridness,
         label: "Aridness")
+    
+    /// The distribution of values (spiky or not) for moisture
     private let moistureDistribution = EditableConfigValue(
         fallback: DefaultTerrainData.moistureDistribution,
         label: "Moisture distribution")
+    
+    /// How much moisture contributes to color of the biome
     private let moistureColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
+    
+    // MARK: - API
     
     /// Adds a nested stack view with equal widths
     private func addView(_ view: EditableValuesStackView) {

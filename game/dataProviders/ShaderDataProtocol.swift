@@ -9,18 +9,10 @@ import Foundation
 
 /// Defines a protocol for all config data shared between the shader and swift code conforms to. Exactly
 /// one of these will be sent in MapRenderer to the shader
-protocol ShaderDataProtocol {
-    
-    /// The number of biomes we'll pass to the shader
-    var numBiomes: Int32 { get }
-}
+protocol ShaderDataProtocol {}
 
-/// Used for shaders that don't have configuration data - dummy class
-class EmptyShaderData: ShaderDataProtocol {
-    
-    var numBiomes: Int32 {
-        fatalError("Should not be called ever")
-    }
-}
-
+/// Extends existing shader with the protocol
 extension TerrainShaderConfigData: ShaderDataProtocol {}
+
+/// Empty class for use when I have no data to pass to the shader
+class EmptyShaderData: ShaderDataProtocol {}
