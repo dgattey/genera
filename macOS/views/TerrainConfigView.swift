@@ -15,14 +15,15 @@ class TerrainConfigView: NSStackView {
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
-            moistureValues.updateDelegate = updateDelegate
             seed.updateDelegate = updateDelegate
             globalScalar.updateDelegate = updateDelegate
-            elevationValues.updateDelegate = updateDelegate
+            
+            elevationFBM.updateDelegate = updateDelegate
             seaLevelOffset.updateDelegate = updateDelegate
             elevationDistribution.updateDelegate = updateDelegate
             elevationColorWeight.updateDelegate = updateDelegate
-            moistureValues.updateDelegate = updateDelegate
+            
+            moistureFBM.updateDelegate = updateDelegate
             aridness.updateDelegate = updateDelegate
             moistureDistribution.updateDelegate = updateDelegate
             moistureColorWeight.updateDelegate = updateDelegate
@@ -39,8 +40,8 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.globalScalar,
         label: "Global scalar")
     
-    /// FMB values for elevation noise generation
-    private let elevationValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFMB)
+    /// FBM values for elevation noise generation
+    private let elevationFBM = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFBM)
     
     /// As a float, how far off of zero we should make sea level
     private let seaLevelOffset = EditableConfigValue(
@@ -57,8 +58,8 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.elevationColorWeight,
         label: "Color weight")
     
-    /// FMB values for moisture noise generation
-    private let moistureValues = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFMB)
+    /// FBM values for moisture noise generation
+    private let moistureFBM = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFBM)
     
     /// How dry "default" is on the map
     private let aridness = EditableConfigValue(
@@ -100,14 +101,14 @@ class TerrainConfigView: NSStackView {
         addView(sharedView)
         
         let elevationView = EditableValuesStackView(title: "Elevation Config")
-        elevationValues.addValues(to: elevationView)
+        elevationFBM.addValues(to: elevationView)
         elevationView.addValue(seaLevelOffset)
         elevationView.addValue(elevationDistribution)
         elevationView.addValue(elevationColorWeight)
         addView(elevationView)
         
         let moistureView = EditableValuesStackView(title: "Moisture Config")
-        moistureValues.addValues(to: moistureView)
+        moistureFBM.addValues(to: moistureView)
         moistureView.addValue(aridness)
         moistureView.addValue(moistureDistribution)
         moistureView.addValue(moistureColorWeight)
@@ -124,16 +125,16 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
     /// Config data for generation of noise, pulls data from text fields if they exist
     var configData: TerrainShaderConfigData {
         let elevationGenerator = FBMData(
-            octaves: elevationValues.octaves.value,
-            persistence: elevationValues.persistence.value,
-            scale: elevationValues.scale.value,
-            compression: elevationValues.compression.value,
+            octaves: elevationFBM.octaves.value,
+            persistence: elevationFBM.persistence.value,
+            scale: elevationFBM.scale.value,
+            compression: elevationFBM.compression.value,
             seed: Self.seed(from: seed.value))
         let moistureGenerator = FBMData(
-            octaves: moistureValues.octaves.value,
-            persistence: moistureValues.persistence.value,
-            scale: moistureValues.scale.value,
-            compression: moistureValues.compression.value,
+            octaves: moistureFBM.octaves.value,
+            persistence: moistureFBM.persistence.value,
+            scale: moistureFBM.scale.value,
+            compression: moistureFBM.compression.value,
             seed: Self.seed(from: seed.value))
         return TerrainShaderConfigData(
             numBiomes: Int32(allBiomes.count),

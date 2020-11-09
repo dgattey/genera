@@ -35,10 +35,10 @@ struct TerrainData: Codable {
     let moistureDistribution: Float
     
     /// Defaults for FBMData for elevation noise generation
-    let elevationFMB: FBMData
+    let elevationFBM: FBMData
     
     /// Defaults for FBMData for moisture noise generation
-    let moistureFMB: FBMData
+    let moistureFBM: FBMData
     
     /// Default amount to weight elevation in color generation [0-1]
     let elevationColorWeight: Float
