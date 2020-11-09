@@ -95,6 +95,11 @@ class TerrainConfigView: NSStackView {
         distribution = .fill
         spacing = SidePanelViewController.interItemSpacing
         
+        let presetView = TerrainPresetView(title: "Presets")
+        presetView.presetDelegate = self
+        presetView.populatePresets()
+        addView(presetView)
+        
         let sharedView = EditableValuesStackView(title: "Global Config")
         sharedView.addValue(seed)
         sharedView.addValue(globalScalar)
@@ -152,6 +157,46 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
     /// Bunch of biomes with different elevation and moistures
     var allBiomes: [Biome] {
         return Biome.defaultBiomes
+    }
+    
+}
+
+// MARK: - TerrainPresetDelegate
+
+extension TerrainConfigView: TerrainPresetDelegate {
+    
+    /// Called when the user selects the given preset to change all values
+    func selectPreset(_ preset: TerrainData) {
+        seed.changeValue(to: preset.seed)
+        globalScalar.changeValue(to: preset.globalScalar)
+        
+        elevationFBM.changeValues(to: preset.elevationFBM)
+        seaLevelOffset.changeValue(to: preset.seaLevelOffset)
+        elevationDistribution.changeValue(to: preset.elevationDistribution)
+        elevationColorWeight.changeValue(to: preset.elevationColorWeight)
+        
+        moistureFBM.changeValues(to: preset.moistureFBM)
+        aridness.changeValue(to: preset.aridness)
+        moistureDistribution.changeValue(to: preset.moistureDistribution)
+        moistureColorWeight.changeValue(to: preset.moistureColorWeight)
+    }
+    
+    /// Called when the user wants to save the current data as a preset
+    func saveCurrentDataAsPreset(named name: String, onCompletion: @escaping (_ presetName: String) -> Void) {
+        let preset = TerrainData(
+            presetName: name,
+            presetID: "customPreset-\(name.decomposedStringWithCanonicalMapping)",
+            seed: seed.value,
+            globalScalar: globalScalar.value,
+            seaLevelOffset: seaLevelOffset.value,
+            elevationDistribution: elevationDistribution.value,
+            aridness: aridness.value,
+            moistureDistribution: moistureDistribution.value,
+            elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
+            moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
+            elevationColorWeight: elevationColorWeight.value,
+            moistureColorWeight: moistureColorWeight.value)
+        TerrainPresetLoader.savePreset(preset, onCompletion: onCompletion)
     }
     
 }
