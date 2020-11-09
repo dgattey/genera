@@ -7,62 +7,98 @@
 
 import AppKit
 
+/// All constants for the generic game view controller
+enum GameViewControllerConstant {
+
+    /// Minimum window width
+    static let minWidth: CGFloat = 250
+
+}
+
 /// The game's view controller - owns the coordinator and kicks off the game itself
 class GameViewController: NSViewController {
     
-    // MARK: - game types
-
-    typealias ChunkDataProviderType = TerrainChunkDataProvider
-    typealias ShaderDataProviderType = TerrainConfigView
-    
-    // MARK: - everything else
-    
-    /// Minimum window width
-    private static let minWidth: CGFloat = 250
-    
     /// Just a reference to the game view itself
     @IBOutlet var gameView: InteractableMTKView!
+
+    /// Check `gameType` to verify what type of `GameCoordinator<T>` this should be! Unfortunately doesn't allow for
+    /// a more specific use since `GameCoordinator<T>` is a generic with an associated type within it - super difficult
+    private var coordinator: Any? = nil
     
-    /// Coordinates the whole game, will be created from `start`. Sets the data provider here via generics.
-    private var coordinator: GameCoordinator<ChunkDataProviderType, ShaderDataProviderType>?
+    /// Specializes the coordinator to terrain provider
+    var terrainCoordinator: GameCoordinator<TerrainChunkDataProvider>? {
+        return coordinator as? GameCoordinator<TerrainChunkDataProvider>
+    }
+    
+    /// Specializes the coordinator to grid provider
+    var gridCoordinator: GameCoordinator<GridTileChunkDataProvider>? {
+        return coordinator as? GameCoordinator<GridTileChunkDataProvider>
+    }
+    
+    /// Controls which coordinator we use!
+    private var gameType: GameType = .terrain
     
     /// Debug delegate passthrough
     weak var debugDelegate: DebugDelegate? {
         didSet {
-            coordinator?.debugDelegate = debugDelegate
+            updateDebugDelegates()
         }
     }
     
     /// Shader config data provider passthrough
-    weak var shaderConfigDataProvider: ShaderDataProviderType? {
-        didSet {
-            coordinator?.shaderDataProvider = shaderConfigDataProvider
-        }
-    }
+    weak var gameControllerDelegate: GameControllerDelegate?
     
     /// Starts the game by creating the coordinator, then kicking it off
-    func start() {
-        guard let coordinator = GameCoordinator<ChunkDataProviderType, ShaderDataProviderType>(view: gameView) else {
-            assertionFailure("Coordinator failed to set up")
-            return
+    func reset(to gameType: GameType) {
+        gameView.delegate = nil // reset in preparation
+        self.gameType = gameType
+        switch gameType {
+        case .grid:
+            guard let coordinator = GameCoordinator<GridTileChunkDataProvider>(view: gameView) else {
+                fatalError("No coordinator created")
+            }
+            self.coordinator = coordinator
+            gameControllerDelegate?.gameController(hasNewDataProvider: coordinator.shaderDataProvider)
+            updateDebugDelegates()
+            coordinator.start()
+        case .terrain:
+            guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
+                fatalError("No coordinator created")
+            }
+            self.coordinator = coordinator
+            gameControllerDelegate?.gameController(hasNewDataProvider: coordinator.shaderDataProvider)
+            updateDebugDelegates()
+            coordinator.start()
         }
-        self.coordinator = coordinator
-        
-        // Set up the right data and start the coordination
-        coordinator.debugDelegate = debugDelegate
-        coordinator.shaderDataProvider = shaderConfigDataProvider
-        coordinator.start()
     }
     
     override func viewDidLoad() {
-        self.view.widthAnchor.constraint(greaterThanOrEqualToConstant: GameViewController.minWidth).isActive = true
+        self.view.widthAnchor.constraint(greaterThanOrEqualToConstant: GameViewControllerConstant.minWidth).isActive = true
     }
+    
+    /// Calls right coordinator to set the debug delegate
+    private func updateDebugDelegates() {
+        switch gameType {
+        case .terrain:
+            terrainCoordinator?.debugDelegate = debugDelegate
+        case .grid:
+            gridCoordinator?.debugDelegate = debugDelegate
+        }
+    }
+
 }
 
-extension GameViewController: TerrainConfigUpdateDelegate {
+/// Passes through to the coordinator
+extension GameViewController: ConfigUpdateDelegate {
     
-    func configDidUpdate() {
-        coordinator?.configDidUpdate()
+    /// Called when a value changes to another value
+    func configDidUpdate<T>(from: T?, to: T?) {
+        switch gameType {
+        case .terrain:
+            terrainCoordinator?.configDidUpdate(from: from, to: to)
+        case .grid:
+            gridCoordinator?.configDidUpdate(from: from, to: to)
+        }
     }
     
 }

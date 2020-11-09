@@ -10,6 +10,16 @@ import Foundation
 /// Creates and holds onto a group of editable config values for FBMData
 class EditableFBMConfigValues {
     
+    /// Update delegate passthrough
+    weak var updateDelegate: ConfigUpdateDelegate? {
+        didSet {
+            octaves.updateDelegate = updateDelegate
+            persistence.updateDelegate = updateDelegate
+            scale.updateDelegate = updateDelegate
+            compression.updateDelegate = updateDelegate
+        }
+    }
+    
     let octaves: EditableConfigValue<Int32>
     let persistence: EditableConfigValue<Float>
     let scale: EditableConfigValue<Float>
@@ -21,5 +31,13 @@ class EditableFBMConfigValues {
         persistence = EditableConfigValue(fallback: defaultData.persistence, label: "Persistence")
         scale = EditableConfigValue(fallback: defaultData.scale, label: "Scale")
         compression = EditableConfigValue(fallback: defaultData.compression, label: "Compression")
+    }
+    
+    /// Adds the config values saved here to a given stack view (in reverse!)
+    func addValues(to stackView: EditableValuesStackView) {
+        EditableValuesStackView.addValue(stackView)(octaves)
+        EditableValuesStackView.addValue(stackView)(persistence)
+        EditableValuesStackView.addValue(stackView)(scale)
+        EditableValuesStackView.addValue(stackView)(compression)
     }
 }

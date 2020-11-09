@@ -20,16 +20,14 @@ class SidePanelViewController: NSViewController {
     
     // MARK: - variables
     
-    /// Debug view for the whole app
-    let debugView: DebugView = DebugView()
+    /// Debug view for the whole app, doesn't change
+    private lazy var debugView: DebugView = DebugView()
     
-    /// Config view for the terrain generator
-    let terrainConfigView = TerrainConfigView()
+    /// All the views we don't want to get rid of when swapping providers
+    private lazy var stickyViews: [NSView] = [debugView]
     
-    /// MARK: - functions
-    
-    /// Adds a new scrollable stack view to the given view after configuring it properly
-    private static func addScrollableStackView(to view: NSView) -> ScrollableStackView {
+    /// Stack view for all views in this view controller
+    private lazy var stackView: ScrollableStackView = {
         let stackView = ScrollableStackView(layoutOrientation: .vertical)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.underlyingStackView.orientation = .vertical
@@ -41,8 +39,18 @@ class SidePanelViewController: NSViewController {
             left: LabeledView.HeaderStyle.section.spacing,
             bottom: LabeledView.HeaderStyle.section.spacing,
             right: LabeledView.HeaderStyle.section.spacing)
-        
-        // Constrain it to fill the view
+        return stackView
+    }()
+    
+    /// Debug delegate passthrough
+    weak var debugDelegate: DebugDelegate? {
+        return debugView
+    }
+    
+    /// MARK: - functions
+    
+    /// Adds a new scrollable stack view to the underlying view after configuring it properly
+    private func addScrollableStackView() {
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -51,15 +59,26 @@ class SidePanelViewController: NSViewController {
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             stackView.widthAnchor.constraint(greaterThanOrEqualToConstant: SidePanelViewController.minWidth)
         ])
-        return stackView
     }
     
     /// Create a scrollable stack view, adding the config and debug views to it
     override func viewDidLoad() {
         view.translatesAutoresizingMaskIntoConstraints = false
-        let stackView = SidePanelViewController.addScrollableStackView(to: view)
-        stackView.underlyingStackView.addView(debugView, in: .top)
-        stackView.underlyingStackView.addView(terrainConfigView, in: .top)
+        addScrollableStackView()
+    }
+    
+    /// Swaps a config view out for an existing old one
+    func resetViews<T: ShaderDataProviderProtocol>(with dataProvider: T? = nil) {
+        Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
+            removableView.removeFromSuperview()
+        }
+        // Adds sticky views below config views
+        Set(stickyViews).subtracting(stackView.underlyingStackView.views).forEach { viewToAdd in
+            stackView.underlyingStackView.addView(viewToAdd, in: .bottom)
+        }
+        if let configView = dataProvider as? NSView {
+            stackView.underlyingStackView.addView(configView, in: .top)
+        }
     }
 
 }

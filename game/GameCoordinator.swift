@@ -8,23 +8,27 @@
 import MetalKit
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
-class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
-                      ShaderDataProviderType: ShaderDataProvider> {
+class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     
     // MARK: variables
     
     /// Provides all data in the form of vertices and chunks for the other objects
-    private let dataProvider: ChunkDataProviderType
+    private let dataProvider: ChunkDataProvider
+    
+    /// Provides the shader data provider from the `dataProvider`
+    var shaderDataProvider: ChunkDataProvider.ShaderDataProviderType? {
+        return dataProvider.shaderDataProvider
+    }
     
     /// Handles user changes to the viewport/translations/visibility of chunks
-    private let viewportCoordinator: ViewportCoordinator<ChunkDataProviderType>
+    private let viewportCoordinator: ViewportCoordinator<ChunkDataProvider>
     
     /// Coordinates loading and deleting chunks in response to user moving around. Also contains
     /// actual vertex data for use in rendering
-    private let chunkCoordinator: ChunkCoordinator<ChunkDataProviderType>
+    private let chunkCoordinator: ChunkCoordinator<ChunkDataProvider>
     
     /// Renders the content to the screen
-    private let renderer: MapRenderer<ChunkDataProviderType, ShaderDataProviderType>
+    private let renderer: MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>
     
     /// This gets set in init to a function that resizes the view
     private let resizeClosure: () -> Void
@@ -40,23 +44,16 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
         }
     }
     
-    /// For querying for data from the shader data provider (comes from another source)
-    weak var shaderDataProvider: ShaderDataProviderType? {
-        didSet {
-            renderer.shaderDataProvider = shaderDataProvider
-        }
-    }
-    
     // MARK: initialization
     
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
     init?(view: InteractableViewProtocol) {
-        let dataProvider = ChunkDataProviderType()
+        let dataProvider = ChunkDataProvider()
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = MapRenderer<ChunkDataProviderType, ShaderDataProviderType>(
+              let renderer = MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>(
                 view: view,
                 device: defaultDevice,
                 dataProvider: dataProvider,
@@ -73,6 +70,10 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
         self.resizeClosure = { renderer.mtkView(view, drawableSizeWillChange: view.drawableSize) }
         
         setupInitialDelegates(with: view)
+    }
+    
+    deinit {
+        chunkCoordinator.shutdown()
     }
     
     /// Actually starts the coordination - resizes the interactable view to make sure
@@ -99,9 +100,10 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
     }
 }
 
-extension GameCoordinator: TerrainConfigUpdateDelegate {
+/// Just re-renders the renderer, no matter what value updated
+extension GameCoordinator: ConfigUpdateDelegate {
     
-    func configDidUpdate() {
+    func configDidUpdate<T>(from: T?, to: T?) {
         renderer.configDidUpdate()
     }
     
