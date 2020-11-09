@@ -26,6 +26,7 @@
 		7528BD4925551D58008038A3 /* DefaultTerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BD4825551D58008038A3 /* DefaultTerrainData.swift */; };
 		7528BD4D255522F3008038A3 /* EditableConfigValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528BD4C255522F3008038A3 /* EditableConfigValue.swift */; };
 		75764D732558CE02000AC3DA /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D722558CE02000AC3DA /* GameType.swift */; };
+		75764D7B2558F0D7000AC3DA /* TerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D7A2558F0D7000AC3DA /* TerrainData.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
 		757DF621254F90CB005723D5 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF620254F90CB005723D5 /* DebugView.swift */; };
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
@@ -85,6 +86,7 @@
 		7528BD4825551D58008038A3 /* DefaultTerrainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTerrainData.swift; sourceTree = "<group>"; };
 		7528BD4C255522F3008038A3 /* EditableConfigValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableConfigValue.swift; sourceTree = "<group>"; };
 		75764D722558CE02000AC3DA /* GameType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
+		75764D7A2558F0D7000AC3DA /* TerrainData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainData.swift; sourceTree = "<group>"; };
 		757DF620254F90CB005723D5 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		757DF625254FA0FF005723D5 /* DebugDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
 		757E14E9255151F50036AEB5 /* Color.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
@@ -198,6 +200,8 @@
 		7528BD232554EE9B008038A3 /* terrainGen */ = {
 			isa = PBXGroup;
 			children = (
+				75764D7A2558F0D7000AC3DA /* TerrainData.swift */,
+				7528BD4825551D58008038A3 /* DefaultTerrainData.swift */,
 				757E154F255331290036AEB5 /* TerrainTile.swift */,
 				757E154C2552C0130036AEB5 /* TerrainChunkDataProvider.swift */,
 			);
@@ -326,7 +330,6 @@
 				757E151125525B750036AEB5 /* VertexProtocol.swift */,
 				7528BD40255512A1008038A3 /* Biome+Defaults.swift */,
 				7528BD43255514E0008038A3 /* BiomeType+Swift.swift */,
-				7528BD4825551D58008038A3 /* DefaultTerrainData.swift */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				75FA6D31254BF07A00A1B409 /* ChunkCoordinatorDelegate.swift in Sources */,
 				7528BD41255512A1008038A3 /* Biome+Defaults.swift in Sources */,
 				757E15392552AD1A0036AEB5 /* ViewportCoordinatorDelegate.swift in Sources */,
+				75764D7B2558F0D7000AC3DA /* TerrainData.swift in Sources */,
 				757DF621254F90CB005723D5 /* DebugView.swift in Sources */,
 				750379A0254A8538002A0C13 /* GridShaders.metal in Sources */,
 				757E14EA255151F50036AEB5 /* Color.metal in Sources */,

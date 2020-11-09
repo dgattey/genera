@@ -10,6 +10,13 @@ import Foundation
 /// Contains a bunch of different default data to use elsewhere
 enum DefaultTerrainData {
     
+    /// The name of the preset representing this set of defaults
+    static let presetName = "Default Settings"
+    
+    /// The identifer of the preset representing this set of defaults
+    static let presetID = "com.dgattey.genera.default"
+    
+    /// The value that sets the map gen seed
     static let seed: String = "puppy"
     
     /// In the shader, this scales all coordinates
