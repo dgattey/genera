@@ -95,10 +95,10 @@ class TerrainConfigView: NSStackView {
 
 }
 
-// MARK: - ShaderDataProvider
+// MARK: - ShaderDataProviderProtocol
 
 /// Creates a bunch of biomes & offers config support from this view's text fields
-extension TerrainConfigView: ShaderDataProvider {
+extension TerrainConfigView: ShaderDataProviderProtocol {
     
     /// Config data for generation of noise, pulls data from text fields if they exist
     var configData: TerrainShaderConfigData {

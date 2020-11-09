@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// The type of game we're currently running - corresponds to a ChunkDataProvider
+/// The type of game we're currently running - corresponds to a ChunkDataProviderProtocol
 enum GameType {
     
     /// Uses `GridTileChunkDataProvider` to show CPU-heavy chunks of random tiled data

@@ -11,6 +11,6 @@ import Foundation
 protocol GameControllerDelegate: class {
     
     /// Called when the game controller wants to reset the data provider
-    func gameController<T: ShaderDataProvider>(hasNewDataProvider dataProvider: T?)
+    func gameController<T: ShaderDataProviderProtocol>(hasNewDataProvider dataProvider: T?)
     
 }

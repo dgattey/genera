@@ -18,7 +18,7 @@ private enum ChunkCoordinatorConstant {
 }
 
 /// Generic class for generating a map. Parameterized with a type of data to use
-class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
+class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
     
     // MARK: - variables
     

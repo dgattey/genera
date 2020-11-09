@@ -36,7 +36,7 @@ private enum ViewportCoordinatorConstant {
 }
 
 /// ViewportCoordinator functions for use with Metal manipulations
-class ViewportCoordinator<DataProvider: ChunkDataProvider>: NSObject, ViewportDataProvider {
+class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, ViewportDataProvider {
     
     // MARK: - static helpers
     

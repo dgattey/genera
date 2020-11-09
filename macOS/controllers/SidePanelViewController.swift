@@ -68,7 +68,7 @@ class SidePanelViewController: NSViewController {
     }
     
     /// Swaps a config view out for an existing old one
-    func resetViews<T: ShaderDataProvider>(with dataProvider: T? = nil) {
+    func resetViews<T: ShaderDataProviderProtocol>(with dataProvider: T? = nil) {
         Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
             removableView.removeFromSuperview()
         }

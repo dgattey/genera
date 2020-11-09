@@ -8,7 +8,7 @@
 import Foundation
 
 /// Generates a random set of tiles of certain "biomes" it chunks
-class GridTileChunkDataProvider: NSObject, ChunkDataProvider {
+class GridTileChunkDataProvider: NSObject, ChunkDataProviderProtocol {
     
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) {

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Provides giant 1-tile chunks for use in generation of terrain
-class TerrainChunkDataProvider: NSObject, ChunkDataProvider {
+class TerrainChunkDataProvider: NSObject, ChunkDataProviderProtocol {
     
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) {

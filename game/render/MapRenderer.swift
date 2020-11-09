@@ -10,8 +10,8 @@ import MetalKit
 import simd
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
-class MapRenderer<DataProvider: ChunkDataProvider,
-                  ShaderDataProviderType: ShaderDataProvider>: NSObject, MTKViewDelegate {
+class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
+                  ShaderDataProvider: ShaderDataProviderProtocol>: NSObject, MTKViewDelegate {
     
     // MARK: - delegates
 
@@ -43,18 +43,18 @@ class MapRenderer<DataProvider: ChunkDataProvider,
     private var viewportBufferData: [Float] = []
     
     /// Provides most data for this renderer
-    private weak var dataProvider: DataProvider?
+    private weak var dataProvider: ChunkDataProvider?
     
     /// Provides chunk data for this renderer
-    private weak var chunkCoordinator: ChunkCoordinator<DataProvider>?
+    private weak var chunkCoordinator: ChunkCoordinator<ChunkDataProvider>?
     
     // MARK: - initialization
     
     /// If the command queue or pipeline state fails to get created, this will fail
     init?(view: MTKView,
           device: MTLDevice,
-          dataProvider: DataProvider?,
-          chunkCoordinator: ChunkCoordinator<DataProvider>) {
+          dataProvider: ChunkDataProvider?,
+          chunkCoordinator: ChunkCoordinator<ChunkDataProvider>) {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
               let shaders = dataProvider?.shaders,
@@ -135,11 +135,11 @@ class MapRenderer<DataProvider: ChunkDataProvider,
 
         for (_, vertexBuffer) in vertexBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.vertices.rawValue)
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: DataProvider.ChunkDataType.verticesPerChunk )
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: ChunkDataProvider.ChunkDataType.verticesPerChunk )
         }
     }
     
-    /// Adds `shaderDataProvider` content to the encoder
+    /// Adds `ShaderDataProviderProtocol` content to the encoder
     private func addShaderConfigData(to encoder: MTLRenderCommandEncoder) {
         guard let shaderDataProvider = dataProvider?.shaderDataProvider else {
             // No data if we have no provider for it
@@ -148,7 +148,7 @@ class MapRenderer<DataProvider: ChunkDataProvider,
         var shaderConfigBufferData = shaderDataProvider.configData
         var shaderBiomeBufferData = shaderDataProvider.allBiomes
         encoder.setFragmentBytes(&shaderConfigBufferData,
-                                 length: MemoryLayout<ShaderDataProviderType.ShaderConfigDataType>.stride,
+                                 length: MemoryLayout<ShaderDataProvider.ShaderDataType>.stride,
                                  index: ShaderIndex.configData.rawValue)
         encoder.setFragmentBytes(&shaderBiomeBufferData,
                                  length: shaderBiomeBufferData.count * MemoryLayout<Biome>.stride,
@@ -211,7 +211,7 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         if let savedBuffer = savedBuffer {
             buffer = savedBuffer
         } else {
-            let length = DataProvider.ChunkDataType.verticesBufferSize
+            let length = ChunkDataProvider.ChunkDataType.verticesBufferSize
             guard let vertexBuffer = mainDevice.makeBuffer(length: length, options: .storageModeManaged) else {
                 assertionFailure("Couldn't create buffers")
                 return
@@ -222,7 +222,7 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            let stride = DataProvider.ChunkDataType.stride
+            let stride = ChunkDataProvider.ChunkDataType.stride
             guard let strongSelf = self,
                   let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk) else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffer))")

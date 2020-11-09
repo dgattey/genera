@@ -1,5 +1,5 @@
 //
-//  ChunkDataProvider.swift
+//  ChunkDataProviderProtocol.swift
 //  Genera
 //
 //  Created by Dylan Gattey on 10/30/20.
@@ -8,13 +8,13 @@
 import Foundation
 
 // A protocol any provider of chunk data must conform to
-protocol ChunkDataProvider: NSObject {
+protocol ChunkDataProviderProtocol: NSObject {
     
     /// The type of data stored in the chunk data
     associatedtype ChunkDataType: ChunkDataProtocol
     
     /// The type of shader data provider associated with this provider
-    associatedtype ShaderDataProviderType: ShaderDataProvider
+    associatedtype ShaderDataProviderType: ShaderDataProviderProtocol
 
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) { get }

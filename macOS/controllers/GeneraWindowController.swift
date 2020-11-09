@@ -57,7 +57,7 @@ class GeneraWindowController: NSWindowController {
 extension GeneraWindowController: GameControllerDelegate {
     
     /// Adds the new config view to the sidebar
-    func gameController<T: ShaderDataProvider>(hasNewDataProvider dataProvider: T?) {
+    func gameController<T: ShaderDataProviderProtocol>(hasNewDataProvider dataProvider: T?) {
         sidePanelViewController?.resetViews(with: dataProvider)
         dataProvider?.updateDelegate = gameViewController
     }
