@@ -40,4 +40,22 @@ class EditableFBMConfigValues {
         EditableValuesStackView.addValue(stackView)(scale)
         EditableValuesStackView.addValue(stackView)(compression)
     }
+    
+    /// Changes current values to new values from the data passed in
+    func changeValues(to values: FBMData) {
+        octaves.changeValue(to: values.octaves)
+        persistence.changeValue(to: values.persistence)
+        scale.changeValue(to: values.scale)
+        compression.changeValue(to: values.compression)
+    }
+    
+    /// Creates FBMData from all fields with a provided seed
+    func value(withSeed seed: uint) -> FBMData {
+        return FBMData(
+            octaves: octaves.value,
+            persistence: persistence.value,
+            scale: scale.value,
+            compression: compression.value,
+            seed: seed)
+    }
 }

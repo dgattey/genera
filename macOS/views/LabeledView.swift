@@ -61,6 +61,8 @@ enum LabeledView {
         let string = NSAttributedString(string: text, attributes: attributes)
         let field = NSTextField(labelWithAttributedString: string)
         field.drawsBackground = false
+        field.allowsEditingTextAttributes = true
+        field.isSelectable = true
         return field
     }
     

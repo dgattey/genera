@@ -124,6 +124,28 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     
     // MARK: - API
     
+    /// Updates the current value to a given value in both the stepper and field itself, and updates the delegate
+    func changeValue(to value: Any) {
+        switch valueType {
+        case .decimalNumber:
+            let previous = field.floatValue
+            field.formatter = floatFormatter // in case it's not currently set
+            field.stringValue = String(describing: value)
+            stepper?.floatValue = field.floatValue
+            updateDelegate?.configDidUpdate(from: previous, to: field.floatValue)
+        case .wholeNumber:
+            let previous = field.integerValue
+            field.stringValue = String(describing: value)
+            stepper?.intValue = field.intValue
+            updateDelegate?.configDidUpdate(from: previous, to: field.integerValue)
+        case .string:
+            let previous = field.stringValue
+            field.stringValue = String(describing: value)
+            stepper?.stringValue = field.stringValue
+            updateDelegate?.configDidUpdate(from: previous, to: field.stringValue)
+        }
+    }
+    
     /// Called from the NSStepper to update the text field
     @objc func updateValue() {
         guard let stepper = stepper else {
@@ -140,7 +162,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
             let previous = field.integerValue
             field.integerValue = stepper.integerValue
             updateDelegate?.configDidUpdate(from: previous, to: field.integerValue)
-        default:
+        case .string:
             assertionFailure("Strings should not have steppers")
         }
     }
