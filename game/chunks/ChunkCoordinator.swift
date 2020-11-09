@@ -214,19 +214,16 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
     private func evictOldestChunk() {
         chunkAccessSemaphore.wait()
         let leastRecentChunk = recentlyAccessedChunks.pop()
-        let recentCount = recentlyAccessedChunks.count
         
         // Stop if nothing to evict
         guard let evictableChunk = leastRecentChunk else {
             chunkAccessSemaphore.signal()
-            Logger.log("~Evict~ finished evicting")
             return
         }
         
         // If it's within the visible range, mark as accessed recently (and the element will move
         // so the next iteration of this eviction loop should get a different element)
         guard !evictableChunk.value.isWithin(visibleRegion) else {
-            Logger.log("~Evict~ in viewport \(evictableChunk) (recent count: \(recentCount))")
             markChunkAsRecentlyAccessed(evictableChunk.value)
             chunkAccessSemaphore.signal()
             return
@@ -234,7 +231,6 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         
         // Evict the chunk itself!
         let oldData = chunks.removeValue(forKey: evictableChunk.value)
-        Logger.log("~Evict~ removed a chunk: \(evictableChunk.value) to leave \(chunks.count) in \(visibleRegion)")
         debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
         chunkAccessSemaphore.signal()
         
