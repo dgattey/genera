@@ -72,8 +72,9 @@ class SidePanelViewController: NSViewController {
         Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
             removableView.removeFromSuperview()
         }
+        // Adds sticky views below config views
         Set(stickyViews).subtracting(stackView.underlyingStackView.views).forEach { viewToAdd in
-            stackView.underlyingStackView.addView(viewToAdd, in: .top)
+            stackView.underlyingStackView.addView(viewToAdd, in: .bottom)
         }
         if let configView = dataProvider as? NSView {
             stackView.underlyingStackView.addView(configView, in: .top)

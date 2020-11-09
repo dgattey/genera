@@ -22,7 +22,8 @@ class GeneraWindowController: NSWindowController {
         super.windowDidLoad()
         guard let contentViewController = window?.contentViewController,
               let gameViewController: GameViewController = firstViewController(in: contentViewController),
-              let sidePanelViewController: SidePanelViewController = firstViewController(in: contentViewController) else {
+              let sidePanelViewController: SidePanelViewController = firstViewController(in: contentViewController),
+              let startingGameType = GameType(rawValue: GameType.titles.first ?? "") else {
             assertionFailure("Views incorrectly set up")
             return
         }
@@ -32,7 +33,7 @@ class GeneraWindowController: NSWindowController {
         gameViewController.gameControllerDelegate = self
         
         DispatchQueue.main.async {
-            gameViewController.reset(to: .terrain)
+            gameViewController.reset(to: startingGameType)
         }
     }
     
@@ -68,13 +69,17 @@ extension GeneraWindowController: GameControllerDelegate {
 
 extension GeneraWindowController: NSToolbarDelegate {
 
-    /// The identifer for the window's label
-    private static let appTitleID = "appTitle"
+    /// The identifer for the window's app title label
+    private static let toolbarItemAppTitle = "dgattey.appTitle"
+    
+    /// The identifer for the game typ dropdown
+    private static let toolbarItemGameType = "dgattey.gameType"
     
     /// Default items
     private static let defaultToolbarIDs: [NSToolbarItem.Identifier] = [
-        NSToolbarItem.Identifier(appTitleID),
+        NSToolbarItem.Identifier(toolbarItemAppTitle),
         .flexibleSpace,
+        NSToolbarItem.Identifier(toolbarItemGameType),
         .toggleSidebar
     ]
     
@@ -90,9 +95,13 @@ extension GeneraWindowController: NSToolbarDelegate {
                  itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
                  willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         switch itemIdentifier {
-        case NSToolbarItem.Identifier(GeneraWindowController.appTitleID):
+        case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemAppTitle):
             let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier)
             toolbarItem.view = GeneraWindowController.buildAppLabel()
+            return toolbarItem
+        case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemGameType):
+            let toolbarItem = NSToolbarItem(itemIdentifier: itemIdentifier)
+            toolbarItem.view = buildGameTypeSelector()
             return toolbarItem
         default:
             return NSToolbarItem(itemIdentifier: itemIdentifier)
@@ -110,5 +119,29 @@ extension GeneraWindowController: NSToolbarDelegate {
         
         titleView.heightAnchor.constraint(equalToConstant: LabeledView.HeaderStyle.appBold.font.pointSize * 0.88).isActive = true
         return view
+    }
+    
+    /// Builds a selector for game mode
+    private func buildGameTypeSelector() -> NSView {
+        let selector = NSPopUpButton()
+        selector.addItems(withTitles: GameType.titles)
+        selector.target = self
+        selector.action = #selector(GeneraWindowController.didChangeGameType)
+        let label = LabeledView.createLabel(from: "Game Type:", style: .field)
+        let view = NSStackView()
+        view.distribution = .equalSpacing
+        view.alignment = .centerY
+        view.addView(selector, in: .trailing)
+        view.addView(label, in: .leading)
+        return view
+    }
+    
+    /// Called in response to changing the game type from the toolbar, and changes the controller's game type
+    @objc func didChangeGameType(_ sender: AnyObject) {
+        if let popupButton = sender as? NSPopUpButton,
+           let menuItem = popupButton.selectedItem,
+           let gameType = GameType(rawValue: menuItem.title) {
+            gameViewController?.reset(to: gameType)
+        }
     }
 }
