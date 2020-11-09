@@ -8,13 +8,17 @@
 import MetalKit
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
-class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
-                      ShaderDataProviderType: ShaderDataProvider> {
+class GameCoordinator<ChunkDataProviderType: ChunkDataProvider> {
     
     // MARK: variables
     
     /// Provides all data in the form of vertices and chunks for the other objects
     private let dataProvider: ChunkDataProviderType
+    
+    /// Provides the shader data provider from the `dataProvider`
+    var shaderDataProvider: ChunkDataProviderType.ShaderDataProviderType? {
+        return dataProvider.shaderDataProvider
+    }
     
     /// Handles user changes to the viewport/translations/visibility of chunks
     private let viewportCoordinator: ViewportCoordinator<ChunkDataProviderType>
@@ -24,7 +28,7 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
     private let chunkCoordinator: ChunkCoordinator<ChunkDataProviderType>
     
     /// Renders the content to the screen
-    private let renderer: MapRenderer<ChunkDataProviderType, ShaderDataProviderType>
+    private let renderer: MapRenderer<ChunkDataProviderType, ChunkDataProviderType.ShaderDataProviderType>
     
     /// This gets set in init to a function that resizes the view
     private let resizeClosure: () -> Void
@@ -40,13 +44,6 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
         }
     }
     
-    /// For querying for data from the shader data provider (comes from another source)
-    weak var shaderDataProvider: ShaderDataProviderType? {
-        didSet {
-            renderer.shaderDataProvider = shaderDataProvider
-        }
-    }
-    
     // MARK: initialization
     
     /// Initialization will fail if Metal is missing or the renderer isn't
@@ -56,7 +53,7 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider,
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = MapRenderer<ChunkDataProviderType, ShaderDataProviderType>(
+              let renderer = MapRenderer<ChunkDataProviderType, ChunkDataProviderType.ShaderDataProviderType>(
                 view: view,
                 device: defaultDevice,
                 dataProvider: dataProvider,

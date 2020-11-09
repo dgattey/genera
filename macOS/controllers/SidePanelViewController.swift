@@ -23,6 +23,9 @@ class SidePanelViewController: NSViewController {
     /// Debug view for the whole app, doesn't change
     private lazy var debugView: DebugView = DebugView()
     
+    /// All the views we don't want to get rid of when swapping providers
+    private lazy var stickyViews: [NSView] = [debugView]
+    
     /// Stack view for all views in this view controller
     private lazy var stackView: ScrollableStackView = {
         let stackView = ScrollableStackView(layoutOrientation: .vertical)
@@ -62,23 +65,19 @@ class SidePanelViewController: NSViewController {
     override func viewDidLoad() {
         view.translatesAutoresizingMaskIntoConstraints = false
         addScrollableStackView()
-        stackView.underlyingStackView.addView(debugView, in: .bottom)
     }
     
     /// Swaps a config view out for an existing old one
-    func add<NewView: ConfigView, OldView: ConfigView>(configView: NewView,
-                                                       removing oldView: OldView) {
-        for view in stackView.subviews {
-            if view == oldView || view as? OldView != nil {
-                view.removeFromSuperview()
-            }
+    func resetViews<T: ShaderDataProvider>(with dataProvider: T? = nil) {
+        Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
+            removableView.removeFromSuperview()
         }
-        add(configView: configView)
-    }
-    
-    /// Adds a new config view to this side panel
-    func add<NewView: ConfigView>(configView: NewView) {
-        stackView.underlyingStackView.addView(configView, in: .top)
+        Set(stickyViews).subtracting(stackView.underlyingStackView.views).forEach { viewToAdd in
+            stackView.underlyingStackView.addView(viewToAdd, in: .top)
+        }
+        if let configView = dataProvider as? NSView {
+            stackView.underlyingStackView.addView(configView, in: .top)
+        }
     }
 
 }

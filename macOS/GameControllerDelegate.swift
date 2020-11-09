@@ -10,7 +10,7 @@ import Foundation
 /// Called by the `GameViewController` in response to game events
 protocol GameControllerDelegate: class {
     
-    /// Called when the game controller wants to add a new config view
-    func gameControllerDidAdd<T: ConfigView>(configView: T)
+    /// Called when the game controller wants to reset the data provider
+    func gameController<T: ShaderDataProvider>(hasNewDataProvider dataProvider: T?)
     
 }

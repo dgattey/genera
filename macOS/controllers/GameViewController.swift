@@ -13,7 +13,6 @@ class GameViewController: NSViewController {
     // MARK: - game types
 
     typealias ChunkDataProviderType = TerrainChunkDataProvider
-    typealias ShaderDataProviderType = TerrainConfigView
     
     // MARK: - everything else
     
@@ -24,7 +23,7 @@ class GameViewController: NSViewController {
     @IBOutlet var gameView: InteractableMTKView!
     
     /// Coordinates the whole game, will be created from `start`. Sets the data provider here via generics.
-    private var coordinator: GameCoordinator<ChunkDataProviderType, ShaderDataProviderType>?
+    private var coordinator: GameCoordinator<ChunkDataProviderType>?
     
     /// Debug delegate passthrough
     weak var debugDelegate: DebugDelegate? {
@@ -38,19 +37,17 @@ class GameViewController: NSViewController {
     
     /// Starts the game by creating the coordinator, then kicking it off
     func start() {
-        guard let coordinator = GameCoordinator<ChunkDataProviderType, ShaderDataProviderType>(view: gameView) else {
+        guard let coordinator = GameCoordinator<ChunkDataProviderType>(view: gameView) else {
             assertionFailure("Coordinator failed to set up")
             return
         }
         self.coordinator = coordinator
         
-        // Create the config view too
-        let configView = ShaderDataProviderType()
-        gameControllerDelegate?.gameControllerDidAdd(configView: configView)
+        // Create the config view too if it exists
+        gameControllerDelegate?.gameController(hasNewDataProvider: coordinator.shaderDataProvider)
         
         // Set up the right data and start the coordination
         coordinator.debugDelegate = debugDelegate
-        coordinator.shaderDataProvider = configView
         coordinator.start()
     }
     

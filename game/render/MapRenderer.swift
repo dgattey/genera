@@ -45,9 +45,6 @@ class MapRenderer<DataProvider: ChunkDataProvider,
     /// Provides most data for this renderer
     private weak var dataProvider: DataProvider?
     
-    /// For querying for data from the shader data provider (comes from another source)
-    weak var shaderDataProvider: ShaderDataProviderType?
-    
     /// Provides chunk data for this renderer
     private weak var chunkCoordinator: ChunkCoordinator<DataProvider>?
     
@@ -144,7 +141,7 @@ class MapRenderer<DataProvider: ChunkDataProvider,
     
     /// Adds `shaderDataProvider` content to the encoder
     private func addShaderConfigData(to encoder: MTLRenderCommandEncoder) {
-        guard let shaderDataProvider = shaderDataProvider else {
+        guard let shaderDataProvider = dataProvider?.shaderDataProvider else {
             // No data if we have no provider for it
             return
         }

@@ -13,6 +13,9 @@ protocol ShaderDataProvider: class {
     /// The type of data stored in by this provider
     associatedtype ShaderConfigDataType: ShaderConfigDataProtocol
     
+    /// Weakly held update delegate for use with sending updates out
+    var updateDelegate: ConfigUpdateDelegate? { get set }
+    
     /// Returns an instance of config data for use with passing to shader
     var configData: ShaderConfigDataType { get }
     
@@ -31,4 +34,22 @@ extension ShaderDataProvider {
         }
     }
     
+}
+
+/// Used for no data views
+class EmptyShaderDataProvider: ShaderDataProvider {
+    
+    var updateDelegate: ConfigUpdateDelegate? {
+        set {}
+        get { return nil }
+    }
+    
+    var configData: EmptyShaderData {
+        fatalError("Cannot be constructed")
+    }
+    
+    var allBiomes: [Biome] {
+        fatalError("Cannot be constructed")
+    }
+
 }

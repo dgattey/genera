@@ -8,7 +8,7 @@
 import AppKit
 
 /// A stack view containing text fields for certain configurable data
-class TerrainConfigView: NSStackView, ConfigView {
+class TerrainConfigView: NSStackView {
     
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {

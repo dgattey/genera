@@ -10,17 +10,20 @@ import Foundation
 /// Generates a random set of tiles of certain "biomes" it chunks
 class GridTileChunkDataProvider: NSObject, ChunkDataProvider {
     
-    typealias ChunkDataType = GridTile
-    
     /// Which shader names to use in generation
     var shaders: (vertex: String, fragment: String) {
         return (vertex: "gridVertexShader", fragment: "gridFragmentShader")
     }
+
+    /// No shader data for this provider
+    var shaderDataProvider: EmptyShaderDataProvider? {
+        return nil
+    }
     
     /// Do the hard work of generating a chunk of data with random tile types
-    func generateChunkData(for chunk: Chunk) -> [ChunkDataType] {
-        return (0 ..< ChunkDataType.chunkSize).flatMap { x -> [ChunkDataType] in
-            return (0 ..< ChunkDataType.chunkSize).map { y -> ChunkDataType in
+    func generateChunkData(for chunk: Chunk) -> [GridTile] {
+        return (0 ..< ChunkDataType.chunkSize).flatMap { x in
+            return (0 ..< ChunkDataType.chunkSize).map { y in
                 let tileX = x + chunk.x * ChunkDataType.chunkSize
                 let tileY = y + chunk.y * ChunkDataType.chunkSize
                 let randomRawTileKind = Int.random(in: (0 ..< BiomeType.total.rawValue))

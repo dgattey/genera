@@ -15,4 +15,12 @@ protocol ShaderConfigDataProtocol {
     var numBiomes: Int32 { get }
 }
 
+/// Used for shaders that don't have configuration data - dummy class
+class EmptyShaderData: ShaderConfigDataProtocol {
+    
+    var numBiomes: Int32 {
+        fatalError("Should not be called ever")
+    }
+}
+
 extension TerrainShaderConfigData: ShaderConfigDataProtocol {}
