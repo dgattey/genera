@@ -36,3 +36,27 @@ extension BiomeType: CustomStringConvertible {
         }
     }
 }
+
+// MARK: - BiomeType Codable
+
+extension BiomeType: Codable {
+    
+    init(rawValueOrOcean: Int) {
+        self = BiomeType(rawValue: rawValueOrOcean) ?? .ocean
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case rawValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(rawValue, forKey: .rawValue)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let rawValue = try values.decode(Int.self, forKey: .rawValue)
+        self.init(rawValueOrOcean: rawValue)
+    }
+}

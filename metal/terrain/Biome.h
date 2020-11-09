@@ -13,6 +13,9 @@
 /// Defines a biome, consisting of a elevation and color that defines a particular biome
 struct Biome {
     
+    /// The type of biome we're representing
+    BiomeType type;
+    
     /// The color defining the core of this biome
     vector_float3 color;
     
