@@ -68,9 +68,19 @@ class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
         return region
     }
     
+    /// Used to block async tasks from starting once we shut down
+    private var shouldCoordinate = true
+    
     /// Saves the generation function for use later
     init(dataProvider: DataProvider?) {
         self.dataProvider = dataProvider
+    }
+    
+    /// Called when we need to shut down this coordinator
+    func shutdown() {
+        shouldCoordinate = false
+        evictionEventLoop?.cancel()
+        generationEventLoop?.cancel()
     }
     
     // MARK: - chunk data manipulation
@@ -111,6 +121,9 @@ class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
     
     /// Just generates visible chunks to start with
     func startMapGeneration() {
+        guard shouldCoordinate else {
+            return
+        }
         guard let region = viewportDataProvider?.visibleRegion else {
             assertionFailure("No chunks visible at start of map generation")
             return
@@ -120,6 +133,9 @@ class ChunkCoordinator<DataProvider: ChunkDataProvider>: NSObject {
     
     /// Makes sure these chunks are currently generated, and evict chunks if they're outside our bounds and we're at the limit
     func handle(updatedVisibleRegion region: ChunkRegion) {
+        guard shouldCoordinate else {
+            return
+        }
         evictChunksIfNeeded()
         for x in region.x {
             for y in region.y {

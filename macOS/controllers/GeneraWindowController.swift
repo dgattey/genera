@@ -32,7 +32,7 @@ class GeneraWindowController: NSWindowController {
         gameViewController.gameControllerDelegate = self
         
         DispatchQueue.main.async {
-            gameViewController.start()
+            gameViewController.reset(to: .terrain)
         }
     }
     

@@ -236,7 +236,6 @@ extension MapRenderer: ChunkCoordinatorDelegate {
             
             DispatchQueue.main.async { [weak self] in
                 guard let strongSelf = self else {
-                    assertionFailure("Couldn't capture self from main thread")
                     return
                 }
                 strongSelf.drawingSemaphore.signal()

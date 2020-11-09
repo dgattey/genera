@@ -72,6 +72,10 @@ class GameCoordinator<ChunkDataProviderType: ChunkDataProvider> {
         setupInitialDelegates(with: view)
     }
     
+    deinit {
+        chunkCoordinator.shutdown()
+    }
+    
     /// Actually starts the coordination - resizes the interactable view to make sure
     /// we have size info, then starts map generation on a background thread
     func start() {
