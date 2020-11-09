@@ -70,7 +70,8 @@ enum DefaultTerrainData {
             elevationFBM: elevationFBM,
             moistureFBM: moistureFBM,
             elevationColorWeight: elevationColorWeight,
-            moistureColorWeight: moistureColorWeight)
+            moistureColorWeight: moistureColorWeight,
+            biomes: Biome.defaultBiomes)
     }
 
 }

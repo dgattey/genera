@@ -195,7 +195,8 @@ extension TerrainConfigView: TerrainPresetDelegate {
             elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
             moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
             elevationColorWeight: elevationColorWeight.value,
-            moistureColorWeight: moistureColorWeight.value)
+            moistureColorWeight: moistureColorWeight.value,
+            biomes: allBiomes)
         TerrainPresetLoader.savePreset(preset, onCompletion: onCompletion)
     }
     

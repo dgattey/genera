@@ -98,7 +98,6 @@ class TerrainPresetView: EditableValuesStackView {
         if let popupButton = sender as? NSPopUpButton,
            let menuItem = popupButton.selectedItem,
            let preset = presets[menuItem.title] {
-            print("Did select \(preset)")
             presetDelegate?.selectPreset(preset)
         }
     }
@@ -127,19 +126,24 @@ class TerrainPresetView: EditableValuesStackView {
     
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser
     private func reloadPresetsAndReset(bySelecting presetName: String) {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            let presets = TerrainPresetLoader.loadPresets()
+        let resetPicker = { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            let keys = Array(strongSelf.presets.keys).sorted()
+            strongSelf.presetChooser.removeAllItems()
+            strongSelf.presetChooser.addItems(withTitles: keys)
+            strongSelf.presetChooser.selectItem(withTitle: presetName)
+        }
+        let handlePresets = { [weak self] (presets: [TerrainData]) in
             let keys = presets.map({ $0.presetName })
             self?.presets = Dictionary(uniqueKeysWithValues: zip(keys, presets))
             DispatchQueue.main.async {
-                guard let strongSelf = self else {
-                    return
-                }
-                let keys = Array(strongSelf.presets.keys).sorted()
-                strongSelf.presetChooser.removeAllItems()
-                strongSelf.presetChooser.addItems(withTitles: keys)
-                strongSelf.presetChooser.selectItem(withTitle: presetName)
+                resetPicker()
             }
+        }
+        DispatchQueue.global(qos: .utility).async {
+            TerrainPresetLoader.loadPresets(completion: handlePresets)
         }
     }
     

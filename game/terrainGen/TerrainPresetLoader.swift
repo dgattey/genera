@@ -41,10 +41,6 @@ enum TerrainPresetLoader {
                 Logger.log("Problem creating presets folder: \(error.localizedDescription)")
             }
         }
-        // Save default preset too if missing
-        if !FileManager.default.fileExists(atPath: defaultPresetsPath) {
-            savePreset(DefaultTerrainData.terrainData)
-        }
     }
     
     /// Saves the given preset to disk in the presets folder
@@ -52,8 +48,12 @@ enum TerrainPresetLoader {
         DispatchQueue.global(qos: .utility).async {
             createPresetsFolderIfNonexistent()
             let encoder = JSONEncoder()
-            guard let data = try? encoder.encode(preset) else {
-                Logger.log("Couldn't create data")
+            encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "∞", negativeInfinity: "-∞", nan: "NAN")
+            let data: Data
+            do {
+                data = try encoder.encode(preset)
+            } catch let error {
+                Logger.log("Couldn't create data: \(error)")
                 return
             }
             let path = presetsFolderURL.appendingPathComponent(preset.presetID).appendingPathExtension(fileExtension).path
@@ -63,19 +63,31 @@ enum TerrainPresetLoader {
     }
     
     /// Loads all plists in the presets folder to try converting them - doesn't run from a background queue
-    static func loadPresets() -> [TerrainData] {
+    static func loadPresets(completion: (([TerrainData]) -> Void)?) {
         createPresetsFolderIfNonexistent()
+        
+        // Save default preset if missing
+        if !FileManager.default.fileExists(atPath: defaultPresetsPath) {
+            savePreset(DefaultTerrainData.terrainData) { _ in
+                // When we save the file, load again to pick it up
+                loadPresets(completion: completion)
+            }
+            return
+        }
+        
         let decoder = JSONDecoder()
+        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "∞", negativeInfinity: "-∞", nan: "NAN")
 
-        var terrainDataArray: [TerrainData] = []
         guard let enumerator = FileManager.default.enumerator(at: presetsFolderURL,
                                                               includingPropertiesForKeys: [.isRegularFileKey],
                                                               options: [.skipsPackageDescendants, .skipsHiddenFiles],
                                                               errorHandler: nil) else {
-            return terrainDataArray
+            completion?([])
+            return
         }
         
         // Try decoding each file recursively in the subdirectory
+        var terrainDataArray: [TerrainData] = []
         for case let fileURL as URL in enumerator {
             guard let fileAttributes = try? fileURL.resourceValues(forKeys:[.isRegularFileKey]),
                fileAttributes.isRegularFile ?? false else {
@@ -89,7 +101,7 @@ enum TerrainPresetLoader {
                 Logger.log("Didn't convert \(fileURL) to a valid preset")
             }
         }
-        return terrainDataArray
+        completion?(terrainDataArray)
     }
 
 }
