@@ -5,7 +5,7 @@
 //  Created by Dylan Gattey on 11/5/20.
 //
 
-import Foundation
+import AppKit
 
 /// Extends the Obj-C defined Biome with some computed vars for use elsewhere
 extension Biome {
@@ -253,5 +253,15 @@ extension Biome {
             .tropicalRainforest: tropicalRainforest.color,
         ]
         return rawColors.mapValues { vector_float4($0, 1.0) }
+    }
+    
+    /// The NSColor representation of this biome's color
+    var nsColor: NSColor {
+        return NSColor(
+            red: CGFloat(color.x),
+            green: CGFloat(color.y),
+            blue: CGFloat(color.z),
+            alpha: 1.0
+        )
     }
 }

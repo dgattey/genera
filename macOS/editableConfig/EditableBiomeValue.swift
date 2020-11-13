@@ -50,13 +50,8 @@ class EditableBiomeValue {
         maxElevation = EditableConfigValue(fallback: initialValue.maxElevation, label: "Max elevation")
         maxMoisture = EditableConfigValue(fallback: initialValue.maxMoisture, label: "Max moisture")
         blendRange = EditableConfigValue(fallback: initialValue.maxMoisture, label: "Range of color blending")
+        colorWell.color = initialValue.nsColor
         
-        let initialColor: NSColor = NSColor(
-            red: CGFloat(initialValue.color.x),
-            green: CGFloat(initialValue.color.y),
-            blue: CGFloat(initialValue.color.z),
-            alpha: 1.0)
-        colorWell.color = initialColor
         minElevation.updateDelegate = self
         maxElevation.updateDelegate = self
         maxMoisture.updateDelegate = self
