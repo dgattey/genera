@@ -12,9 +12,6 @@ class SidePanelViewController: NSViewController {
     
     // MARK: - constants
     
-    /// Min width of the view owned here
-    private static let minWidth: CGFloat = 380
-    
     /// The spacing between subviews
     static let interItemSpacing = LabeledView.HeaderStyle.section.spacing * 1.5
     
@@ -57,7 +54,6 @@ class SidePanelViewController: NSViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            stackView.widthAnchor.constraint(greaterThanOrEqualToConstant: SidePanelViewController.minWidth)
         ])
     }
     

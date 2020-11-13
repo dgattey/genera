@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="Tc3-vS-wKE">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="Tc3-vS-wKE">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,8 +22,6 @@
                                                 <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -329,8 +327,8 @@
         <scene sceneID="3iN-t0-Pbf">
             <objects>
                 <windowController id="Tc3-vS-wKE" customClass="GeneraWindowController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Genera" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="darkAqua" frameAutosaveName="" animationBehavior="default" titleVisibility="hidden" id="TZz-3d-sxH">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
+                    <window key="window" title="Genera" subtitle="A map generator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" appearanceType="darkAqua" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="TZz-3d-sxH">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="245" y="310" width="800" height="600"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
                         <value key="minSize" type="size" width="400" height="300"/>
@@ -338,7 +336,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="small" id="Jul-at-Bb0">
+                        <toolbar key="toolbar" implicitIdentifier="C8EBF028-1B18-4A8E-91F7-D3136539DFEA" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="Jul-at-Bb0">
                             <allowedToolbarItems/>
                             <defaultToolbarItems/>
                             <connections>
@@ -356,26 +354,26 @@
                 </windowController>
                 <customObject id="zqo-SE-kEg" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-689" y="300"/>
+            <point key="canvasLocation" x="-420" y="276"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Obk-lJ-gL1">
             <objects>
+                <customObject id="5aY-08-fDA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <splitViewController id="cXq-wP-lTF" sceneMemberID="viewController">
                     <splitViewItems>
-                        <splitViewItem holdingPriority="260" id="nFi-vW-mEA"/>
-                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" separatorStyle="none" id="mma-QM-U96"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="YUL-eT-BZ6"/>
+                        <splitViewItem id="ONr-fy-irV"/>
                     </splitViewItems>
-                    <splitView key="splitView" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6us-nn-m3P">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="BnS-S7-eIT">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
-                        <segue destination="1Vi-Bk-PD6" kind="relationship" relationship="splitItems" id="oIl-sn-yBW"/>
-                        <segue destination="kFq-56-eon" kind="relationship" relationship="splitItems" id="Vmb-Ne-Cav"/>
+                        <segue destination="kFq-56-eon" kind="relationship" relationship="splitItems" id="IdV-fT-Oxi"/>
+                        <segue destination="1Vi-Bk-PD6" kind="relationship" relationship="splitItems" id="cqJ-6I-5RR"/>
                     </connections>
                 </splitViewController>
-                <customObject id="5aY-08-fDA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-689" y="1078"/>
         </scene>
@@ -401,15 +399,12 @@
                 <viewController id="kFq-56-eon" customClass="SidePanelViewController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="4d7-cv-TWW">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="HVa-5q-7be"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="pZw-3u-w7z"/>
-                        </constraints>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </view>
                 </viewController>
                 <customObject id="xgx-H1-H4b" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-318.5" y="1945.5"/>
+            <point key="canvasLocation" x="-375" y="1829"/>
         </scene>
     </scenes>
 </document>

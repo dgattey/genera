@@ -11,10 +11,10 @@ import Foundation
 enum GameType: String {
     
     /// Uses `TerrainChunkDataProvider` to show GPU-heavy chunks of Simplex-noise-generated terrain data
-    case terrain = "Generated Terrain"
+    case terrain = "Terrain"
     
     /// Uses `GridTileChunkDataProvider` to show CPU-heavy chunks of random tiled data
-    case grid = "Random tile grid"
+    case grid = "Random Grid"
     
     /// Titles of all game types - when adding more, add them here too!
     static let titles: [String] = [
