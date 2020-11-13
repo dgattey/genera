@@ -81,6 +81,8 @@ class TerrainConfigView: NSStackView {
     /// All current biome values, defaulted to all default biomes
     private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
     
+    private let biomeView = EditableValuesStackView(title: "Biome Config")
+    
     // MARK: - API
     
     /// Adds a nested stack view with equal widths
@@ -124,7 +126,6 @@ class TerrainConfigView: NSStackView {
         moistureView.addValue(moistureColorWeight)
         addView(moistureView)
         
-        let biomeView = EditableValuesStackView(title: "Biome Config")
         biomes.addValues(to: biomeView)
         addView(biomeView)
     }
@@ -189,7 +190,10 @@ extension TerrainConfigView: TerrainPresetDelegate {
         moistureDistribution.changeValue(to: preset.moistureDistribution)
         moistureColorWeight.changeValue(to: preset.moistureColorWeight)
         
+        /// Reset the biome views entirely
         biomes.changeValues(to: preset.biomes)
+        biomeView.views.forEach({ biomeView.removeView($0) })
+        biomes.addValues(to: biomeView)
     }
     
     /// Called when the user wants to save the current data as a preset

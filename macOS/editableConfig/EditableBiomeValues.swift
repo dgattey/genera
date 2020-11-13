@@ -34,6 +34,7 @@ class EditableBiomeValues {
     func addValues(to stackView: EditableValuesStackView) {
         var counts: [BiomeType: Int] = [:]
         for biomeValue in biomeValues {
+            biomeValue.updateDelegate = updateDelegate
             counts[biomeValue.value.type] = (counts[biomeValue.value.type] ?? 0) + 1
             biomeValue.addValues(to: stackView, index: counts[biomeValue.value.type] ?? 0)
         }

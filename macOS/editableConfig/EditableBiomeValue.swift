@@ -41,14 +41,7 @@ class EditableBiomeValue {
     private let blendRange: EditableConfigValue<Float>
     
     /// Update delegate passthrough
-    weak var updateDelegate: ConfigUpdateDelegate? {
-        didSet {
-            minElevation.updateDelegate = updateDelegate
-            maxElevation.updateDelegate = updateDelegate
-            maxMoisture.updateDelegate = updateDelegate
-            blendRange.updateDelegate = updateDelegate
-        }
-    }
+    weak var updateDelegate: ConfigUpdateDelegate?
     
     /// Creates fields out of the initial values
     init(_ initialValue: Biome) {
@@ -64,6 +57,10 @@ class EditableBiomeValue {
             blue: CGFloat(initialValue.color.z),
             alpha: 1.0)
         colorWell.color = initialColor
+        minElevation.updateDelegate = self
+        maxElevation.updateDelegate = self
+        maxMoisture.updateDelegate = self
+        blendRange.updateDelegate = self
     }
     
     /// Adds the config values saved here to a given stack view
@@ -94,7 +91,18 @@ class EditableBiomeValue {
     
     /// Called when the user picks a color
     @objc func userDidPickColor() {
-        updateDelegate?.configDidUpdate(from: nil, to: colorWell.color)
+        configDidUpdate(from: nil, to: colorWell.color)
     }
     
+}
+
+// MARK: ConfigUpdateDelegate
+
+extension EditableBiomeValue: ConfigUpdateDelegate {
+    
+    /// Notifies both our update delegate and the biome delegate
+    func configDidUpdate<T>(from: T?, to: T?) {
+        updateDelegate?.configDidUpdate(from: from, to: to)
+    }
+
 }
