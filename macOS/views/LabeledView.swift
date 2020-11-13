@@ -79,6 +79,7 @@ enum LabeledView {
                         style: HeaderStyle = .field,
                         toStack stack: NSStackView) {
         let label = createLabel(from: text, style: style)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         add([label, view], withPaddingFrom: style, toStack: stack)
     }
     
