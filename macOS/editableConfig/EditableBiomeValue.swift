@@ -5,22 +5,28 @@
 //  Created by Dylan Gattey on 11/9/20.
 //
 
-import Foundation
+import AppKit
 
 /// Contains all the fields to change the values of a particular biome (not its type!)
 class EditableBiomeValue {
     
+    /// The min size of the color well
+    private static let colorWellMinSize: CGFloat = 60
+    
     /// The immutable biome type
     private let biomeType: BiomeType
     
-    /// The red portion of the color
-    private let colorR: EditableConfigValue<Float>
-    
-    /// The green portion of the color
-    private let colorG: EditableConfigValue<Float>
-    
-    /// The blue portion of the color
-    private let colorB: EditableConfigValue<Float>
+    /// The color picker itself, configured
+    private lazy var colorWell: NSColorWell = {
+        let colorWell = NSColorWell()
+        colorWell.isBordered = true
+        colorWell.controlSize = .large
+        colorWell.widthAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize).isActive = true
+        colorWell.heightAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize).isActive = true
+        colorWell.action = #selector(userDidPickColor)
+        colorWell.target = self
+        return colorWell
+    }()
     
     /// Minimum elevation this biome exists at
     private let minElevation: EditableConfigValue<Float>
@@ -37,9 +43,6 @@ class EditableBiomeValue {
     /// Update delegate passthrough
     weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
-            colorR.updateDelegate = updateDelegate
-            colorG.updateDelegate = updateDelegate
-            colorB.updateDelegate = updateDelegate
             minElevation.updateDelegate = updateDelegate
             maxElevation.updateDelegate = updateDelegate
             maxMoisture.updateDelegate = updateDelegate
@@ -50,22 +53,24 @@ class EditableBiomeValue {
     /// Creates fields out of the initial values
     init(_ initialValue: Biome) {
         biomeType = initialValue.type
-        colorR = EditableConfigValue(fallback: initialValue.color.x, label: "Color Red %")
-        colorG = EditableConfigValue(fallback: initialValue.color.y, label: "Color Green %")
-        colorB = EditableConfigValue(fallback: initialValue.color.z, label: "Color Blue %")
         minElevation = EditableConfigValue(fallback: initialValue.minElevation, label: "Min elevation")
         maxElevation = EditableConfigValue(fallback: initialValue.maxElevation, label: "Max elevation")
         maxMoisture = EditableConfigValue(fallback: initialValue.maxMoisture, label: "Max moisture")
         blendRange = EditableConfigValue(fallback: initialValue.maxMoisture, label: "Range of color blending")
+        
+        let initialColor: NSColor = NSColor(
+            red: CGFloat(initialValue.color.x),
+            green: CGFloat(initialValue.color.y),
+            blue: CGFloat(initialValue.color.z),
+            alpha: 1.0)
+        colorWell.color = initialColor
     }
     
     /// Adds the config values saved here to a given stack view
     func addValues(to stackView: EditableValuesStackView, index: Int) {
         let suffix = index > 1 ? " \(index)" : ""
         LabeledView.addLabel("\(biomeType.description) \(suffix)", style: .smallSection, toStack: stackView)
-        EditableValuesStackView.addValue(stackView)(colorR)
-        EditableValuesStackView.addValue(stackView)(colorG)
-        EditableValuesStackView.addValue(stackView)(colorB)
+        stackView.addView(colorWell, in: .bottom)
         EditableValuesStackView.addValue(stackView)(minElevation)
         EditableValuesStackView.addValue(stackView)(maxElevation)
         EditableValuesStackView.addValue(stackView)(maxMoisture)
@@ -76,12 +81,20 @@ class EditableBiomeValue {
     var value: Biome {
         return Biome(
             type: biomeType,
-            color: vector_float3(colorR.value, colorG.value, colorB.value),
+            color: vector_float3(
+                Float(colorWell.color.redComponent),
+                Float(colorWell.color.greenComponent),
+                Float(colorWell.color.blueComponent)),
             minElevation: minElevation.value,
             maxElevation: maxElevation.value,
             maxMoisture: maxMoisture.value,
             blendRange: blendRange.value
         )
+    }
+    
+    /// Called when the user picks a color
+    @objc func userDidPickColor() {
+        updateDelegate?.configDidUpdate(from: nil, to: colorWell.color)
     }
     
 }
