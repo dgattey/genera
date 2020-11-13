@@ -27,6 +27,8 @@ class TerrainConfigView: NSStackView {
             aridness.updateDelegate = updateDelegate
             moistureDistribution.updateDelegate = updateDelegate
             moistureColorWeight.updateDelegate = updateDelegate
+            
+            biomes.updateDelegate = updateDelegate
         }
     }
     
@@ -76,6 +78,9 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
     
+    /// All current biome values, defaulted to all default biomes
+    private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
+    
     // MARK: - API
     
     /// Adds a nested stack view with equal widths
@@ -118,6 +123,10 @@ class TerrainConfigView: NSStackView {
         moistureView.addValue(moistureDistribution)
         moistureView.addValue(moistureColorWeight)
         addView(moistureView)
+        
+        let biomeView = EditableValuesStackView(title: "Biome Config")
+        biomes.addValues(to: biomeView)
+        addView(biomeView)
     }
 
 }
@@ -156,7 +165,7 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
     
     /// Bunch of biomes with different elevation and moistures
     var allBiomes: [Biome] {
-        return Biome.defaultBiomes
+        return biomes.values
     }
     
 }
@@ -179,6 +188,8 @@ extension TerrainConfigView: TerrainPresetDelegate {
         aridness.changeValue(to: preset.aridness)
         moistureDistribution.changeValue(to: preset.moistureDistribution)
         moistureColorWeight.changeValue(to: preset.moistureColorWeight)
+        
+        biomes.changeValues(to: preset.biomes)
     }
     
     /// Called when the user wants to save the current data as a preset

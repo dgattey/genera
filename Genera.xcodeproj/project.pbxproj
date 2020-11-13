@@ -30,6 +30,8 @@
 		75764D7F2558F270000AC3DA /* TerrainPresetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D7E2558F270000AC3DA /* TerrainPresetView.swift */; };
 		75764D88255900CB000AC3DA /* TerrainPresetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D87255900CB000AC3DA /* TerrainPresetLoader.swift */; };
 		75764D8B25591903000AC3DA /* TerrainPresetDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D8A25591903000AC3DA /* TerrainPresetDelegate.swift */; };
+		75764D8F25593942000AC3DA /* EditableBiomeValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D8E25593942000AC3DA /* EditableBiomeValues.swift */; };
+		75764D9225593BF3000AC3DA /* EditableBiomeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75764D9125593BF3000AC3DA /* EditableBiomeValue.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
 		757DF621254F90CB005723D5 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF620254F90CB005723D5 /* DebugView.swift */; };
 		757DF626254FA0FF005723D5 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757DF625254FA0FF005723D5 /* DebugDelegate.swift */; };
@@ -93,6 +95,8 @@
 		75764D7E2558F270000AC3DA /* TerrainPresetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainPresetView.swift; sourceTree = "<group>"; };
 		75764D87255900CB000AC3DA /* TerrainPresetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainPresetLoader.swift; sourceTree = "<group>"; };
 		75764D8A25591903000AC3DA /* TerrainPresetDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainPresetDelegate.swift; sourceTree = "<group>"; };
+		75764D8E25593942000AC3DA /* EditableBiomeValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableBiomeValues.swift; sourceTree = "<group>"; };
+		75764D9125593BF3000AC3DA /* EditableBiomeValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableBiomeValue.swift; sourceTree = "<group>"; };
 		757DF620254F90CB005723D5 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		757DF625254FA0FF005723D5 /* DebugDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
 		757E14E9255151F50036AEB5 /* Color.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
@@ -256,6 +260,8 @@
 				7528BD4C255522F3008038A3 /* EditableConfigValue.swift */,
 				750F62D425577289004C9370 /* EditableFBMConfigValues.swift */,
 				750F62D025577005004C9370 /* EditableValuesStackView.swift */,
+				75764D8E25593942000AC3DA /* EditableBiomeValues.swift */,
+				75764D9125593BF3000AC3DA /* EditableBiomeValue.swift */,
 			);
 			path = editableConfig;
 			sourceTree = "<group>";
@@ -460,6 +466,7 @@
 				7528BD282554F119008038A3 /* GameViewController.swift in Sources */,
 				75B90871254B747400231E39 /* ViewportCoordinator.swift in Sources */,
 				75FA6D37254BF80D00A1B409 /* ChunkDataProviderProtocol.swift in Sources */,
+				75764D8F25593942000AC3DA /* EditableBiomeValues.swift in Sources */,
 				75FA6D3D254C06C600A1B409 /* InteractableMTKView.swift in Sources */,
 				759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */,
 				757E1550255331290036AEB5 /* TerrainTile.swift in Sources */,
@@ -471,6 +478,7 @@
 				75B90875254B796A00231E39 /* GridTile.swift in Sources */,
 				75764D8B25591903000AC3DA /* TerrainPresetDelegate.swift in Sources */,
 				7528BD4D255522F3008038A3 /* EditableConfigValue.swift in Sources */,
+				75764D9225593BF3000AC3DA /* EditableBiomeValue.swift in Sources */,
 				757E154D2552C0130036AEB5 /* TerrainChunkDataProvider.swift in Sources */,
 				7528BD0C25549013008038A3 /* SidePanelViewController.swift in Sources */,
 				75FA6D50254C91CE00A1B409 /* ViewportDataProvider.swift in Sources */,

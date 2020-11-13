@@ -12,22 +12,22 @@ extension BiomeType: CustomStringConvertible {
     
     public var description: String {
         switch self {
-        case .ocean: return ".ocean"
-        case .shallowWater: return ".shallowWater"
-        case .shore: return ".shore"
-        case .scorched: return ".scorched"
-        case .bare: return ".bare"
-        case .tundra: return ".tundra"
-        case .snow: return ".snow"
-        case .temperateDesert: return ".temperateDesert"
-        case .shrubland: return ".shrubland"
-        case .taiga: return ".taiga"
-        case .grassland: return ".grassland"
-        case .temperateDeciduousForest: return ".temperateDeciduousForest"
-        case .temperateRainforest: return ".temperateRainforest"
-        case .subtropicalDesert: return ".subtropicalDesert"
-        case .tropicalSeasonalForest: return ".tropicalSeasonalForest"
-        case .tropicalRainforest: return ".tropicalRainforest"
+        case .ocean: return "Ocean"
+        case .shallowWater: return "Shallow Water"
+        case .shore: return "Shore"
+        case .scorched: return "Scorched"
+        case .bare: return "Bare"
+        case .tundra: return "Tundra"
+        case .snow: return "Snow"
+        case .temperateDesert: return "Temperate Desert"
+        case .shrubland: return "Shrubland"
+        case .taiga: return "Taiga"
+        case .grassland: return "Grassland"
+        case .temperateDeciduousForest: return "Temperate Deciduous Forest"
+        case .temperateRainforest: return "Temperate Rainforest"
+        case .subtropicalDesert: return "Subtropical Desert"
+        case .tropicalSeasonalForest: return "Tropical Seasonal Forest"
+        case .tropicalRainforest: return "Tropical Rainforest"
         case .total:
             return "BiomeType total: \(self.rawValue)"
         @unknown default:
@@ -35,12 +35,14 @@ extension BiomeType: CustomStringConvertible {
             return ""
         }
     }
+
 }
 
-// MARK: - BiomeType Codable
+// MARK: - Codable
 
 extension BiomeType: Codable {
     
+    /// Creates a value out of the raw value or gives back ocean
     init(rawValueOrOcean: Int) {
         self = BiomeType(rawValue: rawValueOrOcean) ?? .ocean
     }
