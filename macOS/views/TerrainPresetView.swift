@@ -21,9 +21,7 @@ class TerrainPresetView: EditableValuesStackView {
     /// Allows choosing between different preset values as the fallback
     private lazy var presetChooser: NSPopUpButton = {
         let button = NSPopUpButton()
-        if #available(OSX 11.0, *) {
-            button.controlSize = .large
-        }
+        button.controlSize = .large
         button.target = self
         button.action = #selector(selectPreset)
         button.addItem(withTitle: DefaultTerrainData.presetName)
@@ -49,16 +47,12 @@ class TerrainPresetView: EditableValuesStackView {
     /// The button that shows the actions menu
     private lazy var actionsMenuButton: NSButton = {
         let actionButton = NSButton(frame: .zero)
-        if #available(OSX 11.0, *) {
-            actionButton.controlSize = .large
-        }
+        actionButton.controlSize = .large
         actionButton.bezelStyle = .circular
         actionButton.target = self
         actionButton.action = #selector(openActionsMenu)
-        if #available(OSX 11.0, *) {
-            actionButton.image = NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "More Actions")?
-                .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .large))
-        }
+        actionButton.image = NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "More Actions")?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .large))
         actionButton.menu = actionsMenu
         return actionButton
     }()
@@ -147,10 +141,8 @@ class TerrainPresetView: EditableValuesStackView {
         item.title = "Save current settings as a new preset..."
         item.keyEquivalent = "s"
         item.keyEquivalentModifierMask = .command
-        if #available(OSX 11.0, *) {
-            item.image = NSImage(systemSymbolName: "square.and.arrow.down.fill", accessibilityDescription: item.title)?
-                .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
-        }
+        item.image = NSImage(systemSymbolName: "square.and.arrow.down.fill", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
         item.target = self
         item.action = #selector(savePreset)
         return item
@@ -162,10 +154,8 @@ class TerrainPresetView: EditableValuesStackView {
         item.title = "Reload presets"
         item.keyEquivalent = "r"
         item.keyEquivalentModifierMask = .command
-        if #available(OSX 11.0, *) {
-            item.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: item.title)?
-                .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
-        }
+        item.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
         item.target = self
         item.action = #selector(reloadPresets)
         return item
@@ -177,10 +167,8 @@ class TerrainPresetView: EditableValuesStackView {
         item.title = "Open presets folder in Finder..."
         item.keyEquivalent = "o"
         item.keyEquivalentModifierMask = .command
-        if #available(OSX 11.0, *) {
-            item.image = NSImage(systemSymbolName: "folder.fill", accessibilityDescription: item.title)?
-                .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
-        }
+        item.image = NSImage(systemSymbolName: "folder.fill", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
         item.target = self
         item.action = #selector(openPresetsFolder)
         return item
