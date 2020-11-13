@@ -63,8 +63,10 @@ class ScrollableStackView: NSView {
     /// Configures all views with the right settings to look and feel proper, laid out in the right
     /// direction based on layout orientation.
     private func configureViews(with layoutOrientation: NSUserInterfaceLayoutOrientation) {
+        let isVertical = layoutOrientation == .vertical
         clipView.translatesAutoresizingMaskIntoConstraints = false
         clipView.drawsBackground = false
+        clipView.setContentHuggingPriority(.required, for: isVertical ? .horizontal : .vertical)
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.hasVerticalScroller = true
@@ -72,13 +74,13 @@ class ScrollableStackView: NSView {
         scrollView.borderType = .noBorder
         scrollView.contentView = clipView
         scrollView.documentView = underlyingStackView
+        scrollView.setContentHuggingPriority(.required, for: isVertical ? .horizontal : .vertical)
         
         underlyingStackView.translatesAutoresizingMaskIntoConstraints = false
         underlyingStackView.orientation = layoutOrientation
         
         // Fills the scroll view in the opposite direction from layout orientation
-        let isVertical = layoutOrientation == .vertical
-        underlyingStackView.setHuggingPriority(.defaultLow, for: isVertical ? .horizontal : .vertical)
+        underlyingStackView.setHuggingPriority(.required, for: isVertical ? .horizontal : .vertical)
     }
     
     /// Adds and activates constraints so scroll view + clip view are the same size as this
@@ -89,13 +91,6 @@ class ScrollableStackView: NSView {
             scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: self.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-        ])
-        
-        NSLayoutConstraint.activate([
-            clipView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            clipView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            clipView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            clipView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
         ])
         
         /// The side that grows differs on the orientation

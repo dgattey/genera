@@ -21,45 +21,49 @@ class TerrainPresetView: EditableValuesStackView {
     /// Allows choosing between different preset values as the fallback
     private lazy var presetChooser: NSPopUpButton = {
         let button = NSPopUpButton()
+        button.controlSize = .large
         button.target = self
         button.action = #selector(selectPreset)
+        button.addItem(withTitle: DefaultTerrainData.presetName)
         return button
     }()
     
-    /// Exposes a button to save current settings
-    private lazy var saveButton: NSButton = {
-        let button = NSButton()
-        button.setButtonType(.momentaryPushIn)
-        button.bezelStyle = .rounded
-        button.title = "Save Current Settings"
-        button.target = self
-        button.action = #selector(savePreset)
-        button.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        return button
+    /// All actions to show in the actions menu from the button
+    private lazy var actionsMenu: NSMenu = {
+        let menu = NSMenu(title: "Actions")
+        menu.items = [saveItem(), reloadItem(), openItem()]
+        return menu
     }()
     
-    /// Reloads the presets from disk
-    private lazy var reloadButton: NSButton = {
-        let reloadButton = NSButton()
-        reloadButton.setButtonType(.momentaryPushIn)
-        reloadButton.bezelStyle = .rounded
-        reloadButton.title = "Reload"
-        reloadButton.target = self
-        reloadButton.action = #selector(reloadPresets)
-        reloadButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        return reloadButton
+    /// All actions to show in the menubar under the presets menu
+    private lazy var menubarPresetsMenu: NSMenuItem = {
+        let item = NSMenuItem()
+        let menu = NSMenu(title: "Presets")
+        menu.items = [saveItem(), reloadItem(), openItem()]
+        item.submenu = menu
+        return item
     }()
     
-    /// Opens the Finder folder where the presets live
-    private lazy var openButton: NSButton = {
-        let button = NSButton()
-        button.setButtonType(.momentaryPushIn)
-        button.bezelStyle = .rounded
-        button.title = "Open folder"
-        button.target = self
-        button.action = #selector(openPresetsFolder)
-        return button
+    /// The button that shows the actions menu
+    private lazy var actionsMenuButton: NSButton = {
+        let actionButton = NSButton(frame: .zero)
+        actionButton.controlSize = .large
+        actionButton.bezelStyle = .circular
+        actionButton.target = self
+        actionButton.action = #selector(openActionsMenu)
+        actionButton.image = NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "More Actions")?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .large))
+        actionButton.menu = actionsMenu
+        return actionButton
     }()
+    
+    /// Remove the menu bar item we added if we're destroying this view
+    deinit {
+        if let menu = NSApp.menu,
+           let index = menu.items.firstIndex(where: { $0.title == menubarPresetsMenu.title }) {
+            menu.removeItem(at: index)
+        }
+    }
     
     // MARK: - API
     
@@ -67,20 +71,26 @@ class TerrainPresetView: EditableValuesStackView {
     func populatePresets() {
         reloadPresets()
         
-        // The chooser itself
+        if let menu = NSApp.menu, !menu.items.contains(where: { $0.title == menubarPresetsMenu.title }) {
+            menu.insertItem(menubarPresetsMenu, at: 1)
+        }
+
         let presetChooserStack = NSStackView()
-        presetChooserStack.distribution = .fill
+        presetChooserStack.distribution = .equalSpacing
+        presetChooserStack.setClippingResistancePriority(.required, for: .horizontal)
+        presetChooserStack.setHuggingPriority(.fittingSizeCompression, for: .horizontal)
         presetChooserStack.addView(presetChooser, in: .leading)
-        presetChooserStack.addView(saveButton, in: .trailing)
+        presetChooserStack.addView(actionsMenuButton, in: .trailing)
         addView(presetChooserStack, in: .bottom)
-        
-        // Helper text + buttons to open presets folder + reset
-        LabeledView.addLabel("Presets located at:\n\(TerrainPresetLoader.presetsFolderPath)", style: .field, toStack: self)
-        let buttonsStack = NSStackView()
-        buttonsStack.distribution = .fill
-        buttonsStack.addView(openButton, in: .leading)
-        buttonsStack.addView(reloadButton, in: .trailing)
-        addView(buttonsStack, in: .bottom)
+    }
+    
+    /// Opens the actions menu from the button
+    @objc func openActionsMenu() {
+        actionsMenu.popUp(
+            positioning: nil,
+            at: actionsMenuButton.frame.origin,
+            in: self
+        )
     }
     
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser
@@ -90,7 +100,7 @@ class TerrainPresetView: EditableValuesStackView {
     
     /// Opens the presets folder in Finder
     @objc func openPresetsFolder() {
-        NSWorkspace.shared.openFile(TerrainPresetLoader.presetsFolderPath)
+        NSWorkspace.shared.open(TerrainPresetLoader.presetsFolderURL)
     }
     
     /// Selects a given preset from the list
@@ -123,6 +133,45 @@ class TerrainPresetView: EditableValuesStackView {
     }
     
     // MARK: - private helpers
+    
+    /// Exposes a button to save current settings
+    private func saveItem() -> NSMenuItem {
+        let item = NSMenuItem()
+        item.title = "Save current settings as a new preset..."
+        item.keyEquivalent = "s"
+        item.keyEquivalentModifierMask = .command
+        item.image = NSImage(systemSymbolName: "square.and.arrow.down.fill", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
+        item.target = self
+        item.action = #selector(savePreset)
+        return item
+    }
+    
+    /// Reloads the presets from disk
+    private func reloadItem() -> NSMenuItem {
+        let item = NSMenuItem()
+        item.title = "Reload presets"
+        item.keyEquivalent = "r"
+        item.keyEquivalentModifierMask = .command
+        item.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
+        item.target = self
+        item.action = #selector(reloadPresets)
+        return item
+    }
+    
+    /// Opens the Finder folder where the presets live
+    private func openItem() -> NSMenuItem {
+        let item = NSMenuItem()
+        item.title = "Open presets folder in Finder..."
+        item.keyEquivalent = "o"
+        item.keyEquivalentModifierMask = .command
+        item.image = NSImage(systemSymbolName: "folder.fill", accessibilityDescription: item.title)?
+            .withSymbolConfiguration(NSImage.SymbolConfiguration(scale: .medium))
+        item.target = self
+        item.action = #selector(openPresetsFolder)
+        return item
+    }
     
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser
     private func reloadPresetsAndReset(bySelecting presetName: String) {
