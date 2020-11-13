@@ -91,13 +91,6 @@ class ScrollableStackView: NSView {
             scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
         
-        NSLayoutConstraint.activate([
-            clipView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            clipView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            clipView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            clipView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-        ])
-        
         /// The side that grows differs on the orientation
         let topConstraint = underlyingStackView.topAnchor.constraint(equalTo: clipView.topAnchor)
         let leftConstraint = underlyingStackView.leftAnchor.constraint(equalTo: clipView.leftAnchor)
