@@ -78,10 +78,19 @@ class TerrainConfigView: NSStackView {
         fallback: DefaultTerrainData.moistureColorWeight,
         label: "Color weight")
     
+    /// A grid view for all the biome color data at a glance
+    private lazy var biomeOverviewView: BiomeOverview = {
+        let view = BiomeOverview()
+        biomes.biomeChangeDelegate = view
+        view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        return view
+    }()
+    
     /// All current biome values, defaulted to all default biomes
     private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
     
-    private let biomeView = EditableValuesStackView(title: "Biome Config")
+    private let biomeView = EditableValuesStackView()
     
     // MARK: - API
     
@@ -126,8 +135,15 @@ class TerrainConfigView: NSStackView {
         moistureView.addValue(moistureColorWeight)
         addView(moistureView)
         
-        biomes.addValues(to: biomeView)
         addView(biomeView)
+        resetBiomesView()
+    }
+    
+    private func resetBiomesView() {
+        biomeView.views.forEach({ $0.removeFromSuperview() })
+        LabeledView.addLabel("Biomes", style: .section, toStack: biomeView)
+        biomeView.addView(biomeOverviewView, in: .bottom)
+        biomes.addValues(to: biomeView)
     }
 
 }
@@ -192,8 +208,7 @@ extension TerrainConfigView: TerrainPresetDelegate {
         
         /// Reset the biome views entirely
         biomes.changeValues(to: preset.biomes)
-        biomeView.views.forEach({ biomeView.removeView($0) })
-        biomes.addValues(to: biomeView)
+        resetBiomesView()
     }
     
     /// Called when the user wants to save the current data as a preset

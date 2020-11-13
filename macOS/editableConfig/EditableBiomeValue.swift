@@ -13,6 +13,17 @@ class EditableBiomeValue {
     /// The min size of the color well
     private static let colorWellMinSize: CGFloat = 60
     
+    /// To notify with biome changes
+    weak var biomeChangeDelegate: BiomeChangeDelegate? {
+        didSet {
+            // Make sure it gets updated once
+            guard !label.isEmpty else {
+                return
+            }
+            biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
+        }
+    }
+    
     /// The immutable biome type
     private let biomeType: BiomeType
     
@@ -40,6 +51,9 @@ class EditableBiomeValue {
     /// Range of values in which the color is blended
     private let blendRange: EditableConfigValue<Float>
     
+    /// The label this value has if it's contained in the view
+    private(set) var label: String = ""
+    
     /// Update delegate passthrough
     weak var updateDelegate: ConfigUpdateDelegate?
     
@@ -61,12 +75,15 @@ class EditableBiomeValue {
     /// Adds the config values saved here to a given stack view
     func addValues(to stackView: EditableValuesStackView, index: Int) {
         let suffix = index > 1 ? " \(index)" : ""
-        LabeledView.addLabel("\(biomeType.description) \(suffix)", style: .smallSection, toStack: stackView)
+        self.label = "\(biomeType.description) \(suffix)"
+        LabeledView.addLabel(label, style: .smallSection, toStack: stackView)
         stackView.addView(colorWell, in: .bottom)
         EditableValuesStackView.addValue(stackView)(minElevation)
         EditableValuesStackView.addValue(stackView)(maxElevation)
         EditableValuesStackView.addValue(stackView)(maxMoisture)
         EditableValuesStackView.addValue(stackView)(blendRange)
+        
+        biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
     }
     
     /// Constructs a biome out of the fields' current data
@@ -98,6 +115,7 @@ extension EditableBiomeValue: ConfigUpdateDelegate {
     /// Notifies both our update delegate and the biome delegate
     func configDidUpdate<T>(from: T?, to: T?) {
         updateDelegate?.configDidUpdate(from: from, to: to)
+        biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
     }
 
 }

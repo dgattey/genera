@@ -46,6 +46,8 @@
 		757E1550255331290036AEB5 /* TerrainTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E154F255331290036AEB5 /* TerrainTile.swift */; };
 		759E000A254E16FC004CF89F /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759E0009254E16FC004CF89F /* VectoredDirection.swift */; };
 		759EFFFC254DE361004CF89F /* InteractableViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759EFFFB254DE361004CF89F /* InteractableViewProtocol.swift */; };
+		75A8C3F6255E76BB00DBE466 /* BiomeOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A8C3F5255E76BB00DBE466 /* BiomeOverview.swift */; };
+		75A8C3F9255E771900DBE466 /* BiomeChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A8C3F8255E771900DBE466 /* BiomeChangeDelegate.swift */; };
 		75B2B74C254B68FB00351DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75B2B747254B68FB00351DC8 /* Main.storyboard */; };
 		75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B749254B68FB00351DC8 /* AppDelegate.swift */; };
 		75B2B764254B71AD00351DC8 /* ChunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B2B763254B71AC00351DC8 /* ChunkCoordinator.swift */; };
@@ -115,6 +117,8 @@
 		757E15572553C1890036AEB5 /* Biome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Biome.h; sourceTree = "<group>"; };
 		759E0009254E16FC004CF89F /* VectoredDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
 		759EFFFB254DE361004CF89F /* InteractableViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractableViewProtocol.swift; sourceTree = "<group>"; };
+		75A8C3F5255E76BB00DBE466 /* BiomeOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiomeOverview.swift; sourceTree = "<group>"; };
+		75A8C3F8255E771900DBE466 /* BiomeChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiomeChangeDelegate.swift; sourceTree = "<group>"; };
 		75B2B745254B68FB00351DC8 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
 		75B2B748254B68FB00351DC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75B2B749254B68FB00351DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 			children = (
 				757DF620254F90CB005723D5 /* DebugView.swift */,
 				7528BCFC255472B4008038A3 /* TerrainConfigView.swift */,
+				75A8C3F5255E76BB00DBE466 /* BiomeOverview.swift */,
+				75A8C3F8255E771900DBE466 /* BiomeChangeDelegate.swift */,
 				75764D8A25591903000AC3DA /* TerrainPresetDelegate.swift */,
 				75764D7E2558F270000AC3DA /* TerrainPresetView.swift */,
 				759EFFFB254DE361004CF89F /* InteractableViewProtocol.swift */,
@@ -454,6 +460,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75A8C3F6255E76BB00DBE466 /* BiomeOverview.swift in Sources */,
 				750348D52558A05F0057D6A9 /* GameControllerDelegate.swift in Sources */,
 				750F62D125577005004C9370 /* EditableValuesStackView.swift in Sources */,
 				759EFFFC254DE361004CF89F /* InteractableViewProtocol.swift in Sources */,
@@ -502,6 +509,7 @@
 				75B2B74D254B68FB00351DC8 /* AppDelegate.swift in Sources */,
 				75C4B4B0254FE57F00F36372 /* Logger.swift in Sources */,
 				757E151225525B750036AEB5 /* VertexProtocol.swift in Sources */,
+				75A8C3F9255E771900DBE466 /* BiomeChangeDelegate.swift in Sources */,
 				75FA6D34254BF37400A1B409 /* Chunk.swift in Sources */,
 				750F62D525577289004C9370 /* EditableFBMConfigValues.swift in Sources */,
 				75FA6D60254CE2A300A1B409 /* GameCoordinator.swift in Sources */,

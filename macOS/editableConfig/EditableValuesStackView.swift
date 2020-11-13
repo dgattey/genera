@@ -16,6 +16,10 @@ class EditableValuesStackView: NSStackView {
 
     // MARK: - initialization
     
+    init() {
+        super.init(frame: .zero)
+    }
+    
     init(title: String) {
         super.init(frame: .zero)
         LabeledView.addLabel(title, style: .section, toStack: self)
