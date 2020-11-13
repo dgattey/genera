@@ -1,61 +1,61 @@
 {
   "images" : [
     {
-      "filename" : "genera-16.png",
+      "filename" : "Icon-16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "genera-33.png",
+      "filename" : "Icon-34.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "genera-32.png",
+      "filename" : "Icon-33.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "genera-64.png",
+      "filename" : "Icon-65.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "genera-128.png",
+      "filename" : "Icon-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "genera-257.png",
+      "filename" : "Icon-258.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "genera-256.png",
+      "filename" : "Icon-257.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "genera-513.png",
+      "filename" : "Icon-514.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "genera-512.png",
+      "filename" : "Icon-513.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "genera-1024.png",
+      "filename" : "Icon-1025.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
