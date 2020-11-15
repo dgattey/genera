@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -447,13 +447,13 @@
 /* Begin PBXShellScriptBuildPhase section */
 		75C066A02560C99F0019B4FB /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/**/*.swift",
 			);
 			name = "Run SwiftFormat";
 			outputFileListPaths = (
@@ -462,7 +462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswift run -c release --package-path BuildTools swiftformat --swiftversion \"5.3\" \"$SRCROOT\" --lint --header \"{file}\\nCopyright (c) {year} Dylan Gattey\\nCreated by Dylan Gattey on {created}.\"\n\n";
+			shellScript = "# Runs Swift Format on all files\nswift run -c release --package-path BuildTools swiftformat --swiftversion \"5.3\" \"$SRCROOT\" --lint\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
