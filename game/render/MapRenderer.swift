@@ -1,9 +1,6 @@
-//
-//  MapRenderer.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/28/20.
-//
+// MapRenderer.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/28/20.
 
 import Metal
 import MetalKit

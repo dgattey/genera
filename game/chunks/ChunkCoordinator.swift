@@ -1,9 +1,6 @@
-//
-//  RandomTileGenerator.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/29/20.
-//
+// ChunkCoordinator.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/29/20.
 
 import Combine
 import Metal

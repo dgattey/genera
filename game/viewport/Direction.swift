@@ -1,9 +1,6 @@
-//
-//  Direction.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/30/20.
-//
+// Direction.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/30/20.
 
 import Foundation
 

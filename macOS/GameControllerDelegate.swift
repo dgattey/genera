@@ -1,9 +1,6 @@
-//
-//  GameControllerDelegate.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/8/20.
-//
+// GameControllerDelegate.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/8/20.
 
 import Foundation
 

@@ -1,9 +1,6 @@
-//
-//  EditableFBMConfigValues.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/7/20.
-//
+// EditableFBMConfigValues.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/7/20.
 
 import Foundation
 

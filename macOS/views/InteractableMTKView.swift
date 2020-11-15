@@ -1,9 +1,6 @@
-//
-//  InteractableMTKView.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/30/20.
-//
+// InteractableMTKView.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/30/20.
 
 import AppKit
 import Combine

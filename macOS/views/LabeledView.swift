@@ -1,9 +1,6 @@
-//
-//  LabeledView.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// LabeledView.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/5/20.
 
 import AppKit
 

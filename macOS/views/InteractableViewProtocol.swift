@@ -1,9 +1,6 @@
-//
-//  InteractableViewProtocol.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/31/20.
-//
+// InteractableViewProtocol.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/31/20.
 
 import Foundation
 import MetalKit

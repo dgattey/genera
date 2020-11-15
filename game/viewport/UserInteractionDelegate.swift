@@ -1,9 +1,6 @@
-//
-//  UserInteractionDelegate.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 10/30/20.
-//
+// UserInteractionDelegate.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/30/20.
 
 /// Handles changes to the viewport initiated by the user
 protocol UserInteractionDelegate: NSObject {

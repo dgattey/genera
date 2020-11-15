@@ -1,9 +1,6 @@
-//
-//  VertexProtocol.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/3/20.
-//
+// VertexProtocol.swift
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/3/20.
 
 import Foundation
 
