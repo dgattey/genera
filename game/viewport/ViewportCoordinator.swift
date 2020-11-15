@@ -9,37 +9,34 @@ import Metal
 
 /// Private static constants for the viewport coordinator
 private enum ViewportCoordinatorConstant {
-    
     /// The amount by which to translate in pixels when using keyboard or mouse
     static let translationStep: Double = 30
-    
+
     /// The amount by which to translate on a diagonal in pixels when using keyboard
     /// or mouse, resulting in the same diagonal movement when applied to both the
     /// horizontal and the vertical translation
     static let diagonalTranslationStep: Double = translationStep * sin(45)
-    
+
     /// All zoom levels
-    struct ZoomLevel {
-        
+    enum ZoomLevel {
         /// Minimum zoom supported
         static let min: Double = 0.2
-        
+
         /// Max zoom supported
         static let max: Double = 1.4
-        
+
         /// The multiplier on the zoom amount
         static let multiplier = 0.01
     }
-    
+
     /// Pad by at least this amount of chunks in any direction
     static let minChunkPadAmount = 1
 }
 
 /// ViewportCoordinator functions for use with Metal manipulations
 class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, ViewportDataProvider {
-    
     // MARK: - static helpers
-    
+
     /// Returns the absolute distance squared from a chunk to a pixel space point. Squared for
     /// speed because division is slow.
     private static func distanceSquared(fromChunk chunk: Chunk, toPixelSpacePoint point: (x: Double, y: Double), chunkSizeInPixels: Int) -> Float {
@@ -49,12 +46,12 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         let y2 = Float(convertToChunkSpace(point.y, chunkSizeInPixels: chunkSizeInPixels))
         return abs((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
     }
-    
+
     /// Converts a value to chunk space (rounded up or down depending on which side of zero we're on)
     private static func convertToChunkSpace(_ value: Double, chunkSizeInPixels: Int) -> Int {
-        return Int(round(value / Double(chunkSizeInPixels)))
+        Int(round(value / Double(chunkSizeInPixels)))
     }
-    
+
     /// Converts the viewport passed to a rect of visible chunks (in whole chunk-units, with 10% padding or at least one chunk)
     /// on all sides.
     private static func visibleRegion(from viewport: MTLViewport, chunkSizeInPixels: Int) -> ChunkRegion {
@@ -62,39 +59,42 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         let startY = convertToChunkSpace(viewport.originY - viewport.height, chunkSizeInPixels: chunkSizeInPixels)
         let endX = convertToChunkSpace(viewport.originX + viewport.width, chunkSizeInPixels: chunkSizeInPixels)
         let endY = convertToChunkSpace(viewport.originY + viewport.height, chunkSizeInPixels: chunkSizeInPixels)
-        
+
         let pad: (Range<Int>) -> Range<Int> = { range in
             let distance: Int = max((range.endIndex - range.startIndex) / 3, ViewportCoordinatorConstant.minChunkPadAmount)
             return (range.startIndex - distance ..< range.endIndex + distance)
         }
-        return (pad(startX..<endX), pad(startY..<endY))
+        return (pad(startX ..< endX), pad(startY ..< endY))
     }
-    
+
     /// Convenience function for resizing a viewport to another size
     private static func viewport(byResizing viewport: MTLViewport,
                                  to size: CGSize,
-                                 atZoom zoomMultiplier: Double = 1.0) -> MTLViewport {
-        return MTLViewport(
+                                 atZoom zoomMultiplier: Double = 1.0) -> MTLViewport
+    {
+        MTLViewport(
             originX: viewport.originX,
             originY: viewport.originY,
             width: Double(size.width) * zoomMultiplier,
             height: Double(size.height) * zoomMultiplier,
             znear: viewport.znear,
-            zfar: viewport.zfar)
+            zfar: viewport.zfar
+        )
     }
-    
+
     /// Convenience function for translating a viewport to another location
     private static func viewport(byTranslating viewport: MTLViewport,
                                  in directions: Set<VectoredDirection<Double>>,
-                                 atZoom zoomMultiplier: Double = 1.0) -> MTLViewport {
+                                 atZoom zoomMultiplier: Double = 1.0) -> MTLViewport
+    {
         if directions.isEmpty {
             assertionFailure("No directions to translate")
             return viewport
         }
-        
+
         var x = viewport.originX
         var y = viewport.originY
-        
+
         // Normalize by number of directions we're moving in, otherwise diagonal move amount is too much
         let amount = directions.count == 2 ? ViewportCoordinatorConstant.diagonalTranslationStep : ViewportCoordinatorConstant.translationStep
         for value in directions {
@@ -115,11 +115,12 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
             width: viewport.width,
             height: viewport.height,
             znear: viewport.znear,
-            zfar: viewport.zfar)
+            zfar: viewport.zfar
+        )
     }
 
     // MARK: - variables
-    
+
     /// This is the user position, including zooming and translation, which sets visibleRegion on set
     private var userPosition: MTLViewport {
         didSet {
@@ -129,46 +130,46 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
             debugDelegate?.didUpdateUserPosition(to: userPosition)
         }
     }
-    
+
     /// The current zoom level, within the min and max range
     private var currentZoomLevel: Double = 1.0
-    
+
     // MARK: - delegates
-    
+
     weak var dataProvider: DataProvider?
     weak var viewportCoordinatorDelegate: ViewportCoordinatorDelegate?
     weak var debugDelegate: DebugDelegate?
-    
+
     // MARK: - ViewportDataProvider
-    
+
     /// This is the viewport for drawing, not including translation
     private(set) var currentViewport: MTLViewport {
         didSet {
             debugDelegate?.didUpdateCurrentViewport(to: userPosition)
         }
     }
-    
+
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
     private(set) var visibleRegion: ChunkRegion {
         didSet {
             viewportCoordinatorDelegate?.viewportCoordinator(didUpdateVisibleRegionTo: visibleRegion)
         }
     }
-    
+
     // MARK: - initialization
-    
+
     /// Initializes the viewports to a size and saves the data provider
     init(initialSize: CGSize, dataProvider: DataProvider?) {
         let chunkSizeInPixels = DataProvider.ChunkDataType.chunkSizeInPixels
         let initialViewport = ViewportCoordinator.viewport(byResizing: MTLViewport(), to: initialSize)
-        self.userPosition = initialViewport
-        self.currentViewport = initialViewport
-        self.visibleRegion = ViewportCoordinator<DataProvider>.visibleRegion(from: initialViewport, chunkSizeInPixels: chunkSizeInPixels)
+        userPosition = initialViewport
+        currentViewport = initialViewport
+        visibleRegion = ViewportCoordinator<DataProvider>.visibleRegion(from: initialViewport, chunkSizeInPixels: chunkSizeInPixels)
         self.dataProvider = dataProvider
     }
-    
+
     // MARK: - shared methods
-    
+
     /// Returns the absolute distance squared from a chunk to the user position. Squared for
     /// speed because division is slow.
     func distanceToUserPositionSquared(fromChunk chunk: Chunk) -> Float {
@@ -177,61 +178,62 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         return ViewportCoordinator<DataProvider>.distanceSquared(
             fromChunk: chunk,
             toPixelSpacePoint: point,
-            chunkSizeInPixels: chunkSizeInPixels)
+            chunkSizeInPixels: chunkSizeInPixels
+        )
     }
-    
+
     // MARK: - private helpers
-    
+
     /// Function for zooming a viewport in or out of the screen, constrained to levels set in constants
     private func viewport(byZooming viewport: MTLViewport,
                           in direction: ZoomDirection,
-                          at point: NSPoint) -> MTLViewport {
+                          at point: NSPoint) -> MTLViewport
+    {
         // Change the current zoom level based on direction, bounded to min/max levels
         var changeAmount = 1.0
         switch direction {
-        case .in(let amount):
+        case let .in(amount):
             changeAmount -= amount * ViewportCoordinatorConstant.ZoomLevel.multiplier
-        case .out(let amount):
+        case let .out(amount):
             changeAmount += amount * ViewportCoordinatorConstant.ZoomLevel.multiplier
         }
         let prevZoom = currentZoomLevel
         currentZoomLevel = max(ViewportCoordinatorConstant.ZoomLevel.min, min(ViewportCoordinatorConstant.ZoomLevel.max, currentZoomLevel * changeAmount))
-        
+
         // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center)
         // TODO: @dgattey this assumes pixel density of screen is 2x, figure out how to find that.
         let normX = 4 * Double(point.x) - currentViewport.width
         let normY = 4 * Double(point.y) - currentViewport.height
-        
+
         // Change the origin based on where we're zooming into
         let originDeltaX = normX * prevZoom - normX * currentZoomLevel
         let originDeltaY = normY * prevZoom - normY * currentZoomLevel
-        
+
         return MTLViewport(
             originX: viewport.originX + originDeltaX,
             originY: viewport.originY + originDeltaY,
             width: currentViewport.width * currentZoomLevel,
             height: currentViewport.height * currentZoomLevel,
             znear: viewport.znear,
-            zfar: viewport.zfar)
+            zfar: viewport.zfar
+        )
     }
-
 }
 
 // MARK: - UserInteractionDelegate
 
 extension ViewportCoordinator: UserInteractionDelegate {
-    
     /// Change the user position only, not the actual viewport
     func userDidPanViewport(_ directions: Set<VectoredDirection<Double>>) {
         userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, in: directions, atZoom: currentZoomLevel)
     }
-    
+
     /// Resize both the user position and the actual viewport
     func userDidResizeViewport(to size: CGSize) {
         userPosition = ViewportCoordinator.viewport(byResizing: userPosition, to: size, atZoom: currentZoomLevel)
         currentViewport = ViewportCoordinator.viewport(byResizing: currentViewport, to: size)
     }
-    
+
     /// Zooms both the user position and the actual viewport by a certain amount
     func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint) {
         userPosition = viewport(byZooming: userPosition, in: direction, at: point)

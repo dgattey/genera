@@ -11,70 +11,72 @@ import simd
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
 class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
-                  ShaderDataProvider: ShaderDataProviderProtocol>: NSObject, MTKViewDelegate {
-    
+    ShaderDataProvider: ShaderDataProviderProtocol>: NSObject, MTKViewDelegate
+{
     // MARK: - delegates
 
     weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
     weak var debugDelegate: DebugDelegate?
-    
+
     // MARK: - variables
-    
+
     /// The view we're drawing into
     private let view: MTKView
-    
+
     /// Main device we're using to draw
     private let mainDevice: MTLDevice
-    
+
     /// Our list of drawing commands
     private let commandQueue: MTLCommandQueue
-    
+
     /// Render pipeline we reuse every draw loop
     private let renderPipelineState: MTLRenderPipelineState
-    
+
     /// This locks in reverse so we wait until the GPU has finished
     private let drawingSemaphore = DispatchSemaphore(value: 1)
-    
+
     /// This keeps track of vertices for a given chunk
-    private var vertexBuffers: Dictionary<Chunk, MTLBuffer> = Dictionary()
-    
+    private var vertexBuffers: [Chunk: MTLBuffer] = Dictionary()
+
     /// Keeps track of current viewport data, passed into rendering
     private var viewportBufferData: [Float] = []
-    
+
     /// Provides most data for this renderer
     private weak var dataProvider: ChunkDataProvider?
-    
+
     /// Provides chunk data for this renderer
     private weak var chunkCoordinator: ChunkCoordinator<ChunkDataProvider>?
-    
+
     // MARK: - initialization
-    
+
     /// If the command queue or pipeline state fails to get created, this will fail
     init?(view: MTKView,
           device: MTLDevice,
           dataProvider: ChunkDataProvider?,
-          chunkCoordinator: ChunkCoordinator<ChunkDataProvider>) {
+          chunkCoordinator: ChunkCoordinator<ChunkDataProvider>)
+    {
         // Create related objects
         guard let commandQueue = device.makeCommandQueue(),
               let shaders = dataProvider?.shaders,
-              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, shaders: shaders) else {
+              let renderPipelineState = MapRenderer.buildPipelineState(view: view, device: device, shaders: shaders)
+        else {
             return nil
         }
-        
+
         // Config changes for the view itself to set it up right
         MapRenderer.configure(view: view, device: device)
-        
-        self.mainDevice = device
+
+        mainDevice = device
         self.view = view
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
         self.dataProvider = dataProvider
         self.chunkCoordinator = chunkCoordinator
-        
+
         super.init()
     }
-    
+
     /// Builds a render pipeline state object using the current device and our default shaders
     private static func buildPipelineState(view: MTKView, device: MTLDevice, shaders: (vertex: String, fragment: String)) -> MTLRenderPipelineState? {
         let library = device.makeDefaultLibrary()
@@ -86,43 +88,44 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
         descriptor.fragmentFunction = fragmentFunction
         descriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
         descriptor.vertexBuffers[ShaderIndex.vertices.rawValue].mutability = .immutable
-        
+
         var stateObject: MTLRenderPipelineState?
         do {
             try stateObject = device.makeRenderPipelineState(descriptor: descriptor)
-        } catch let error {
+        } catch {
             assertionFailure("Couldn't create render pipeline state object: \(error)")
             return nil
         }
         return stateObject
     }
-    
-    //. Configures the view itself once with everything it needs to start to render - uses Dark Mode background color
+
+    // . Configures the view itself once with everything it needs to start to render - uses Dark Mode background color
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
         view.clearColor = MTLClearColor(
             red: 56 / 255,
             green: 57 / 255,
-            blue:  58 / 255,
-            alpha: 1)
+            blue: 58 / 255,
+            alpha: 1
+        )
         view.enableSetNeedsDisplay = true
     }
-    
+
     // MARK: - drawing functions
-    
+
     func configDidUpdate() {
         drawingSemaphore.signal()
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
-    
+
     /// Makes sure bytes are stored for the new user position viewport
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
         viewportBufferData = [
             Float(viewport.originX),
             Float(viewport.originY),
             Float(viewport.width),
-            Float(viewport.height)
+            Float(viewport.height),
         ]
         view.setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width, height: viewport.height))
     }
@@ -135,10 +138,10 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
         for (_, vertexBuffer) in vertexBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.vertices.rawValue)
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: ChunkDataProvider.ChunkDataType.verticesPerChunk )
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: ChunkDataProvider.ChunkDataType.verticesPerChunk)
         }
     }
-    
+
     /// Adds `ShaderDataProviderProtocol` content to the encoder
     private func addShaderConfigData(to encoder: MTLRenderCommandEncoder) {
         guard let shaderDataProvider = dataProvider?.shaderDataProvider else {
@@ -156,41 +159,43 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     }
 
     // MARK: - MTKViewDelegate
-    
+
     /// Tell our change delegate we've resized
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    func mtkView(_: MTKView, drawableSizeWillChange size: CGSize) {
         userInteractionDelegate?.userDidResizeViewport(to: size)
     }
-    
+
     /// Updates map state and draws it to the screen
     func draw(in view: MTKView) {
         guard let commandBuffer = commandQueue.makeCommandBuffer(),
-              let viewport = viewportDataProvider?.currentViewport else {
+              let viewport = viewportDataProvider?.currentViewport
+        else {
             assertionFailure("No command buffer to work with")
             return
         }
-        
+
         // Block the semaphore while drawing so we don't update out of sync
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
         let semaphore = drawingSemaphore
         commandBuffer.addCompletedHandler { _ in
             semaphore.signal()
         }
-        
+
         // In the drawing loop below here - be quick!
         guard let descriptor = view.currentRenderPassDescriptor,
-              let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
+              let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor)
+        else {
             assertionFailure("Error in drawing stage")
             return
         }
-        
+
         // Configure the encoder & draw to it
         encoder.setViewport(viewport)
         encoder.setRenderPipelineState(renderPipelineState)
         addShaderConfigData(to: encoder)
         drawShapes(to: encoder)
         encoder.endEncoding()
-        
+
         // Draw to the screen itself and commit what we've enqueued
         if let drawable = view.currentDrawable {
             commandBuffer.present(drawable)
@@ -202,7 +207,6 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 // MARK: - ChunkCoordinatorDelegate
 
 extension MapRenderer: ChunkCoordinatorDelegate {
-    
     /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
     func chunkCoordinator(didGenerate chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
@@ -219,12 +223,13 @@ extension MapRenderer: ChunkCoordinatorDelegate {
             vertexBuffers[chunk] = vertexBuffer
             buffer = vertexBuffer
         }
-        
+
         // Then dispatch to the background to populate them
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let stride = ChunkDataProvider.ChunkDataType.stride
             guard let strongSelf = self,
-                  let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk) else {
+                  let vertices = strongSelf.chunkCoordinator?.vertices(from: chunk)
+            else {
                 assertionFailure("No \(chunk) set up yet or self missing: \(String(describing: self)) | \(String(describing: buffer))")
                 return
             }
@@ -233,21 +238,21 @@ extension MapRenderer: ChunkCoordinatorDelegate {
                 vertexPointer.storeBytes(of: item, as: type(of: item))
                 vertexPointer = vertexPointer + stride
             }
-            
+
             DispatchQueue.main.async { [weak self] in
                 guard let strongSelf = self else {
                     return
                 }
                 strongSelf.drawingSemaphore.signal()
-                
-                buffer.didModifyRange((0 ..< buffer.length))
+
+                buffer.didModifyRange(0 ..< buffer.length)
                 strongSelf.view.setNeedsDisplay(strongSelf.view.bounds)
-                
+
                 _ = strongSelf.drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
             }
         }
     }
-    
+
     /// Deletes data for the chunk
     func chunkCoordinator(didDelete chunk: Chunk) {
         // Delete the buffer
@@ -256,21 +261,18 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
-    
 }
 
 // MARK: - ViewportCoordinatorDelegate
 
 extension MapRenderer: ViewportCoordinatorDelegate {
-    
     /// Updates viewport buffer data with the new viewport info
     func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport) {
         updateUserViewportBufferData(to: viewport)
     }
-    
+
     /// Forwards to the chunk coordinator
     func viewportCoordinator(didUpdateVisibleRegionTo visibleRegion: (x: Range<Int>, y: Range<Int>)) {
         chunkCoordinator?.handle(updatedVisibleRegion: visibleRegion)
     }
-    
 }

@@ -9,7 +9,6 @@ import Foundation
 
 /// Creates and holds onto a group of editable config values for FBMData
 class EditableFBMConfigValues {
-    
     /// Update delegate passthrough
     weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
@@ -19,12 +18,12 @@ class EditableFBMConfigValues {
             compression.updateDelegate = updateDelegate
         }
     }
-    
+
     let octaves: EditableConfigValue<Int32>
     let persistence: EditableConfigValue<Float>
     let scale: EditableConfigValue<Float>
     let compression: EditableConfigValue<Float>
-    
+
     /// Creates a list of config values from a title for the fbm data and default data
     init(defaultData: FBMData) {
         octaves = EditableConfigValue(fallback: defaultData.octaves, label: "Octaves")
@@ -32,7 +31,7 @@ class EditableFBMConfigValues {
         scale = EditableConfigValue(fallback: defaultData.scale, label: "Scale")
         compression = EditableConfigValue(fallback: defaultData.compression, label: "Compression")
     }
-    
+
     /// Adds the config values saved here to a given stack view (in reverse!)
     func addValues(to stackView: EditableValuesStackView) {
         EditableValuesStackView.addValue(stackView)(octaves)
@@ -40,7 +39,7 @@ class EditableFBMConfigValues {
         EditableValuesStackView.addValue(stackView)(scale)
         EditableValuesStackView.addValue(stackView)(compression)
     }
-    
+
     /// Changes current values to new values from the data passed in
     func changeValues(to values: FBMData) {
         octaves.changeValue(to: values.octaves)
@@ -48,14 +47,15 @@ class EditableFBMConfigValues {
         scale.changeValue(to: values.scale)
         compression.changeValue(to: values.compression)
     }
-    
+
     /// Creates FBMData from all fields with a provided seed
     func value(withSeed seed: uint) -> FBMData {
-        return FBMData(
+        FBMData(
             octaves: octaves.value,
             persistence: persistence.value,
             scale: scale.value,
             compression: compression.value,
-            seed: seed)
+            seed: seed
+        )
     }
 }

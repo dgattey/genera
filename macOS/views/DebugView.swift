@@ -5,14 +5,13 @@
 //  Created by Dylan Gattey on 11/1/20.
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 // MARK: - DebugView
 
 /// Creates a stacked debug view, showing some info on it, kept up to date via implementation of the debug delegate
 class DebugView: NSStackView {
-    
     private let visibleChunkBounds = createTextField()
     private let numGeneratedChunks = createTextField()
     private let generationQueue = createTextField()
@@ -29,7 +28,7 @@ class DebugView: NSStackView {
             field.stringValue = String(describing: value)
         }
     }
-    
+
     /// Creates a well-configured text field for any debug data
     private static func createTextField() -> NSTextField {
         let field = NSTextField(wrappingLabelWithString: "--")
@@ -37,7 +36,7 @@ class DebugView: NSStackView {
         field.backgroundColor = .clear
         return field
     }
-    
+
     /// Add our views when this view moves to a window
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -59,22 +58,20 @@ extension DebugView: DebugDelegate {
     func didUpdateChunkBounds(to value: ChunkRegion) {
         DebugView.update(visibleChunkBounds, to: value)
     }
-    
+
     func didUpdateNumGeneratedChunks(to value: Int) {
         DebugView.update(numGeneratedChunks, to: value)
     }
-    
+
     func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int)) {
         DebugView.update(generationQueue, to: value)
     }
-    
+
     func didUpdateUserPosition(to value: MTLViewport) {
         DebugView.update(userPosition, to: value)
     }
-    
+
     func didUpdateCurrentViewport(to value: MTLViewport) {
         DebugView.update(currentViewport, to: value)
     }
-    
-    
 }

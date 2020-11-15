@@ -11,7 +11,7 @@ import Foundation
 enum ZoomDirection {
     case `in`(_ amount: Double)
     case out(_ amount: Double)
-    
+
     /// Creates a zoom direction from a scalar amount (negative is into the screen)
     init(_ amount: Double) {
         self = amount < 0 ? .in(abs(amount)) : .out(amount)

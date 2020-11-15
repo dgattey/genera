@@ -9,9 +9,8 @@ import Foundation
 
 /// Extends the Obj-C defined Biome with some computed vars for use elsewhere
 extension Biome {
-    
     private static var ocean: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.2188037932, 0.210770309, 0.3924256861),
             minElevation: -Float.infinity,
             maxElevation: 0.05,
@@ -19,9 +18,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shallowWater: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.3497013152, 0.329328239, 0.4814990759),
             minElevation: 0.05,
             maxElevation: 0.10,
@@ -29,9 +28,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shore: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.6381754875, 0.5679113269, 0.4531891346),
             minElevation: 0.1,
             maxElevation: 0.12,
@@ -39,9 +38,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var scorched: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.3333011568, 0.3333538771, 0.3332896829),
             minElevation: 0.8,
             maxElevation: Float.infinity,
@@ -49,9 +48,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var bare: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.5332846642, 0.5333645344, 0.5332672),
             minElevation: 0.8,
             maxElevation: Float.infinity,
@@ -59,9 +58,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tundra: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.7315357924, 0.7387986779, 0.6590853333),
             minElevation: 0.8,
             maxElevation: Float.infinity,
@@ -69,9 +68,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var snow: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.8708811402, 0.8700690866, 0.9006112814),
             minElevation: 0.8,
             maxElevation: Float.infinity,
@@ -79,9 +78,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDesert1: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.7777122855, 0.8286150098, 0.5814029574),
             minElevation: 0.6,
             maxElevation: 0.8,
@@ -89,9 +88,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shrubland: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.5155887008, 0.6048905253, 0.4522334337),
             minElevation: 0.6,
             maxElevation: 0.8,
@@ -99,9 +98,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var taiga: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.5767214894, 0.6726787686, 0.4422698319),
             minElevation: 0.6,
             maxElevation: 0.8,
@@ -109,9 +108,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDesert2: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.7777122855, 0.8286150098, 0.5814029574),
             minElevation: 0.3,
             maxElevation: 0.6,
@@ -119,9 +118,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var grassland1: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.4925258756, 0.6802223325, 0.2770718932),
             minElevation: 0.3,
             maxElevation: 0.6,
@@ -129,9 +128,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDeciduousForest: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.3480811715, 0.5857154727, 0.3204561472),
             minElevation: 0.3,
             maxElevation: 0.6,
@@ -139,9 +138,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateRainforest: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.1177579537, 0.544154644, 0.3114391267),
             minElevation: 0.3,
             maxElevation: 0.6,
@@ -149,9 +148,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var subtropicalDesert: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.8410642147, 0.7242162228, 0.5193104148),
             minElevation: 0,
             maxElevation: Float.infinity,
@@ -159,9 +158,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var grassland2: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.4925258756, 0.6802223325, 0.2770718932),
             minElevation: 0,
             maxElevation: Float.infinity,
@@ -169,9 +168,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tropicalSeasonalForest: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0.2234450281, 0.6123558879, 0.2096185088),
             minElevation: 0,
             maxElevation: Float.infinity,
@@ -179,9 +178,9 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tropicalRainforest: Biome {
-        return Biome(
+        Biome(
             color: vector_float3(0, 0.476154685, 0.32167539),
             minElevation: 0,
             maxElevation: Float.infinity,
@@ -189,10 +188,10 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     /// Array of biomes with different elevations and moistures
     static var defaultBiomes: [Biome] {
-        return [
+        [
             ocean,
             shallowWater,
             shore,
@@ -213,10 +212,10 @@ extension Biome {
             tropicalRainforest,
         ]
     }
-    
+
     /// Contains _a_ definition of biome type to biome color (assumes multiple biomes defined above have the same colors)
-    static var defaultBiomeColors: Dictionary<BiomeType, vector_float4> {
-        let rawColors: Dictionary<BiomeType, vector_float3> = [
+    static var defaultBiomeColors: [BiomeType: vector_float4] {
+        let rawColors: [BiomeType: vector_float3] = [
             .ocean: ocean.color,
             .shallowWater: shallowWater.color,
             .shore: shore.color,

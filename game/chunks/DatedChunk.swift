@@ -9,29 +9,28 @@ import Foundation
 
 /// Represents a chunk that has a built-in creation date
 struct DatedChunk: Hashable, Comparable {
-    
     /// The inner value of the chunk
     let value: Chunk
-    
+
     /// The creation date of this chunk
     let creationDate: TimeInterval
-    
+
     /// Sets it up with an existing chunk
     init(_ chunk: Chunk) {
-        self.value = chunk
-        self.creationDate = Date.timeIntervalSinceReferenceDate
+        value = chunk
+        creationDate = Date.timeIntervalSinceReferenceDate
     }
-    
+
     /// Use only the creation date in determining less or greater than
     static func < (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
-        return lhs.creationDate < rhs.creationDate
+        lhs.creationDate < rhs.creationDate
     }
-    
+
     /// Two dated chunks are equivalent if their chunks are the same (date doesn't matter)
     static func == (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
-        return lhs.value == rhs.value
+        lhs.value == rhs.value
     }
-    
+
     /// Just hash the chunk itself, not the date
     func hash(into hasher: inout Hasher) {
         hasher.combine(value)

@@ -9,10 +9,8 @@ import Foundation
 
 /// Defines a reusable vertex type our shared vertices can use
 protocol VertexProtocol {
-    
     /// The position of this vertex
     var position: simd_float2 { get }
-
 }
 
 // MARK: - extensions to conform to VertexProtocol

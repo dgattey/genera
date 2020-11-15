@@ -21,12 +21,11 @@ private enum KeyCode: UInt16 {
 
 /// Directions to pan in, with their key codes attached
 enum Direction {
-    
     case north
     case east
     case south
     case west
-    
+
     /// Creates a Direction from an event's key code from a key down/up event, or
     /// nil if the key code doesn't create a valid Direction
     init?(from keyCode: UInt16) {
@@ -43,5 +42,4 @@ enum Direction {
             return nil
         }
     }
-    
 }
