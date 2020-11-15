@@ -58,7 +58,6 @@
 		750F003125611E3700E166D4 /* GridTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF225611E3600E166D4 /* GridTile.swift */; };
 		750F003225611E3700E166D4 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF325611E3600E166D4 /* GridShaders.metal */; };
 		750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */; };
-		750F003425611E3700E166D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF725611E3700E166D4 /* Logger.swift */; };
 		750FFFF825611E3700E166D4 /* ZoomDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9C25611E3600E166D4 /* ZoomDirection.swift */; };
 		750FFFF925611E3700E166D4 /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9D25611E3600E166D4 /* VectoredDirection.swift */; };
 		750FFFFA25611E3700E166D4 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9E25611E3600E166D4 /* Direction.swift */; };
@@ -68,6 +67,7 @@
 		750FFFFE25611E3700E166D4 /* EditableBiomeValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */; };
 		750FFFFF25611E3700E166D4 /* EditableBiomeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */; };
 		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
+		758616302561E51600B61C32 /* Utility in Frameworks */ = {isa = PBXBuildFile; productRef = 7586162F2561E51600B61C32 /* Utility */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,7 +144,6 @@
 		750FFFF325611E3600E166D4 /* GridShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
 		750FFFF425611E3600E166D4 /* GridShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridShaderTypes.h; sourceTree = "<group>"; };
 		750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridTileChunkDataProvider.swift; sourceTree = "<group>"; };
-		750FFFF725611E3700E166D4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */,
+				758616302561E51600B61C32 /* Utility in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,8 +166,8 @@
 				750FFFDE25611E3600E166D4 /* game */,
 				750FFFC625611E3600E166D4 /* macOS */,
 				750FFFC525611E3600E166D4 /* SharedTypes.h */,
-				750FFFF625611E3700E166D4 /* util */,
 				75037995254A8538002A0C13 /* Products */,
+				7586162E2561E51600B61C32 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -399,12 +399,11 @@
 			path = grid;
 			sourceTree = "<group>";
 		};
-		750FFFF625611E3700E166D4 /* util */ = {
+		7586162E2561E51600B61C32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				750FFFF725611E3700E166D4 /* Logger.swift */,
 			);
-			path = util;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -426,6 +425,7 @@
 			name = "Genera (macOS 11)";
 			packageProductDependencies = (
 				757DF61D254F687F005723D5 /* SwiftPriorityQueue */,
+				7586162F2561E51600B61C32 /* Utility */,
 			);
 			productName = "Land macOS";
 			productReference = 75037994254A8538002A0C13 /* Genera.app */;
@@ -511,7 +511,6 @@
 				750F000A25611E3700E166D4 /* DatedChunk.swift in Sources */,
 				750FFFF825611E3700E166D4 /* ZoomDirection.swift in Sources */,
 				750F000725611E3700E166D4 /* MapRenderer.swift in Sources */,
-				750F003425611E3700E166D4 /* Logger.swift in Sources */,
 				750F000825611E3700E166D4 /* ChunkCoordinator.swift in Sources */,
 				750F000225611E3700E166D4 /* BiomeChangeDelegate.swift in Sources */,
 				750F001225611E3700E166D4 /* ShaderDataProtocol.swift in Sources */,
@@ -795,6 +794,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 757DF61C254F687F005723D5 /* XCRemoteSwiftPackageReference "SwiftPriorityQueue" */;
 			productName = SwiftPriorityQueue;
+		};
+		7586162F2561E51600B61C32 /* Utility */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utility;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation
+import Utility
 
 /// Loads and saves terrain presets to disk
 enum TerrainPresetLoader {

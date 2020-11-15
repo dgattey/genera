@@ -5,6 +5,7 @@ import Combine
 import Metal
 import simd
 import SwiftPriorityQueue
+import Utility
 
 /// Constants for the map generator
 private enum ChunkCoordinatorConstant {

@@ -4,11 +4,11 @@
 import Foundation
 
 /// Simple logger, with config
-enum Logger {
+public enum Logger {
     static let shouldLog = true
 
     /// Logs a value if logging is on
-    static func log(_ value: Any) {
+    public static func log(_ value: Any) {
         if shouldLog {
             print(String(describing: value))
         }
