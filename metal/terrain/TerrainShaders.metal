@@ -1,9 +1,6 @@
-//
-//  TerrainShaders.metal
-//  Genera
-//
-//  Created by Dylan Gattey on 10/28/20.
-//
+// TerrainShaders.metal
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/28/20.
 
 // File for shading terrain
 

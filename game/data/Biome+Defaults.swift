@@ -1,15 +1,10 @@
-//
-//  Biome+Defaults.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// Biome+Defaults.swift
+// Copyright (c) 2020 Dylan Gattey
 
 import AppKit
 
 /// Extends the Obj-C defined Biome with some computed vars for use elsewhere
 extension Biome {
-    
     private static var ocean: Biome {
         return Biome(
             type: .ocean,
@@ -20,7 +15,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shallowWater: Biome {
         return Biome(
             type: .shallowWater,
@@ -31,7 +26,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shore: Biome {
         return Biome(
             type: .shore,
@@ -42,7 +37,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var scorched: Biome {
         return Biome(
             type: .scorched,
@@ -53,7 +48,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var bare: Biome {
         return Biome(
             type: .bare,
@@ -64,7 +59,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tundra: Biome {
         return Biome(
             type: .tundra,
@@ -75,7 +70,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var snow: Biome {
         return Biome(
             type: .snow,
@@ -86,7 +81,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDesert1: Biome {
         return Biome(
             type: .temperateDesert,
@@ -97,7 +92,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var shrubland: Biome {
         return Biome(
             type: .shrubland,
@@ -108,7 +103,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var taiga: Biome {
         return Biome(
             type: .taiga,
@@ -119,7 +114,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDesert2: Biome {
         return Biome(
             type: .temperateDesert,
@@ -130,7 +125,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var grassland1: Biome {
         return Biome(
             type: .grassland,
@@ -141,7 +136,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateDeciduousForest: Biome {
         return Biome(
             type: .temperateDeciduousForest,
@@ -152,7 +147,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var temperateRainforest: Biome {
         return Biome(
             type: .temperateRainforest,
@@ -163,7 +158,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var subtropicalDesert: Biome {
         return Biome(
             type: .subtropicalDesert,
@@ -174,7 +169,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var grassland2: Biome {
         return Biome(
             type: .grassland,
@@ -185,7 +180,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tropicalSeasonalForest: Biome {
         return Biome(
             type: .tropicalSeasonalForest,
@@ -196,7 +191,7 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     private static var tropicalRainforest: Biome {
         return Biome(
             type: .tropicalRainforest,
@@ -207,10 +202,10 @@ extension Biome {
             blendRange: 0.02
         )
     }
-    
+
     /// Array of biomes with different elevations and moistures
     static var defaultBiomes: [Biome] {
-        return [
+        [
             ocean,
             shallowWater,
             shore,
@@ -231,10 +226,10 @@ extension Biome {
             tropicalRainforest,
         ]
     }
-    
+
     /// Contains _a_ definition of biome type to biome color (assumes multiple biomes defined above have the same colors)
-    static var defaultBiomeColors: Dictionary<BiomeType, vector_float4> {
-        let rawColors: Dictionary<BiomeType, vector_float3> = [
+    static var defaultBiomeColors: [BiomeType: vector_float4] {
+        let rawColors: [BiomeType: vector_float3] = [
             .ocean: ocean.color,
             .shallowWater: shallowWater.color,
             .shore: shore.color,

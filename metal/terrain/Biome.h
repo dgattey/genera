@@ -1,9 +1,6 @@
-//
-//  Biome.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/4/20.
-//
+// Biome.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/4/20.
 
 #ifndef Biome_h
 #define Biome_h

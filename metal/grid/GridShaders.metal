@@ -1,9 +1,6 @@
-//
-//  GridShaders.metal
-//  Genera
-//
-//  Created by Dylan Gattey on 10/28/20.
-//
+// GridShaders.metal
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/28/20.
 
 // Shades tiles in a grid, using a passed in color and vertex
 

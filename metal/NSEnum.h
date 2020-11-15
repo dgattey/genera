@@ -1,9 +1,6 @@
-//
-//  NSEnum.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// NSEnum.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/5/20.
 
 #ifndef NSEnum_h
 #define NSEnum_h

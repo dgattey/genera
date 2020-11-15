@@ -1,9 +1,6 @@
-//
-//  Color.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/3/20.
-//
+// Color.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/3/20.
 
 // Has all color functions defined (make sure the Color.metal file includes these impls)
 
