@@ -1,6 +1,5 @@
 // TerrainChunkDataProvider.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 11/4/20.
 
 import Foundation
 

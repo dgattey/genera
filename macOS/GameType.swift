@@ -1,6 +1,5 @@
 // GameType.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 11/8/20.
 
 import Foundation
 
@@ -13,8 +12,6 @@ enum GameType: String {
     case grid = "Random Grid"
 
     /// Titles of all game types - when adding more, add them here too!
-    static let titles: [String] = [
-        GameType.terrain,
-        GameType.grid,
-    ].map(\.rawValue)
+    static let titles: [String] = [GameType.terrain,
+                                   GameType.grid].map(\.rawValue)
 }

@@ -1,6 +1,5 @@
 // TerrainPresetLoader.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 11/8/20.
 
 import Foundation
 
@@ -32,7 +31,8 @@ enum TerrainPresetLoader {
     private static func createPresetsFolderIfNonexistent() {
         if !FileManager.default.fileExists(atPath: presetsFolderPath) {
             do {
-                try FileManager.default.createDirectory(atPath: presetsFolderPath, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(atPath: presetsFolderPath, withIntermediateDirectories: true,
+                                                        attributes: nil)
             } catch {
                 Logger.log("Problem creating presets folder: \(error.localizedDescription)")
             }
@@ -52,7 +52,8 @@ enum TerrainPresetLoader {
                 Logger.log("Couldn't create data")
                 return
             }
-            let path = presetsFolderURL.appendingPathComponent(preset.presetID).appendingPathExtension(fileExtension).path
+            let path = presetsFolderURL.appendingPathComponent(preset.presetID).appendingPathExtension(fileExtension)
+                .path
             FileManager.default.createFile(atPath: path, contents: data, attributes: nil)
             onCompletion?(preset.presetName)
         }

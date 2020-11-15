@@ -1,6 +1,5 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 10/28/20.
 
 import Metal
 import MetalKit
@@ -75,7 +74,9 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     }
 
     /// Builds a render pipeline state object using the current device and our default shaders
-    private static func buildPipelineState(view: MTKView, device: MTLDevice, shaders: (vertex: String, fragment: String)) -> MTLRenderPipelineState? {
+    private static func buildPipelineState(view: MTKView, device: MTLDevice,
+                                           shaders: (vertex: String, fragment: String)) -> MTLRenderPipelineState?
+    {
         let library = device.makeDefaultLibrary()
         let vertexFunction = library?.makeFunction(name: shaders.vertex)
         let fragmentFunction = library?.makeFunction(name: shaders.fragment)
@@ -99,12 +100,10 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     // . Configures the view itself once with everything it needs to start to render - uses Dark Mode background color
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
-        view.clearColor = MTLClearColor(
-            red: 56 / 255,
-            green: 57 / 255,
-            blue: 58 / 255,
-            alpha: 1
-        )
+        view.clearColor = MTLClearColor(red: 56 / 255,
+                                        green: 57 / 255,
+                                        blue: 58 / 255,
+                                        alpha: 1)
         view.enableSetNeedsDisplay = true
     }
 
@@ -118,13 +117,13 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     /// Makes sure bytes are stored for the new user position viewport
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
-        viewportBufferData = [
-            Float(viewport.originX),
-            Float(viewport.originY),
-            Float(viewport.width),
-            Float(viewport.height),
-        ]
-        view.setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width, height: viewport.height))
+        viewportBufferData = [Float(viewport.originX),
+                              Float(viewport.originY),
+                              Float(viewport.width),
+                              Float(viewport.height)]
+        view
+            .setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width,
+                                    height: viewport.height))
     }
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
@@ -135,7 +134,8 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
         for (_, vertexBuffer) in vertexBuffers {
             encoder.setVertexBuffer(vertexBuffer, offset: 0, index: ShaderIndex.vertices.rawValue)
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: ChunkDataProvider.ChunkDataType.verticesPerChunk)
+            encoder.drawPrimitives(type: .triangle, vertexStart: 0,
+                                   vertexCount: ChunkDataProvider.ChunkDataType.verticesPerChunk)
         }
     }
 

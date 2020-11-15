@@ -1,6 +1,5 @@
 // TerrainPresetView.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 11/8/20.
 
 import AppKit
 
@@ -83,11 +82,9 @@ class TerrainPresetView: EditableValuesStackView {
 
     /// Opens the actions menu from the button
     @objc func openActionsMenu() {
-        actionsMenu.popUp(
-            positioning: nil,
-            at: actionsMenuButton.frame.origin,
-            in: self
-        )
+        actionsMenu.popUp(positioning: nil,
+                          at: actionsMenuButton.frame.origin,
+                          in: self)
     }
 
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser

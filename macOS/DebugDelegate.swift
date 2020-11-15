@@ -1,6 +1,5 @@
 // DebugDelegate.swift
 // Copyright (c) 2020 Dylan Gattey
-// Created by Dylan Gattey on 11/1/20.
 
 import Foundation
 import MetalKit
