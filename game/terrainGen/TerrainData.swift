@@ -4,7 +4,7 @@
 
 import Foundation
 
-/// Class for data for terrain generation used to create presets. Mirrors static properties in DefaultTerrainData
+/// Struct for data for terrain generation used to create presets. Mirrors static properties in DefaultTerrainData
 struct TerrainData: Codable {
     /// The name of the preset representing this set of defaults
     let presetName: String

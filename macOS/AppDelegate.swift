@@ -4,7 +4,7 @@
 
 import AppKit
 
-@NSApplicationMain
+@main
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {
         true
@@ -23,7 +23,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let alert = NSAlert()
         alert.alertStyle = .informational
         alert.addButton(withTitle: "OK")
-        alert.buttons.first?.bezelColor = .red
         alert.addButton(withTitle: "Cancel")
         alert.messageText = title
         alert.informativeText = details
