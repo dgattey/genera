@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "container:src/Genera.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:buildTools"
+      name = "buildTools">
+      <FileRef
+         location = "group:/Users/dgattey/checkouts/genera/buildTools/Empty.swift">
+      </FileRef>
+      <FileRef
+         location = "group:format-swift.zsh">
+      </FileRef>
+      <FileRef
+         location = "group:Package.swift">
+      </FileRef>
+      <FileRef
+         location = "group:Package.resolved">
+      </FileRef>
+   </Group>
+</Workspace>
