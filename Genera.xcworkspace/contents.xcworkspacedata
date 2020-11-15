@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:buildTools">
+      location = "group:Build Tools">
    </FileRef>
    <FileRef
       location = "group:Utility">
