@@ -1,29 +1,25 @@
-//
-//  GeneraWindowController.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/1/20.
-//
+// GeneraWindowController.swift
+// Copyright (c) 2020 Dylan Gattey
 
 import AppKit
 import MetalKit
 
 /// Owns the views in the app and starts the game controller after an event loop on app start
 class GeneraWindowController: NSWindowController {
-    
     /// The controller running the game - should always exist but optional for safety
     private var gameViewController: GameViewController?
-    
+
     /// The controller in charge of the sidebar - should always exist but optional for safety
     private var sidePanelViewController: SidePanelViewController?
-    
+
     /// Sets up whole app, using the next run loop to make sure the window has resized at least once before creating the coordinator
     override func windowDidLoad() {
         super.windowDidLoad()
         guard let contentViewController = window?.contentViewController,
               let gameViewController: GameViewController = firstViewController(in: contentViewController),
               let sidePanelViewController: SidePanelViewController = firstViewController(in: contentViewController),
-              let startingGameType = GameType(rawValue: GameType.titles.first ?? "") else {
+              let startingGameType = GameType(rawValue: GameType.titles.first ?? "")
+        else {
             assertionFailure("Views incorrectly set up")
             return
         }
@@ -31,12 +27,12 @@ class GeneraWindowController: NSWindowController {
         self.sidePanelViewController = sidePanelViewController
         gameViewController.debugDelegate = sidePanelViewController.debugDelegate
         gameViewController.gameControllerDelegate = self
-        
+
         DispatchQueue.main.async {
             gameViewController.reset(to: startingGameType)
         }
     }
-    
+
     /// Finds the first view controller of a certain type in the given view controller to get around Storyboards being absolute shit
     func firstViewController<T: NSViewController>(in parentController: NSViewController) -> T? {
         for viewController in parentController.children {
@@ -47,34 +43,30 @@ class GeneraWindowController: NSWindowController {
                 return subChild
             }
         }
-        
+
         return nil
     }
-    
 }
 
 // MARK: - GameControllerDelegate
 
 extension GeneraWindowController: GameControllerDelegate {
-    
     /// Adds the new config view to the sidebar
     func gameController<T: ShaderDataProviderProtocol>(hasNewDataProvider dataProvider: T?) {
         sidePanelViewController?.resetViews(with: dataProvider)
         dataProvider?.updateDelegate = gameViewController
     }
-    
 }
 
 // MARK: - NSToolbarDelegate
 
 extension GeneraWindowController: NSToolbarDelegate {
-
     /// The identifer for toggling the sidebar (custom button for it)
     private static let toolbarItemToggleSidebar = "dgattey.toggleSidebar"
-    
+
     /// The identifer for the game type dropdown
     private static let toolbarItemGameType = "dgattey.gameType"
-    
+
     /// Default items for the toolbar itself (all to left of sidebar divider)
     private static let defaultToolbarIDs: [NSToolbarItem.Identifier] = [
         NSToolbarItem.Identifier(toolbarItemGameType),
@@ -82,19 +74,20 @@ extension GeneraWindowController: NSToolbarDelegate {
         NSToolbarItem.Identifier(toolbarItemToggleSidebar),
         .sidebarTrackingSeparator,
     ]
-    
-    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return GeneraWindowController.defaultToolbarIDs
+
+    func toolbarDefaultItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
+        GeneraWindowController.defaultToolbarIDs
     }
-    
-    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return GeneraWindowController.defaultToolbarIDs
+
+    func toolbarAllowedItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
+        GeneraWindowController.defaultToolbarIDs
     }
-    
+
     /// Creates the right data for the game type selector and the sidebar toggle
-    func toolbar(_ toolbar: NSToolbar,
+    func toolbar(_: NSToolbar,
                  itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
-                 willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+                 willBeInsertedIntoToolbar _: Bool) -> NSToolbarItem?
+    {
         switch itemIdentifier {
         case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemToggleSidebar):
             let item = NSToolbarItem(itemIdentifier: itemIdentifier)
@@ -110,7 +103,7 @@ extension GeneraWindowController: NSToolbarDelegate {
             return NSToolbarItem(itemIdentifier: itemIdentifier)
         }
     }
-    
+
     /// Builds a selector for game mode out of all possible game modes - if this grows, will have to do a different kind of control
     private func buildGameTypeSelector() -> NSView {
         let selector = NSSegmentedControl()
@@ -124,7 +117,7 @@ extension GeneraWindowController: NSToolbarDelegate {
         selector.controlSize = .large
         return selector
     }
-    
+
     /// Called in response to changing the game type from the toolbar - changes it on the gameViewController
     @objc func didChangeGameType(_ sender: AnyObject) {
         guard let segmentedControl = sender as? NSSegmentedControl else {
@@ -135,9 +128,9 @@ extension GeneraWindowController: NSToolbarDelegate {
             gameViewController?.reset(to: gameType)
         }
     }
-    
+
     /// Shows or hides the sidebar by calling the split view's toggle method
-    @objc func toggleSidebar(_ sender: AnyObject) {
+    @objc func toggleSidebar(_: AnyObject) {
         NSApp.keyWindow?.contentViewController?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
     }
 }

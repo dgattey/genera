@@ -1,9 +1,6 @@
-//
-//  SimplexNoise.metal
-//  Genera
-//
-//  Created by Dylan Gattey on 11/2/20.
-//
+// SimplexNoise.metal
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/2/20.
 
 // Has all simplex noise functions defined (make sure the SimplexNoise.h file includes these defs)
 

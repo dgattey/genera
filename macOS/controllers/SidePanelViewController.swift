@@ -1,28 +1,23 @@
-//
-//  SidePanelViewController.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// SidePanelViewController.swift
+// Copyright (c) 2020 Dylan Gattey
 
 import AppKit
 
 /// All the views that appear in our side panel, within a scrollable stack view
 class SidePanelViewController: NSViewController {
-    
     // MARK: - constants
-    
+
     /// The spacing between subviews
     static let interItemSpacing = LabeledView.HeaderStyle.section.spacing * 1.5
-    
+
     // MARK: - variables
-    
+
     /// Debug view for the whole app, doesn't change
-    private lazy var debugView: DebugView = DebugView()
-    
+    private lazy var debugView = DebugView()
+
     /// All the views we don't want to get rid of when swapping providers
     private lazy var stickyViews: [NSView] = [debugView]
-    
+
     /// Stack view for all views in this view controller
     private lazy var stackView: ScrollableStackView = {
         let stackView = ScrollableStackView(layoutOrientation: .vertical)
@@ -35,17 +30,18 @@ class SidePanelViewController: NSViewController {
             top: LabeledView.HeaderStyle.section.spacing,
             left: LabeledView.HeaderStyle.section.spacing,
             bottom: LabeledView.HeaderStyle.section.spacing,
-            right: LabeledView.HeaderStyle.section.spacing)
+            right: LabeledView.HeaderStyle.section.spacing
+        )
         return stackView
     }()
-    
+
     /// Debug delegate passthrough
     weak var debugDelegate: DebugDelegate? {
-        return debugView
+        debugView
     }
-    
-    /// MARK: - functions
-    
+
+    // MARK: - functions
+
     /// Adds a new scrollable stack view to the underlying view after configuring it properly
     private func addScrollableStackView() {
         view.addSubview(stackView)
@@ -56,13 +52,13 @@ class SidePanelViewController: NSViewController {
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
-    
+
     /// Create a scrollable stack view, adding the config and debug views to it
     override func viewDidLoad() {
         view.translatesAutoresizingMaskIntoConstraints = false
         addScrollableStackView()
     }
-    
+
     /// Swaps a config view out for an existing old one
     func resetViews<T: ShaderDataProviderProtocol>(with dataProvider: T? = nil) {
         Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
@@ -76,5 +72,4 @@ class SidePanelViewController: NSViewController {
             stackView.underlyingStackView.addView(configView, in: .top)
         }
     }
-
 }

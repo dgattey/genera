@@ -1,9 +1,6 @@
-//
-//  ShaderIndex.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/4/20.
-//
+// ShaderIndex.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/4/20.
 
 #ifndef ShaderIndex_h
 #define ShaderIndex_h

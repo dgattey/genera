@@ -1,9 +1,6 @@
-//
-//  GridShaderTypes.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/3/20.
-//
+// GridShaderTypes.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/3/20.
 
 #ifndef GridShaderTypes_h
 #define GridShaderTypes_h

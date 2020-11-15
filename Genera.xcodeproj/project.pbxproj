@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -379,6 +379,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 750379A6254A8538002A0C13 /* Build configuration list for PBXNativeTarget "Genera" */;
 			buildPhases = (
+				75C066A02560C99F0019B4FB /* Run SwiftFormat */,
 				75037990254A8538002A0C13 /* Sources */,
 				75037991254A8538002A0C13 /* Frameworks */,
 				75037992254A8538002A0C13 /* Resources */,
@@ -442,6 +443,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		75C066A02560C99F0019B4FB /* Run SwiftFormat */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftFormat";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "# Runs Swift Format lint on all files\nswift run -c release --package-path BuildTools swiftformat --swiftversion \"5.3\" \"$SRCROOT\" --header \"{file}\\nCopyright (c) {year} Dylan Gattey\" --lint --lenient --verbose\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		75037990254A8538002A0C13 /* Sources */ = {

@@ -1,9 +1,5 @@
-//
-//  ShaderDataProtocol.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// ShaderDataProtocol.swift
+// Copyright (c) 2020 Dylan Gattey
 
 import Foundation
 

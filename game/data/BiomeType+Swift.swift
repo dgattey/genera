@@ -1,15 +1,10 @@
-//
-//  BiomeType+Swift.swift
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// BiomeType+Swift.swift
+// Copyright (c) 2020 Dylan Gattey
 
 import Foundation
 
 /// Conforms BiomeType to string convertible so it can print properly
 extension BiomeType: CustomStringConvertible {
-    
     public var description: String {
         switch self {
         case .ocean: return ".ocean"
@@ -29,9 +24,9 @@ extension BiomeType: CustomStringConvertible {
         case .tropicalSeasonalForest: return ".tropicalSeasonalForest"
         case .tropicalRainforest: return ".tropicalRainforest"
         case .total:
-            return "BiomeType total: \(self.rawValue)"
+            return "BiomeType total: \(rawValue)"
         @unknown default:
-            assertionFailure("New enum type we haven't handled with raw value \(self.rawValue)")
+            assertionFailure("New enum type we haven't handled with raw value \(rawValue)")
             return ""
         }
     }

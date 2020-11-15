@@ -1,9 +1,6 @@
-//
-//  TerrainShaderTypes.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/3/20.
-//
+// TerrainShaderTypes.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/3/20.
 
 #ifndef TerrainShaderTypes_h
 #define TerrainShaderTypes_h

@@ -1,9 +1,6 @@
-//
-//  BiomeType.h
-//  Genera
-//
-//  Created by Dylan Gattey on 11/5/20.
-//
+// BiomeType.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 11/5/20.
 
 #ifndef BiomeType_h
 #define BiomeType_h

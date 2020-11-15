@@ -1,9 +1,6 @@
-//
-//  SharedTypes.h
-//  Genera
-//
-//  Created by Dylan Gattey on 10/28/20.
-//
+// SharedTypes.h
+// Copyright (c) 2020 Dylan Gattey
+// Created by Dylan Gattey on 10/28/20.
 
 #ifndef SharedTypes_h
 #define SharedTypes_h
