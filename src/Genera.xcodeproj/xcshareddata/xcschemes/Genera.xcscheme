@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "75037993254A8538002A0C13"
                BuildableName = "Genera.app"
-               BlueprintName = "Genera"
+               BlueprintName = "Genera (macOS 11)"
                ReferencedContainer = "container:Genera.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,7 +48,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "75037993254A8538002A0C13"
             BuildableName = "Genera.app"
-            BlueprintName = "Genera"
+            BlueprintName = "Genera (macOS 11)"
             ReferencedContainer = "container:Genera.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -79,7 +79,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "75037993254A8538002A0C13"
             BuildableName = "Genera.app"
-            BlueprintName = "Genera"
+            BlueprintName = "Genera (macOS 11)"
             ReferencedContainer = "container:Genera.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
