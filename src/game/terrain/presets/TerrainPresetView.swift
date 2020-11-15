@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Utility
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime
 class TerrainPresetView: EditableValuesStackView {
@@ -113,10 +114,10 @@ class TerrainPresetView: EditableValuesStackView {
             assertionFailure("Missing window")
             return
         }
-        AppDelegate.promptForReply(from: window,
-                                   withTitle: "Save as...",
-                                   details: "Name your preset to finish saving it",
-                                   placeholder: "My Favorite Map") { name, success in
+        WindowCoordinator.promptForReply(from: window,
+                                         withTitle: "Save as...",
+                                         details: "Name your preset to finish saving it",
+                                         placeholder: "My Favorite Map") { name, success in
             guard success else {
                 return
             }

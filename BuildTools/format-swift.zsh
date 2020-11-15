@@ -13,7 +13,8 @@ else
     SFARGS="--lint --lenient"
 fi
 
-cd $SRCROOT/../buildTools
+cd "${SRCROOT}/../BuildTools"
 echo "IF THIS IS TAKING FOREVER - it's probably installing SwiftFormat as a package"
 echo "Running on all files in $SRCROOT..."
 swift run -c release swiftformat --swiftversion "$SWIFT_VERSION" "$SRCROOT" --header "$HEADER_FORMAT" $SFARGS
+cd ../

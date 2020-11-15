@@ -497,7 +497,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "# Formats Swift files\n${SRCROOT}/../buildTools/format-swift.zsh\n";
+			shellScript = "# Formats Swift files\n${SRCROOT}/../BuildTools/format-swift.zsh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -703,7 +703,6 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				EXCLUDED_SOURCE_FILE_NAMES = "$SRCROOT/../buildTools/*";
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -735,7 +734,6 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				EXCLUDED_SOURCE_FILE_NAMES = "$SRCROOT/../buildTools/*";
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
