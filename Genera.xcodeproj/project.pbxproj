@@ -462,7 +462,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswift run -c release --package-path BuildTools swiftformat --swiftversion \"5.1\" \"$SRCROOT\" --header \"{file}\\nCopyright (c) {year} Dylan Gattey\\nCreated by Dylan Gattey on {created}.\"\n\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswift run -c release --package-path BuildTools swiftformat --swiftversion \"5.3\" \"$SRCROOT\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

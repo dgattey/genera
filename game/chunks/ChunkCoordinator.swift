@@ -114,7 +114,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 
     /// Returns vertices for a particular chunk of data if they exist to the renderer
     func vertices(from chunk: Chunk) -> [DataProvider.ChunkDataType.VertexType] {
-        chunkData(for: chunk).flatMap { $0.vertices }
+        chunkData(for: chunk).flatMap(\.vertices)
     }
 
     /// Just generates visible chunks to start with

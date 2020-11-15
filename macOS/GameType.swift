@@ -19,5 +19,5 @@ enum GameType: String {
     static let titles: [String] = [
         GameType.terrain,
         GameType.grid,
-    ].map { $0.rawValue }
+    ].map(\.rawValue)
 }

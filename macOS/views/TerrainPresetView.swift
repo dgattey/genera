@@ -178,7 +178,7 @@ class TerrainPresetView: EditableValuesStackView {
     private func reloadPresetsAndReset(bySelecting presetName: String) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             let presets = TerrainPresetLoader.loadPresets()
-            let keys = presets.map { $0.presetName }
+            let keys = presets.map(\.presetName)
             self?.presets = Dictionary(uniqueKeysWithValues: zip(keys, presets))
             DispatchQueue.main.async {
                 guard let strongSelf = self else {
