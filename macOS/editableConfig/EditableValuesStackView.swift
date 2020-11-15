@@ -10,7 +10,11 @@ class EditableValuesStackView: NSStackView {
     private static let minFieldWidth: CGFloat = 80
 
     // MARK: - initialization
-
+    
+    init() {
+        super.init(frame: .zero)
+    }
+    
     init(title: String) {
         super.init(frame: .zero)
         LabeledView.addLabel(title, style: .section, toStack: self)

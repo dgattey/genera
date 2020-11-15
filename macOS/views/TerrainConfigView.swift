@@ -22,6 +22,8 @@ class TerrainConfigView: NSStackView {
             aridness.updateDelegate = updateDelegate
             moistureDistribution.updateDelegate = updateDelegate
             moistureColorWeight.updateDelegate = updateDelegate
+            
+            biomes.updateDelegate = updateDelegate
         }
     }
 
@@ -76,9 +78,22 @@ class TerrainConfigView: NSStackView {
     /// How much moisture contributes to color of the biome
     private let moistureColorWeight = EditableConfigValue(
         fallback: DefaultTerrainData.moistureColorWeight,
-        label: "Color weight"
-    )
-
+        label: "Color weight")
+    
+    /// A grid view for all the biome color data at a glance
+    private lazy var biomeOverviewView: BiomeOverview = {
+        let view = BiomeOverview()
+        biomes.biomeChangeDelegate = view
+        view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        return view
+    }()
+    
+    /// All current biome values, defaulted to all default biomes
+    private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
+    
+    private let biomeView = EditableValuesStackView()
+    
     // MARK: - API
 
     /// Adds a nested stack view with equal widths
@@ -121,6 +136,16 @@ class TerrainConfigView: NSStackView {
         moistureView.addValue(moistureDistribution)
         moistureView.addValue(moistureColorWeight)
         addView(moistureView)
+        
+        addView(biomeView)
+        resetBiomesView()
+    }
+    
+    private func resetBiomesView() {
+        biomeView.views.forEach({ $0.removeFromSuperview() })
+        LabeledView.addLabel("Biomes", style: .section, toStack: biomeView)
+        biomeView.addView(biomeOverviewView, in: .bottom)
+        biomes.addValues(to: biomeView)
     }
 }
 
@@ -160,7 +185,7 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
 
     /// Bunch of biomes with different elevation and moistures
     var allBiomes: [Biome] {
-        Biome.defaultBiomes
+        return biomes.values
     }
 }
 
@@ -181,6 +206,10 @@ extension TerrainConfigView: TerrainPresetDelegate {
         aridness.changeValue(to: preset.aridness)
         moistureDistribution.changeValue(to: preset.moistureDistribution)
         moistureColorWeight.changeValue(to: preset.moistureColorWeight)
+        
+        /// Reset the biome views entirely
+        biomes.changeValues(to: preset.biomes)
+        resetBiomesView()
     }
 
     /// Called when the user wants to save the current data as a preset
@@ -197,8 +226,8 @@ extension TerrainConfigView: TerrainPresetDelegate {
             elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
             moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
             elevationColorWeight: elevationColorWeight.value,
-            moistureColorWeight: moistureColorWeight.value
-        )
+            moistureColorWeight: moistureColorWeight.value,
+            biomes: allBiomes)
         TerrainPresetLoader.savePreset(preset, onCompletion: onCompletion)
     }
 }

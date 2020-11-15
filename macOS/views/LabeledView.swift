@@ -14,7 +14,10 @@ enum LabeledView {
 
         /// Represents a full section with a big header
         case section
-
+        
+        // Represents a small section with a medium header
+        case smallSection
+        
         /// Represents a field inside a section with smaller header
         case field
 
@@ -25,6 +28,8 @@ enum LabeledView {
                 return NSFont.systemFont(ofSize: 100, weight: .heavy)
             case .section:
                 return NSFont.systemFont(ofSize: 30, weight: .heavy)
+            case .smallSection:
+                return NSFont.systemFont(ofSize: 22, weight: .bold)
             case .field:
                 return NSFont.systemFont(ofSize: 14, weight: .medium)
             }
@@ -37,6 +42,8 @@ enum LabeledView {
                 return 0
             case .section:
                 return 32
+            case .smallSection:
+                return 26
             case .field:
                 return 16
             }
