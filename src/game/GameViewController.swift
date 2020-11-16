@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import UI
 
 /// All constants for the generic game view controller
 enum GameViewControllerConstant {

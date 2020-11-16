@@ -2,6 +2,8 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import DataStructures
+import UI
 
 /// Contains all the fields to change the values of a particular biome (not its type!)
 class EditableBiomeValue {

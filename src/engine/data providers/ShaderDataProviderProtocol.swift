@@ -1,6 +1,7 @@
 // ShaderDataProviderProtocol.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructures
 import Foundation
 
 // A protocol any provider of shader config data must conform to

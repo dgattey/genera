@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation
+import GeneraGame
 
 /// Defines a protocol for all config data shared between the shader and swift code conforms to. Exactly
 /// one of these will be sent in MapRenderer to the shader

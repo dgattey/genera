@@ -5,6 +5,9 @@
       location = "group:BuildTools">
    </FileRef>
    <FileRef
+      location = "group:Modules">
+   </FileRef>
+   <FileRef
       location = "group:Utility">
    </FileRef>
    <FileRef

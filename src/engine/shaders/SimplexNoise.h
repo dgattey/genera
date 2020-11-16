@@ -10,9 +10,9 @@
 #import "FBMData.h"
 
 /// Creates one value of simplex noise from a 2d point
-float simplexNoise(simd_float2 v);
+float simplexNoise(vector_float2 v);
 
 /// Implements fractal Brownian motion with multiple octaves, persistence, scale, frequency, and compression, with a seed in [0..<4096]
-float fractalBrownianMotion(simd_float2 xy, struct FBMData data);
+float fractalBrownianMotion(vector_float2 xy, struct FBMData data);
 
 #endif /* SimplexNoise_h */

@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import UI
 
 /// All the views that appear in our side panel, within a scrollable stack view
 class SidePanelViewController: NSViewController {

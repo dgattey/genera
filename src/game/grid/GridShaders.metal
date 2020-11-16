@@ -6,8 +6,8 @@
 #import <metal_stdlib>
 #import <simd/simd.h>
 #import "GridShaderTypes.h"
-#import "engine/shaders/ShaderIndex.h"
-#import "engine/shaders/SimplexNoise.h"
+#import "SimplexNoise.h"
+#import "ShaderIndex.h"
 
 using namespace metal;
 

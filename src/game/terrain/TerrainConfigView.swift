@@ -2,6 +2,8 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import GeneraGame
+import UI
 
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {

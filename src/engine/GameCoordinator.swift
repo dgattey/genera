@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import MetalKit
+import UI
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
 class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {

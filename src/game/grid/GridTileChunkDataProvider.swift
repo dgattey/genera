@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation
+import GeneraGame
 
 /// Generates a random set of tiles of certain "biomes" it chunks
 class GridTileChunkDataProvider: NSObject, ChunkDataProviderProtocol {

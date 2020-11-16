@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import DataStructures
 
 /// Shows all biomes in a grid
 class BiomeOverview: NSView {

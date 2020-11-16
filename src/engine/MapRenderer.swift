@@ -1,9 +1,11 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructures
 import Metal
 import MetalKit
 import simd
+import UI
 
 /// Renders a full map to the main Metal screen, using shaders defined in the generation delegate
 class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,

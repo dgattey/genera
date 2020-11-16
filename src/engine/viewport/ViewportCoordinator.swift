@@ -1,7 +1,9 @@
 // ViewportCoordinator.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructuresSwift
 import Metal
+import UI
 
 /// Private static constants for the viewport coordinator
 private enum ViewportCoordinatorConstant {
