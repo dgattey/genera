@@ -91,7 +91,7 @@ class TerrainPresetView: EditableValuesStackView {
 
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser
     @objc func reloadPresets() {
-        reloadPresetsAndReset(bySelecting: DefaultTerrainData.presetName)
+        reloadPresetsAndReset()
     }
 
     /// Opens the presets folder in Finder
@@ -170,15 +170,25 @@ class TerrainPresetView: EditableValuesStackView {
     }
 
     /// Reloads all presets into the main array onto a background thread, then reloads the preset chooser
-    private func reloadPresetsAndReset(bySelecting presetName: String) {
+    private func reloadPresetsAndReset(bySelecting presetName: String? = nil) {
         let resetPicker = { [weak self] in
             guard let strongSelf = self else {
                 return
             }
             let keys = Array(strongSelf.presets.keys).sorted()
+            let previousSelectedItem = strongSelf.presetChooser.selectedItem?.title
             strongSelf.presetChooser.removeAllItems()
             strongSelf.presetChooser.addItems(withTitles: keys)
-            strongSelf.presetChooser.selectItem(withTitle: presetName)
+
+            // Choose either the given preset, the previous item, or the default preset
+            if let presetName = presetName, keys.contains(presetName) {
+                strongSelf.presetChooser.selectItem(withTitle: presetName)
+            } else if let previousSelectedItem = previousSelectedItem, keys.contains(previousSelectedItem) {
+                strongSelf.presetChooser.selectItem(withTitle: previousSelectedItem)
+            } else {
+                strongSelf.presetChooser.selectItem(withTitle: DefaultTerrainData.presetName)
+            }
+            strongSelf.selectPreset(strongSelf.presetChooser)
         }
         let handlePresets = { [weak self] (presets: [TerrainData]) in
             let keys = presets.map { $0.presetName }
