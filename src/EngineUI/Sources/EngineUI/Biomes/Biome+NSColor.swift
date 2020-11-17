@@ -2,9 +2,10 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Engine
 
 /// Adds color support to Biome
-public extension Biome {
+extension Biome {
     /// The NSColor representation of this biome's color
     var nsColor: NSColor {
         return NSColor(

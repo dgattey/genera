@@ -1,7 +1,33 @@
-// BiomeType+Swift.swift
+// BiomeType+Codable.swift
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation
+
+// MARK: - Codable
+
+extension BiomeType: Codable {
+    /// Creates a value out of the raw value or gives back ocean
+    public init(rawValueOrOcean: Int) {
+        self = BiomeType(rawValue: rawValueOrOcean) ?? .ocean
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case rawValue
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(rawValue, forKey: .rawValue)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let rawValue = try values.decode(Int.self, forKey: .rawValue)
+        self.init(rawValueOrOcean: rawValue)
+    }
+}
+
+// MARK: - CustomStringConvertible
 
 /// Conforms BiomeType to string convertible so it can print properly
 extension BiomeType: CustomStringConvertible {
@@ -29,29 +55,5 @@ extension BiomeType: CustomStringConvertible {
             assertionFailure("New enum type we haven't handled with raw value \(rawValue)")
             return ""
         }
-    }
-}
-
-// MARK: - Codable
-
-extension BiomeType: Codable {
-    /// Creates a value out of the raw value or gives back ocean
-    public init(rawValueOrOcean: Int) {
-        self = BiomeType(rawValue: rawValueOrOcean) ?? .ocean
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case rawValue
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(rawValue, forKey: .rawValue)
-    }
-
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let rawValue = try values.decode(Int.self, forKey: .rawValue)
-        self.init(rawValueOrOcean: rawValue)
     }
 }

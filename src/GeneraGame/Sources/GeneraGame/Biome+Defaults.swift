@@ -204,7 +204,7 @@ extension Biome {
     }
 
     /// Array of biomes with different elevations and moistures
-    public static var defaultBiomes: [Biome] {
+    static var defaultBiomes: [Biome] {
         [
             ocean,
             shallowWater,
@@ -228,7 +228,7 @@ extension Biome {
     }
 
     /// Contains _a_ definition of biome type to biome color (assumes multiple biomes defined above have the same colors)
-    public static var defaultBiomeColors: [BiomeType: vector_float4] {
+    static var defaultBiomeColors: [BiomeType: vector_float4] {
         let rawColors: [BiomeType: vector_float3] = [
             .ocean: ocean.color,
             .shallowWater: shallowWater.color,
