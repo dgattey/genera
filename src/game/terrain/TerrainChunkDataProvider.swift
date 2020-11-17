@@ -1,6 +1,7 @@
 // TerrainChunkDataProvider.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructuresSwift
 import Engine
 import Foundation
 import GeneraGame

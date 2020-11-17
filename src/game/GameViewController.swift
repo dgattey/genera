@@ -2,6 +2,8 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Engine
+import GeneraGame
 import UI
 
 /// All constants for the generic game view controller

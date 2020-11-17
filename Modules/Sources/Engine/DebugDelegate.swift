@@ -1,11 +1,12 @@
 // DebugDelegate.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructuresSwift
 import Foundation
 import MetalKit
 
 /// Anything that shows debug data implements this
-protocol DebugDelegate: NSObject {
+public protocol DebugDelegate: NSObject {
     /// Called when chunk bounds update
     func didUpdateChunkBounds(to value: ChunkRegion) -> Void
 

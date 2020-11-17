@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Combine
+import DataStructuresSwift
 import Metal
 import simd
 import SwiftPriorityQueue

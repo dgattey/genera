@@ -1,7 +1,7 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import DataStructures
+import DataStructuresSwift
 import Metal
 import MetalKit
 import simd

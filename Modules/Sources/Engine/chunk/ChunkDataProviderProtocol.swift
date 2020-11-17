@@ -1,12 +1,11 @@
 // ChunkDataProviderProtocol.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import Engine
+import DataStructuresSwift
 import Foundation
-import GeneraGame
 
 // A protocol any provider of chunk data must conform to
-protocol ChunkDataProviderProtocol: NSObject {
+public protocol ChunkDataProviderProtocol: NSObject {
     /// The type of data stored in the chunk data
     associatedtype ChunkDataType: ChunkDataProtocol
 

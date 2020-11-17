@@ -1,6 +1,7 @@
 // GameControllerDelegate.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Engine
 import Foundation
 
 /// Called by the `GameViewController` in response to game events

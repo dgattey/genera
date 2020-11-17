@@ -4,7 +4,12 @@
 #ifndef TerrainShaderConfigData_h
 #define TerrainShaderConfigData_h
 
-#import "../../DataStructures/include/FBMData.h"
+// This file is imported both from Metal and Swift, so we need dual imports for the two different search contexts
+#ifdef __METAL_VERSION__
+#import "FBMData.h"
+#else
+@import DataStructures;
+#endif
 
 /// Shader config data to pass in the form of a uniform to all shaders
 struct TerrainShaderConfigData {

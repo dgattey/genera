@@ -30,6 +30,10 @@ let package = Package(
             targets: ["UI"]
         ),
     ],
+    dependencies: [
+        .package(path: "Utility"),
+        .package(url: "https://github.com/davecom/SwiftPriorityQueue", .upToNextMinor(from: "1.3.1")),
+    ],
     targets: [
         /// All data structures, pure ObjC
         .target(
@@ -43,7 +47,7 @@ let package = Package(
         /// Game engine itself, used from the game & externally
         .target(
             name: "Engine",
-            dependencies: ["DataStructuresSwift"]
+            dependencies: ["DataStructures", "DataStructuresSwift", "SwiftPriorityQueue", "Utility", "UI"]
         ),
         /// The shaders that power the game (includes Engine + other shaders for now with hardcoded paths to other packages... not ideal)
         .target(

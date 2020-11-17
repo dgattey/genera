@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Engine
 import MetalKit
 
 /// Owns the views in the app and starts the game controller after an event loop on app start

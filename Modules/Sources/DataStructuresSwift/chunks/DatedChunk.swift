@@ -4,31 +4,31 @@
 import Foundation
 
 /// Represents a chunk that has a built-in creation date
-struct DatedChunk: Hashable, Comparable {
+public struct DatedChunk: Hashable, Comparable {
     /// The inner value of the chunk
-    let value: Chunk
+    public let value: Chunk
 
     /// The creation date of this chunk
-    let creationDate: TimeInterval
+    public let creationDate: TimeInterval
 
     /// Sets it up with an existing chunk
-    init(_ chunk: Chunk) {
+    public init(_ chunk: Chunk) {
         value = chunk
         creationDate = Date.timeIntervalSinceReferenceDate
     }
 
     /// Use only the creation date in determining less or greater than
-    static func < (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
+    public static func < (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
         lhs.creationDate < rhs.creationDate
     }
 
     /// Two dated chunks are equivalent if their chunks are the same (date doesn't matter)
-    static func == (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
+    public static func == (lhs: DatedChunk, rhs: DatedChunk) -> Bool {
         lhs.value == rhs.value
     }
 
     /// Just hash the chunk itself, not the date
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(value)
     }
 }

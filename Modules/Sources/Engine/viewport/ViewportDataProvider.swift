@@ -1,6 +1,7 @@
 // ViewportDataProvider.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructuresSwift
 import Metal
 
 /// Returns viewport data to other objects

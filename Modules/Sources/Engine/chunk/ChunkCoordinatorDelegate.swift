@@ -1,6 +1,7 @@
 // ChunkCoordinatorDelegate.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import DataStructuresSwift
 import Foundation
 
 /// A delegate for use with all map updates that need to be processed by the renderer

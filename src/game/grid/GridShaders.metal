@@ -5,9 +5,9 @@
 
 #import <metal_stdlib>
 #import <simd/simd.h>
-#import "GridShaderTypes.h"
-#import "SimplexNoise.h"
-#import "ShaderIndex.h"
+#import "GridShaderTypes.h" // Move into folder with this file
+#import "SimplexNoise.h" // here, and all shaders (sharing between here and SimplexNoise is difficult)
+#import "ShaderIndex.h" // map renderer (engine), shaders
 
 using namespace metal;
 

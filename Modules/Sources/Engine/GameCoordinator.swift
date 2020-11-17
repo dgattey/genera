@@ -5,14 +5,14 @@ import MetalKit
 import UI
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
-class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
+public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     // MARK: variables
 
     /// Provides all data in the form of vertices and chunks for the other objects
     private let dataProvider: ChunkDataProvider
 
     /// Provides the shader data provider from the `dataProvider`
-    var shaderDataProvider: ChunkDataProvider.ShaderDataProviderType? {
+    public var shaderDataProvider: ChunkDataProvider.ShaderDataProviderType? {
         dataProvider.shaderDataProvider
     }
 
@@ -32,7 +32,7 @@ class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     // MARK: delegated delegates
 
     /// For logging things to the debug delegate
-    weak var debugDelegate: DebugDelegate? {
+    public weak var debugDelegate: DebugDelegate? {
         didSet {
             renderer.debugDelegate = debugDelegate
             chunkCoordinator.debugDelegate = debugDelegate
@@ -44,7 +44,7 @@ class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
-    init?(view: InteractableViewProtocol) {
+    public init?(view: InteractableViewProtocol) {
         let dataProvider = ChunkDataProvider()
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
@@ -76,7 +76,7 @@ class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
     /// Actually starts the coordination - resizes the interactable view to make sure
     /// we have size info, then starts map generation on a background thread
-    func start() {
+    public func start() {
         resizeClosure()
         DispatchQueue.global(qos: .utility).async(execute: chunkCoordinator.startMapGeneration)
     }
@@ -100,7 +100,7 @@ class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
 /// Just re-renders the renderer, no matter what value updated
 extension GameCoordinator: ConfigUpdateDelegate {
-    func configDidUpdate<T>(from _: T?, to _: T?) {
+    public func configDidUpdate<T>(from _: T?, to _: T?) {
         renderer.configDidUpdate()
     }
 }

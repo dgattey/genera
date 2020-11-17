@@ -1,7 +1,9 @@
 // EditableConfigValue.swift
 // Copyright (c) 2020 Dylan Gattey
 
+// TODO: @dgattey try to remove dependency on AppKit
 import AppKit
+import Engine
 
 /// So we can use constants in this file
 private enum EditableConfigValueConstant {

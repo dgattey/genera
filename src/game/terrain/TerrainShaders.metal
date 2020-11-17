@@ -5,12 +5,12 @@
 
 #import <metal_stdlib>
 #import <simd/simd.h>
-#import "TerrainShaderTypes.h"
-#import "TerrainShaderConfigData.h"
-#import "SimplexNoise.h"
-#import "Color.h"
-#import "ShaderIndex.h"
-#import "Biome.h"
+#import "TerrainShaderTypes.h" // Move into folder with this file
+#import "TerrainShaderConfigData.h" // Shared with GeneraGame (TerrainConfigView), and here
+#import "SimplexNoise.h" // here, and all shaders (sharing between here and SimplexNoise is difficult)
+#import "Color.h" // color shader, here
+#import "ShaderIndex.h" // map renderer (engine), shaders
+#import "Biome.h" // everywhere - needs to be in DataStructures
 
 using namespace metal;
 

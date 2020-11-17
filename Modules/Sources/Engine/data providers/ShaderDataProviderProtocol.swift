@@ -5,7 +5,7 @@ import DataStructures
 import Foundation
 
 // A protocol any provider of shader config data must conform to
-protocol ShaderDataProviderProtocol: AnyObject {
+public protocol ShaderDataProviderProtocol: AnyObject {
     /// The type of data stored in by this provider
     associatedtype ShaderDataType: ShaderDataProtocol
 
@@ -19,7 +19,7 @@ protocol ShaderDataProviderProtocol: AnyObject {
     var allBiomes: [Biome] { get }
 }
 
-extension ShaderDataProviderProtocol {
+public extension ShaderDataProviderProtocol {
     /// Deterministically turns a seed into a uint for use with creation of config data
     static func seed(from seed: String) -> uint {
         let scalars = seed.unicodeScalars.map(\.value)
@@ -30,17 +30,17 @@ extension ShaderDataProviderProtocol {
 }
 
 /// Used for no data views
-class EmptyShaderDataProvider: ShaderDataProviderProtocol {
-    var updateDelegate: ConfigUpdateDelegate? {
+public class EmptyShaderDataProvider: ShaderDataProviderProtocol {
+    public var updateDelegate: ConfigUpdateDelegate? {
         set {}
         get { nil }
     }
 
-    var configData: EmptyShaderData {
+    public var configData: EmptyShaderData {
         fatalError("Cannot be constructed")
     }
 
-    var allBiomes: [Biome] {
+    public var allBiomes: [Biome] {
         fatalError("Cannot be constructed")
     }
 }

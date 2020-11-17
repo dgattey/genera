@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import DataStructures
+import Engine
 import Foundation
 
 /// Supports a list of editable biome values

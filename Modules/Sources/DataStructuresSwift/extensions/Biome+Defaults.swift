@@ -1,7 +1,7 @@
 // Biome+Defaults.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import AppKit
+import Foundation
 
 /// Extends the Obj-C defined Biome with some computed vars for use elsewhere
 extension Biome {
@@ -248,15 +248,5 @@ extension Biome {
             .tropicalRainforest: tropicalRainforest.color,
         ]
         return rawColors.mapValues { vector_float4($0, 1.0) }
-    }
-
-    /// The NSColor representation of this biome's color
-    public var nsColor: NSColor {
-        return NSColor(
-            red: CGFloat(color.x),
-            green: CGFloat(color.y),
-            blue: CGFloat(color.z),
-            alpha: 1.0
-        )
     }
 }
