@@ -16,17 +16,6 @@
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
 		750F001925611E3700E166D4 /* GeneraMacOSAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */; };
 		750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD225611E3600E166D4 /* AppDelegate.swift */; };
-		750F002525611E3700E166D4 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDF25611E3600E166D4 /* GameViewController.swift */; };
-		750F002625611E3700E166D4 /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE025611E3600E166D4 /* GameType.swift */; };
-		750F002725611E3700E166D4 /* GameControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */; };
-		750F002825611E3700E166D4 /* TerrainConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE325611E3600E166D4 /* TerrainConfigView.swift */; };
-		750F002A25611E3700E166D4 /* TerrainPresetDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */; };
-		750F002B25611E3700E166D4 /* TerrainPresetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */; };
-		750F002C25611E3700E166D4 /* TerrainPresetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */; };
-		750F002D25611E3700E166D4 /* TerrainChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */; };
-		750F002E25611E3700E166D4 /* TerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEE25611E3600E166D4 /* TerrainData.swift */; };
-		750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */; };
-		750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */; };
 		751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C2256268F0000B0326 /* SimplexNoise.metal */; };
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
@@ -56,17 +45,6 @@
 		750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GeneraMacOSInfo.plist; sourceTree = "<group>"; };
 		750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GeneraMacOSAssets.xcassets; sourceTree = "<group>"; };
 		750FFFD225611E3600E166D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		750FFFDF25611E3600E166D4 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		750FFFE025611E3600E166D4 /* GameType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
-		750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameControllerDelegate.swift; sourceTree = "<group>"; };
-		750FFFE325611E3600E166D4 /* TerrainConfigView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainConfigView.swift; sourceTree = "<group>"; };
-		750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetDelegate.swift; sourceTree = "<group>"; };
-		750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetLoader.swift; sourceTree = "<group>"; };
-		750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetView.swift; sourceTree = "<group>"; };
-		750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainChunkDataProvider.swift; sourceTree = "<group>"; };
-		750FFFEE25611E3600E166D4 /* TerrainData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainData.swift; sourceTree = "<group>"; };
-		750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTerrainData.swift; sourceTree = "<group>"; };
-		750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridTileChunkDataProvider.swift; sourceTree = "<group>"; };
 		751D56C1256268F0000B0326 /* SimplexNoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimplexNoise.h; sourceTree = "<group>"; };
 		751D56C2256268F0000B0326 /* SimplexNoise.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimplexNoise.metal; sourceTree = "<group>"; };
 		751D56C3256268F0000B0326 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
@@ -97,7 +75,6 @@
 				751D56A925625905000B0326 /* Shaders - Engine */,
 				750FFFF125611E3600E166D4 /* Shaders - Game */,
 				750FFFC625611E3600E166D4 /* MacOS */,
-				750FFFDE25611E3600E166D4 /* game non module */,
 				75037995254A8538002A0C13 /* Products */,
 				7586162E2561E51600B61C32 /* Frameworks */,
 			);
@@ -123,32 +100,6 @@
 				750FFFC825611E3600E166D4 /* SidePanelViewController.swift */,
 			);
 			path = MacOS;
-			sourceTree = "<group>";
-		};
-		750FFFDE25611E3600E166D4 /* game non module */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFDF25611E3600E166D4 /* GameViewController.swift */,
-				750FFFE025611E3600E166D4 /* GameType.swift */,
-				750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */,
-				750FFFE225611E3600E166D4 /* terrain */,
-			);
-			path = "game non module";
-			sourceTree = "<group>";
-		};
-		750FFFE225611E3600E166D4 /* terrain */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */,
-				750FFFE325611E3600E166D4 /* TerrainConfigView.swift */,
-				750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */,
-				750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */,
-				750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */,
-				750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */,
-				750FFFEE25611E3600E166D4 /* TerrainData.swift */,
-				750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */,
-			);
-			path = terrain;
 			sourceTree = "<group>";
 		};
 		750FFFF125611E3600E166D4 /* Shaders - Game */ = {
@@ -283,20 +234,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				751D56CA256268F0000B0326 /* Color.metal in Sources */,
-				750F002B25611E3700E166D4 /* TerrainPresetLoader.swift in Sources */,
 				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
-				750F002825611E3700E166D4 /* TerrainConfigView.swift in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,
-				750F002625611E3700E166D4 /* GameType.swift in Sources */,
-				750F002C25611E3700E166D4 /* TerrainPresetView.swift in Sources */,
-				750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */,
 				750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */,
-				750F002725611E3700E166D4 /* GameControllerDelegate.swift in Sources */,
-				750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */,
-				750F002E25611E3700E166D4 /* TerrainData.swift in Sources */,
-				750F002A25611E3700E166D4 /* TerrainPresetDelegate.swift in Sources */,
-				750F002D25611E3700E166D4 /* TerrainChunkDataProvider.swift in Sources */,
-				750F002525611E3700E166D4 /* GameViewController.swift in Sources */,
 				751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */,
 				751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */,
 				750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */,

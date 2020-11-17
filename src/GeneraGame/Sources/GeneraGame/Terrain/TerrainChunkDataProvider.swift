@@ -3,7 +3,6 @@
 
 import Engine
 import Foundation
-import GeneraGame
 
 /// Provides giant 1-tile chunks for use in generation of terrain
 class TerrainChunkDataProvider: NSObject, ChunkDataProviderProtocol {

@@ -4,11 +4,13 @@
 import AppKit
 import Engine
 import EngineUI
-import GeneraGame
-import UI
 
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {
+    // MARK: - constants
+
+    private static let interItemSpacing: CGFloat = 48
+
     // MARK: - variables
 
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
@@ -116,7 +118,7 @@ class TerrainConfigView: NSStackView {
         orientation = .vertical
         alignment = .leading
         distribution = .fill
-        spacing = SidePanelViewController.interItemSpacing
+        spacing = TerrainConfigView.interItemSpacing
 
         let presetView = TerrainPresetView(title: "Presets")
         presetView.presetDelegate = self
@@ -148,7 +150,6 @@ class TerrainConfigView: NSStackView {
 
     private func resetBiomesView() {
         biomeView.views.forEach { $0.removeFromSuperview() }
-        LabeledView.addLabel("Biomes", style: .section, toStack: biomeView)
         biomeView.addView(biomeOverviewView, in: .bottom)
         biomes.addValues(to: biomeView)
     }

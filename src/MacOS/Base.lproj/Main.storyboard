@@ -379,8 +379,8 @@
         <!--Game View Controller-->
         <scene sceneID="rFD-kC-Yzk">
             <objects>
-                <viewController title="Game View Controller" id="1Vi-Bk-PD6" customClass="GameViewController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
-                    <customView key="view" horizontalHuggingPriority="200" id="Yjw-54-B3L" userLabel="Game View" customClass="InteractableMTKView" customModule="UI">
+                <viewController title="Game View Controller" id="1Vi-Bk-PD6" customClass="GameViewController" customModule="GeneraGame" sceneMemberID="viewController">
+                    <customView key="view" horizontalHuggingPriority="200" id="Yjw-54-B3L" userLabel="Game View" customClass="InteractableMTKView" customModule="EngineUI">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </customView>

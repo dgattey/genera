@@ -3,7 +3,7 @@
 
 import AppKit
 import Engine
-import MetalKit
+import GeneraGame
 
 /// Owns the views in the app and starts the game controller after an event loop on app start
 class GeneraWindowController: NSWindowController {

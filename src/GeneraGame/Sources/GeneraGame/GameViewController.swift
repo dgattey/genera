@@ -4,7 +4,6 @@
 import AppKit
 import Engine
 import EngineUI
-import GeneraGame
 
 /// All constants for the generic game view controller
 enum GameViewControllerConstant {
@@ -13,7 +12,7 @@ enum GameViewControllerConstant {
 }
 
 /// The game's view controller - owns the coordinator and kicks off the game itself
-class GameViewController: NSViewController {
+public class GameViewController: NSViewController {
     /// Just a reference to the game view itself
     @IBOutlet var gameView: InteractableMTKView!
 
@@ -35,17 +34,17 @@ class GameViewController: NSViewController {
     private var gameType: GameType = .terrain
 
     /// Debug delegate passthrough
-    weak var debugDelegate: DebugDelegate? {
+    public weak var debugDelegate: DebugDelegate? {
         didSet {
             updateDebugDelegates()
         }
     }
 
     /// Shader config data provider passthrough
-    weak var gameControllerDelegate: GameControllerDelegate?
+    public weak var gameControllerDelegate: GameControllerDelegate?
 
     /// Starts the game by creating the coordinator, then kicking it off
-    func reset(to gameType: GameType) {
+    public func reset(to gameType: GameType) {
         gameView.delegate = nil // reset in preparation
         self.gameType = gameType
         switch gameType {
@@ -68,7 +67,7 @@ class GameViewController: NSViewController {
         }
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         view.widthAnchor.constraint(greaterThanOrEqualToConstant: GameViewControllerConstant.minWidth).isActive = true
     }
 
@@ -86,7 +85,7 @@ class GameViewController: NSViewController {
 /// Passes through to the coordinator
 extension GameViewController: ConfigUpdateDelegate {
     /// Called when a value changes to another value
-    func configDidUpdate<T>(from: T?, to: T?) {
+    public func configDidUpdate<T>(from: T?, to: T?) {
         switch gameType {
         case .terrain:
             terrainCoordinator?.configDidUpdate(from: from, to: to)

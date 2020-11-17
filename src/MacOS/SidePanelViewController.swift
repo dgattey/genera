@@ -11,7 +11,7 @@ class SidePanelViewController: NSViewController {
     // MARK: - constants
 
     /// The spacing between subviews
-    static let interItemSpacing = LabeledView.HeaderStyle.section.spacing * 1.5
+    static let interItemSpacing: CGFloat = 48
 
     // MARK: - variables
 

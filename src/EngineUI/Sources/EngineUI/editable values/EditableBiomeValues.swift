@@ -3,6 +3,7 @@
 
 import Engine
 import Foundation
+import UI
 
 /// Supports a list of editable biome values
 public class EditableBiomeValues {
@@ -43,6 +44,7 @@ public class EditableBiomeValues {
 
     /// Adds all biome edit fields to a stack view and one overview biome view
     public func addValues(to stackView: EditableValuesStackView) {
+        LabeledView.addLabel("Biomes", style: .section, toStack: stackView)
         var counts: [BiomeType: Int] = [:]
         for biomeValue in biomeValues {
             biomeValue.updateDelegate = updateDelegate
