@@ -5,27 +5,27 @@ import AppKit
 import UI
 
 /// A stack view containing text fields for certain configurable data
-class EditableValuesStackView: NSStackView {
+open class EditableValuesStackView: NSStackView {
     // MARK: - constants
 
     private static let minFieldWidth: CGFloat = 80
 
     // MARK: - initialization
 
-    init() {
+    public init() {
         super.init(frame: .zero)
     }
 
-    init(title: String) {
+    public init(title: String) {
         super.init(frame: .zero)
         LabeledView.addLabel(title, style: .section, toStack: self)
     }
 
-    required init?(coder _: NSCoder) {
+    public required init?(coder _: NSCoder) {
         super.init(frame: .zero)
     }
 
-    override func viewDidMoveToWindow() {
+    override open func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         orientation = .vertical
         alignment = .leading
@@ -37,7 +37,7 @@ class EditableValuesStackView: NSStackView {
     // MARK: - API
 
     /// Adds the text field and optional stepper from the value to this stack view
-    func addValue<T>(_ value: EditableConfigValue<T>) {
+    public func addValue<T>(_ value: EditableConfigValue<T>) {
         value.field.delegate = value
         value.field.setContentHuggingPriority(.required, for: .horizontal)
         value.field.widthAnchor.constraint(greaterThanOrEqualToConstant: EditableValuesStackView.minFieldWidth).isActive = true

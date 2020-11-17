@@ -2,10 +2,10 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import EngineData
+import Engine
 
 /// Shows all biomes in a grid
-class BiomeOverview: NSView {
+public class BiomeOverview: NSView {
     /// Min height of view
     private static let minHeight: CGFloat = 100
 
@@ -15,7 +15,7 @@ class BiomeOverview: NSView {
     /// Keeps track of string to value
     private var biomes: [String: (biome: Biome, layer: CALayer)] = [:]
 
-    override func viewDidMoveToWindow() {
+    override public func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         translatesAutoresizingMaskIntoConstraints = false
         autoresizesSubviews = false
@@ -23,7 +23,7 @@ class BiomeOverview: NSView {
         draw(.infinite)
     }
 
-    override func draw(_: NSRect) {
+    override public func draw(_: NSRect) {
         let width = Float(max(bounds.width, BiomeOverview.minWidth))
         let height = Float(max(bounds.height, BiomeOverview.minHeight))
         let origin = CGPoint(x: 0, y: 0)
@@ -48,7 +48,7 @@ class BiomeOverview: NSView {
 
 extension BiomeOverview: BiomeChangeDelegate {
     /// Updates the grid with the new data at the right index and adds a view for it to this subview
-    func biome(withIdentifier id: String, didUpdateTo biome: Biome) {
+    public func biome(withIdentifier id: String, didUpdateTo biome: Biome) {
         wantsLayer = true
         if let (_, existingLayer) = biomes[id] {
             biomes[id] = (biome, existingLayer)

@@ -2,13 +2,12 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Engine
-import EngineData
 import Foundation
 
 /// Creates and holds onto a group of editable config values for FBMData
-class EditableFBMConfigValues {
+public class EditableFBMConfigValues {
     /// Update delegate passthrough
-    weak var updateDelegate: ConfigUpdateDelegate? {
+    public weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
             octaves.updateDelegate = updateDelegate
             persistence.updateDelegate = updateDelegate
@@ -17,13 +16,13 @@ class EditableFBMConfigValues {
         }
     }
 
-    let octaves: EditableConfigValue<Int32>
-    let persistence: EditableConfigValue<Float>
-    let scale: EditableConfigValue<Float>
-    let compression: EditableConfigValue<Float>
+    public let octaves: EditableConfigValue<Int32>
+    public let persistence: EditableConfigValue<Float>
+    public let scale: EditableConfigValue<Float>
+    public let compression: EditableConfigValue<Float>
 
     /// Creates a list of config values from a title for the fbm data and default data
-    init(defaultData: FBMData) {
+    public init(defaultData: FBMData) {
         octaves = EditableConfigValue(fallback: defaultData.octaves, label: "Octaves")
         persistence = EditableConfigValue(fallback: defaultData.persistence, label: "Persistence")
         scale = EditableConfigValue(fallback: defaultData.scale, label: "Scale")
@@ -31,7 +30,7 @@ class EditableFBMConfigValues {
     }
 
     /// Adds the config values saved here to a given stack view (in reverse!)
-    func addValues(to stackView: EditableValuesStackView) {
+    public func addValues(to stackView: EditableValuesStackView) {
         EditableValuesStackView.addValue(stackView)(octaves)
         EditableValuesStackView.addValue(stackView)(persistence)
         EditableValuesStackView.addValue(stackView)(scale)
@@ -39,7 +38,7 @@ class EditableFBMConfigValues {
     }
 
     /// Changes current values to new values from the data passed in
-    func changeValues(to values: FBMData) {
+    public func changeValues(to values: FBMData) {
         octaves.changeValue(to: values.octaves)
         persistence.changeValue(to: values.persistence)
         scale.changeValue(to: values.scale)
@@ -47,7 +46,7 @@ class EditableFBMConfigValues {
     }
 
     /// Creates FBMData from all fields with a provided seed
-    func value(withSeed seed: uint) -> FBMData {
+    public func value(withSeed seed: uint) -> FBMData {
         FBMData(
             octaves: octaves.value,
             persistence: persistence.value,

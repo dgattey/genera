@@ -3,6 +3,7 @@
 
 import AppKit
 import Engine
+import EngineUI
 import GeneraGame
 import UI
 

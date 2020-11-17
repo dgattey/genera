@@ -15,11 +15,11 @@ private enum EditableConfigValueConstant {
 }
 
 /// A config value, containing the text field used to display the value, plus a default fallback
-class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDelegate {
+public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDelegate {
     // MARK: - types
 
     /// The class of value we're using, based on protocols!
-    enum ValueType {
+    private enum ValueType {
         case decimalNumber
         case wholeNumber
         case string
@@ -28,7 +28,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     // MARK: - variables
 
     /// The update delegate to call when we change data
-    weak var updateDelegate: ConfigUpdateDelegate?
+    public weak var updateDelegate: ConfigUpdateDelegate?
 
     /// The text field where the user can edit the value
     let field: NSTextField
@@ -43,7 +43,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     private let fallback: T
 
     /// What type of field this is
-    let valueType: ValueType
+    private let valueType: ValueType
 
     /// Used if we need a float formatter
     private lazy var floatFormatter: NumberFormatter = {
@@ -55,7 +55,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     }()
 
     /// Returns the value of the field as a casted optional value or the saved fallback value
-    var value: T {
+    public var value: T {
         T(field.stringValue) ?? fallback
     }
 
@@ -92,7 +92,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     }
 
     /// For use in creating a .wholeNumber field
-    convenience init(fallback: T, label: String) where T: BinaryInteger {
+    public convenience init(fallback: T, label: String) where T: BinaryInteger {
         let stepper = NSStepper()
         stepper.autorepeat = true
         stepper.increment = 1.0
@@ -103,7 +103,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     }
 
     /// For use in creating an .decimalNumber field
-    convenience init(fallback: T, label: String) where T: BinaryFloatingPoint {
+    public convenience init(fallback: T, label: String) where T: BinaryFloatingPoint {
         let stepper = NSStepper()
         stepper.autorepeat = true
         stepper.increment = 0.1
@@ -114,14 +114,14 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     }
 
     /// For use in creating a .string field
-    convenience init(fallback: T, label: String) where T: StringProtocol {
+    public convenience init(fallback: T, label: String) where T: StringProtocol {
         self.init(valueType: .string, fallback: fallback, label: label)
     }
 
     // MARK: - API
 
     /// Updates the current value to a given value in both the stepper and field itself, and updates the delegate
-    func changeValue(to value: Any) {
+    public func changeValue(to value: Any) {
         switch valueType {
         case .decimalNumber:
             let previous = field.floatValue
@@ -166,7 +166,7 @@ class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSTextFieldDe
     // MARK: - NSTextFieldDelegate
 
     /// Changes the text as needed based on the type, and updates our delegate
-    func controlTextDidChange(_ obj: Notification) {
+    public func controlTextDidChange(_ obj: Notification) {
         guard obj.object as? NSTextField != nil else {
             return
         }

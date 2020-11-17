@@ -11,16 +11,11 @@
 		75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A532563B9E2008D2B31 /* GeneraGame */; };
 		75092A582563B9E2008D2B31 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A572563B9E2008D2B31 /* UI */; };
 		75092A5A2563B9E2008D2B31 /* Utility in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A592563B9E2008D2B31 /* Utility */; };
-		750F000125611E3700E166D4 /* BiomeOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA825611E3600E166D4 /* BiomeOverview.swift */; };
-		750F000225611E3700E166D4 /* BiomeChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */; };
-		750F000425611E3700E166D4 /* EditableFBMConfigValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */; };
 		750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC825611E3600E166D4 /* SidePanelViewController.swift */; };
 		750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC925611E3600E166D4 /* GeneraWindowController.swift */; };
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
 		750F001925611E3700E166D4 /* GeneraMacOSAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */; };
 		750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD225611E3600E166D4 /* AppDelegate.swift */; };
-		750F001D25611E3700E166D4 /* EditableConfigValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD425611E3600E166D4 /* EditableConfigValue.swift */; };
-		750F001E25611E3700E166D4 /* EditableValuesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */; };
 		750F002325611E3700E166D4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDC25611E3600E166D4 /* DebugView.swift */; };
 		750F002525611E3700E166D4 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDF25611E3600E166D4 /* GameViewController.swift */; };
 		750F002625611E3700E166D4 /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE025611E3600E166D4 /* GameType.swift */; };
@@ -33,12 +28,11 @@
 		750F002E25611E3700E166D4 /* TerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEE25611E3600E166D4 /* TerrainData.swift */; };
 		750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */; };
 		750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */; };
-		750FFFFE25611E3700E166D4 /* EditableBiomeValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */; };
-		750FFFFF25611E3700E166D4 /* EditableBiomeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */; };
 		751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C2256268F0000B0326 /* SimplexNoise.metal */; };
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
 		751D56CB256268F0000B0326 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C7256268F0000B0326 /* GridShaders.metal */; };
+		75EE4E192563C18700AB5DF8 /* EngineUI in Frameworks */ = {isa = PBXBuildFile; productRef = 75EE4E182563C18700AB5DF8 /* EngineUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,11 +50,6 @@
 
 /* Begin PBXFileReference section */
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableBiomeValues.swift; sourceTree = "<group>"; };
-		750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableBiomeValue.swift; sourceTree = "<group>"; };
-		750FFFA825611E3600E166D4 /* BiomeOverview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiomeOverview.swift; sourceTree = "<group>"; };
-		750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiomeChangeDelegate.swift; sourceTree = "<group>"; };
-		750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableFBMConfigValues.swift; sourceTree = "<group>"; };
 		750FFFC825611E3600E166D4 /* SidePanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidePanelViewController.swift; sourceTree = "<group>"; };
 		750FFFC925611E3600E166D4 /* GeneraWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneraWindowController.swift; sourceTree = "<group>"; };
 		750FFFCA25611E3600E166D4 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
@@ -68,8 +57,6 @@
 		750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GeneraMacOSInfo.plist; sourceTree = "<group>"; };
 		750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GeneraMacOSAssets.xcassets; sourceTree = "<group>"; };
 		750FFFD225611E3600E166D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		750FFFD425611E3600E166D4 /* EditableConfigValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableConfigValue.swift; sourceTree = "<group>"; };
-		750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableValuesStackView.swift; sourceTree = "<group>"; };
 		750FFFDC25611E3600E166D4 /* DebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		750FFFDF25611E3600E166D4 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		750FFFE025611E3600E166D4 /* GameType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
@@ -98,6 +85,7 @@
 				75092A582563B9E2008D2B31 /* UI in Frameworks */,
 				75092A5A2563B9E2008D2B31 /* Utility in Frameworks */,
 				75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */,
+				75EE4E192563C18700AB5DF8 /* EngineUI in Frameworks */,
 				75092A522563B9E2008D2B31 /* Engine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -108,7 +96,7 @@
 		75037986254A8537002A0C13 = {
 			isa = PBXGroup;
 			children = (
-				750FFF9A25611E3600E166D4 /* engine non module */,
+				751D56A925625905000B0326 /* engine shaders */,
 				750FFFDE25611E3600E166D4 /* game non module */,
 				750FFFC625611E3600E166D4 /* macOS non module */,
 				75037995254A8538002A0C13 /* Products */,
@@ -122,27 +110,6 @@
 				75037994254A8538002A0C13 /* Genera.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		750FFF9A25611E3600E166D4 /* engine non module */ = {
-			isa = PBXGroup;
-			children = (
-				751D56A925625905000B0326 /* shaders */,
-				750FFFA325611E3600E166D4 /* biomes */,
-			);
-			path = "engine non module";
-			sourceTree = "<group>";
-		};
-		750FFFA325611E3600E166D4 /* biomes */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */,
-				750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */,
-				750FFFA825611E3600E166D4 /* BiomeOverview.swift */,
-				750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */,
-				750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */,
-			);
-			path = biomes;
 			sourceTree = "<group>";
 		};
 		750FFFC625611E3600E166D4 /* macOS non module */ = {
@@ -171,8 +138,6 @@
 		750FFFDB25611E3600E166D4 /* movable */ = {
 			isa = PBXGroup;
 			children = (
-				750FFFD425611E3600E166D4 /* EditableConfigValue.swift */,
-				750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */,
 				750FFFDC25611E3600E166D4 /* DebugView.swift */,
 			);
 			path = movable;
@@ -214,7 +179,7 @@
 			path = grid;
 			sourceTree = "<group>";
 		};
-		751D56A925625905000B0326 /* shaders */ = {
+		751D56A925625905000B0326 /* engine shaders */ = {
 			isa = PBXGroup;
 			children = (
 				751D56C3256268F0000B0326 /* Color.h */,
@@ -222,7 +187,7 @@
 				751D56C4256268F0000B0326 /* Color.metal */,
 				751D56C2256268F0000B0326 /* SimplexNoise.metal */,
 			);
-			path = shaders;
+			path = "engine shaders";
 			sourceTree = "<group>";
 		};
 		7586162E2561E51600B61C32 /* Frameworks */ = {
@@ -255,6 +220,7 @@
 				75092A532563B9E2008D2B31 /* GeneraGame */,
 				75092A572563B9E2008D2B31 /* UI */,
 				75092A592563B9E2008D2B31 /* Utility */,
+				75EE4E182563C18700AB5DF8 /* EngineUI */,
 			);
 			productName = "Land macOS";
 			productReference = 75037994254A8538002A0C13 /* Genera.app */;
@@ -336,22 +302,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				751D56CA256268F0000B0326 /* Color.metal in Sources */,
-				750F000225611E3700E166D4 /* BiomeChangeDelegate.swift in Sources */,
 				750F002B25611E3700E166D4 /* TerrainPresetLoader.swift in Sources */,
 				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
 				750F002825611E3700E166D4 /* TerrainConfigView.swift in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,
 				750F002625611E3700E166D4 /* GameType.swift in Sources */,
-				750F001E25611E3700E166D4 /* EditableValuesStackView.swift in Sources */,
-				750FFFFE25611E3700E166D4 /* EditableBiomeValues.swift in Sources */,
-				750F000125611E3700E166D4 /* BiomeOverview.swift in Sources */,
 				750F002C25611E3700E166D4 /* TerrainPresetView.swift in Sources */,
 				750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */,
-				750F001D25611E3700E166D4 /* EditableConfigValue.swift in Sources */,
 				750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */,
 				750F002725611E3700E166D4 /* GameControllerDelegate.swift in Sources */,
-				750FFFFF25611E3700E166D4 /* EditableBiomeValue.swift in Sources */,
-				750F000425611E3700E166D4 /* EditableFBMConfigValues.swift in Sources */,
 				750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */,
 				750F002E25611E3700E166D4 /* TerrainData.swift in Sources */,
 				750F002A25611E3700E166D4 /* TerrainPresetDelegate.swift in Sources */,
@@ -595,6 +554,10 @@
 		75092A592563B9E2008D2B31 /* Utility */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utility;
+		};
+		75EE4E182563C18700AB5DF8 /* EngineUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EngineUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

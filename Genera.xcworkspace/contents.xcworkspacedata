@@ -8,6 +8,9 @@
       location = "group:src/Engine">
    </FileRef>
    <FileRef
+      location = "group:src/EngineUI">
+   </FileRef>
+   <FileRef
       location = "group:src/GeneraGame">
    </FileRef>
    <FileRef

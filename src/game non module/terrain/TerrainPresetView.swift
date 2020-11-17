@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import EngineUI
 import Utility
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime
