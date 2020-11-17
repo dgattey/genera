@@ -3,8 +3,8 @@
 
 // TODO: @dgattey try to remove dependency on AppKit
 import AppKit
-import DataStructures
 import Engine
+import EngineData
 import UI
 
 /// Contains all the fields to change the values of a particular biome (not its type!)

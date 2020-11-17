@@ -1,7 +1,7 @@
 // TerrainData.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import DataStructures
+import EngineData
 import Foundation
 
 /// Struct for data for terrain generation used to create presets. Mirrors static properties in DefaultTerrainData

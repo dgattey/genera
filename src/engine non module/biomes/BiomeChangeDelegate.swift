@@ -1,7 +1,7 @@
 // BiomeChangeDelegate.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import DataStructures
+import EngineData
 import Foundation
 
 /// Called when changes to biomes happen

@@ -1,7 +1,7 @@
 // DefaultTerrainData.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import DataStructures
+import EngineData
 import Foundation
 
 /// In-memory fallback for default terrain data if it doesn't exist locally

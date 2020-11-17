@@ -1,8 +1,8 @@
 // EditableFBMConfigValues.swift
 // Copyright (c) 2020 Dylan Gattey
 
-import DataStructures
 import Engine
+import EngineData
 import Foundation
 
 /// Creates and holds onto a group of editable config values for FBMData

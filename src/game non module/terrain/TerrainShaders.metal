@@ -10,7 +10,7 @@
 #import "SimplexNoise.h" // here, and all shaders (sharing between here and SimplexNoise is difficult)
 #import "Color.h" // color shader, here
 #import "ShaderIndex.h" // map renderer (engine), shaders
-#import "Biome.h" // everywhere - needs to be in DataStructures
+#import "Biome.h" // everywhere - needs to be in EngineData
 
 using namespace metal;
 

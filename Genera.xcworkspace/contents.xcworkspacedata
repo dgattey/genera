@@ -5,7 +5,13 @@
       location = "group:BuildTools">
    </FileRef>
    <FileRef
-      location = "group:src/Modules">
+      location = "group:src/Engine">
+   </FileRef>
+   <FileRef
+      location = "group:src/GeneraGame">
+   </FileRef>
+   <FileRef
+      location = "group:src/UI">
    </FileRef>
    <FileRef
       location = "group:src/Utility">
