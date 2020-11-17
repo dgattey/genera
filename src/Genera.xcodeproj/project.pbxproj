@@ -110,9 +110,9 @@
 		75037986254A8537002A0C13 = {
 			isa = PBXGroup;
 			children = (
-				750FFF9A25611E3600E166D4 /* engine */,
-				750FFFDE25611E3600E166D4 /* game */,
-				750FFFC625611E3600E166D4 /* macOS */,
+				750FFF9A25611E3600E166D4 /* engine non module */,
+				750FFFDE25611E3600E166D4 /* game non module */,
+				750FFFC625611E3600E166D4 /* macOS non module */,
 				75037995254A8538002A0C13 /* Products */,
 				7586162E2561E51600B61C32 /* Frameworks */,
 			);
@@ -126,13 +126,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		750FFF9A25611E3600E166D4 /* engine */ = {
+		750FFF9A25611E3600E166D4 /* engine non module */ = {
 			isa = PBXGroup;
 			children = (
 				751D56A925625905000B0326 /* shaders */,
 				750FFFA325611E3600E166D4 /* biomes */,
 			);
-			path = engine;
+			path = "engine non module";
 			sourceTree = "<group>";
 		};
 		750FFFA325611E3600E166D4 /* biomes */ = {
@@ -147,7 +147,7 @@
 			path = biomes;
 			sourceTree = "<group>";
 		};
-		750FFFC625611E3600E166D4 /* macOS */ = {
+		750FFFC625611E3600E166D4 /* macOS non module */ = {
 			isa = PBXGroup;
 			children = (
 				750FFFCA25611E3600E166D4 /* GeneraMacOS.entitlements */,
@@ -158,7 +158,7 @@
 				750FFFC725611E3600E166D4 /* view controllers */,
 				750FFFDB25611E3600E166D4 /* movable */,
 			);
-			path = macOS;
+			path = "macOS non module";
 			sourceTree = "<group>";
 		};
 		750FFFC725611E3600E166D4 /* view controllers */ = {
@@ -180,7 +180,7 @@
 			path = movable;
 			sourceTree = "<group>";
 		};
-		750FFFDE25611E3600E166D4 /* game */ = {
+		750FFFDE25611E3600E166D4 /* game non module */ = {
 			isa = PBXGroup;
 			children = (
 				750FFFDF25611E3600E166D4 /* GameViewController.swift */,
@@ -189,7 +189,7 @@
 				750FFFE225611E3600E166D4 /* terrain */,
 				750FFFF125611E3600E166D4 /* grid */,
 			);
-			path = game;
+			path = "game non module";
 			sourceTree = "<group>";
 		};
 		750FFFE225611E3600E166D4 /* terrain */ = {
@@ -508,13 +508,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_INDEX_STORE = YES;
-				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/** $PROJECT_DIR/../Modules/**";
+				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -539,13 +535,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
-					"@executable_path/../Frameworks",
-				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_INDEX_STORE = YES;
-				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/** $PROJECT_DIR/../Modules/**";
+				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";

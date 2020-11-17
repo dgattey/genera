@@ -5,10 +5,10 @@
       location = "group:BuildTools">
    </FileRef>
    <FileRef
-      location = "group:Modules">
+      location = "group:src/Modules">
    </FileRef>
    <FileRef
-      location = "group:Utility">
+      location = "group:src/Utility">
    </FileRef>
    <FileRef
       location = "container:src/Genera.xcodeproj">
