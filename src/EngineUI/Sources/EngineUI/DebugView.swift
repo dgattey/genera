@@ -9,7 +9,7 @@ import UI
 // MARK: - DebugView
 
 /// Creates a stacked debug view, showing some info on it, kept up to date via implementation of the debug delegate
-class DebugView: NSStackView {
+public class DebugView: NSStackView {
     private let visibleChunkBounds = createTextField()
     private let numGeneratedChunks = createTextField()
     private let generationQueue = createTextField()
@@ -36,7 +36,7 @@ class DebugView: NSStackView {
     }
 
     /// Add our views when this view moves to a window
-    override func viewDidMoveToWindow() {
+    override public func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         orientation = .vertical
         alignment = .leading
@@ -53,23 +53,23 @@ class DebugView: NSStackView {
 // MARK: - DebugDelegate
 
 extension DebugView: DebugDelegate {
-    func didUpdateChunkBounds(to value: ChunkRegion) {
+    public func didUpdateChunkBounds(to value: ChunkRegion) {
         DebugView.update(visibleChunkBounds, to: value)
     }
 
-    func didUpdateNumGeneratedChunks(to value: Int) {
+    public func didUpdateNumGeneratedChunks(to value: Int) {
         DebugView.update(numGeneratedChunks, to: value)
     }
 
-    func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int)) {
+    public func didUpdateGenerationQueue(to value: (needsGeneration: Int, inProgress: Int)) {
         DebugView.update(generationQueue, to: value)
     }
 
-    func didUpdateUserPosition(to value: MTLViewport) {
+    public func didUpdateUserPosition(to value: MTLViewport) {
         DebugView.update(userPosition, to: value)
     }
 
-    func didUpdateCurrentViewport(to value: MTLViewport) {
+    public func didUpdateCurrentViewport(to value: MTLViewport) {
         DebugView.update(currentViewport, to: value)
     }
 }

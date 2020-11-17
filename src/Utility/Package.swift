@@ -3,6 +3,7 @@
 
 import PackageDescription
 
+/// Utility functions useful across the board
 let package = Package(
     name: "Utility",
     platforms: [.macOS(.v11)],
@@ -14,8 +15,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Utility",
-            dependencies: []
+            name: "Utility"
         ),
     ]
 )

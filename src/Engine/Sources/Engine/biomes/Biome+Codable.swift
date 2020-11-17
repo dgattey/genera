@@ -1,4 +1,4 @@
-// Biome+Swift.swift
+// Biome+Codable.swift
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation

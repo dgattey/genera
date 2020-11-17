@@ -3,7 +3,7 @@
 
 import Foundation
 
-/// Extends the Obj-C defined Biome with some computed vars for use elsewhere
+/// Extends the Obj-C defined Biome with some computed defaults for use elsewhere
 extension Biome {
     private static var ocean: Biome {
         return Biome(

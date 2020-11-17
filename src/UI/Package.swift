@@ -13,11 +13,9 @@ let package = Package(
             targets: ["UI"]
         ),
     ],
-    dependencies: [.package(path: "Engine")],
     targets: [
         .target(
-            name: "UI",
-            dependencies: ["Engine"]
+            name: "UI"
         ),
     ]
 )

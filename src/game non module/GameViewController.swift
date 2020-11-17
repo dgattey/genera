@@ -3,8 +3,8 @@
 
 import AppKit
 import Engine
+import EngineUI
 import GeneraGame
-import UI
 
 /// All constants for the generic game view controller
 enum GameViewControllerConstant {
