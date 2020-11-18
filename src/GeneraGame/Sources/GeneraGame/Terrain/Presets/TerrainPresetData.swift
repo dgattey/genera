@@ -9,7 +9,6 @@ struct TerrainPresetData: Codable {
     /// All default data if there's nothing saved on disk
     static let `default` = TerrainPresetData(
         presetName: "Default Settings",
-        presetID: "defaultSettings",
         seed: "puppy",
         globalScalar: 0.03,
         seaLevelOffset: -0.82,
@@ -37,9 +36,6 @@ struct TerrainPresetData: Codable {
 
     /// The name of the preset representing this set of defaults
     let presetName: String
-
-    /// The identifer of the preset representing this set of defaults
-    let presetID: String
 
     /// The value that sets the map gen seed
     let seed: String
@@ -73,4 +69,20 @@ struct TerrainPresetData: Codable {
 
     /// The current configuration of biomes
     let biomes: [Biome]
+
+    /// Creates shader config data out of this preset
+    var shaderConfigData: TerrainShaderConfigData {
+        return TerrainShaderConfigData(
+            numBiomes: Int32(biomes.count),
+            elevationColorWeight: elevationColorWeight,
+            moistureColorWeight: moistureColorWeight,
+            globalScalar: globalScalar,
+            seaLevelOffset: seaLevelOffset,
+            elevationDistribution: elevationDistribution,
+            aridness: aridness,
+            moistureDistribution: moistureDistribution,
+            elevationGenerator: elevationFBM,
+            moistureGenerator: moistureFBM
+        )
+    }
 }

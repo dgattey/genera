@@ -2,6 +2,8 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Combine
+import Debug
 import Engine
 import EngineUI
 
@@ -12,6 +14,9 @@ class TerrainConfigView: NSStackView {
     private static let interItemSpacing: CGFloat = 48
 
     // MARK: - variables
+
+    /// To keep track of saving the preset
+    private var savePresetCancellable: AnyCancellable?
 
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {
@@ -98,6 +103,7 @@ class TerrainConfigView: NSStackView {
     /// All current biome values, defaulted to all default biomes
     private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
 
+    /// The biome views
     private let biomeView = EditableValuesStackView()
 
     // MARK: - API
@@ -160,32 +166,7 @@ class TerrainConfigView: NSStackView {
 extension TerrainConfigView: ShaderDataProviderProtocol {
     /// Config data for generation of noise, pulls data from text fields if they exist
     var configData: TerrainShaderConfigData {
-        let elevationGenerator = FBMData(
-            octaves: elevationFBM.octaves.value,
-            persistence: elevationFBM.persistence.value,
-            scale: elevationFBM.scale.value,
-            compression: elevationFBM.compression.value,
-            seed: Self.seed(from: seed.value)
-        )
-        let moistureGenerator = FBMData(
-            octaves: moistureFBM.octaves.value,
-            persistence: moistureFBM.persistence.value,
-            scale: moistureFBM.scale.value,
-            compression: moistureFBM.compression.value,
-            seed: Self.seed(from: seed.value)
-        )
-        return TerrainShaderConfigData(
-            numBiomes: Int32(allBiomes.count),
-            elevationColorWeight: elevationColorWeight.value,
-            moistureColorWeight: moistureColorWeight.value,
-            globalScalar: globalScalar.value,
-            seaLevelOffset: seaLevelOffset.value,
-            elevationDistribution: elevationDistribution.value,
-            aridness: aridness.value,
-            moistureDistribution: moistureDistribution.value,
-            elevationGenerator: elevationGenerator,
-            moistureGenerator: moistureGenerator
-        )
+        return preset().shaderConfigData
     }
 
     /// Bunch of biomes with different elevation and moistures
@@ -197,6 +178,24 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
 // MARK: - TerrainPresetDelegate
 
 extension TerrainConfigView: TerrainPresetDelegate {
+    /// Creates a preset with the current data and a preset name
+    private func preset(named name: String = "") -> TerrainPresetData {
+        return TerrainPresetData(
+            presetName: name,
+            seed: seed.value,
+            globalScalar: globalScalar.value,
+            seaLevelOffset: seaLevelOffset.value,
+            elevationDistribution: elevationDistribution.value,
+            aridness: aridness.value,
+            moistureDistribution: moistureDistribution.value,
+            elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
+            moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
+            elevationColorWeight: elevationColorWeight.value,
+            moistureColorWeight: moistureColorWeight.value,
+            biomes: allBiomes
+        )
+    }
+
     /// Called when the user selects the given preset to change all values
     func selectPreset(_ preset: TerrainPresetData) {
         seed.changeValue(to: preset.seed)
@@ -218,22 +217,14 @@ extension TerrainConfigView: TerrainPresetDelegate {
     }
 
     /// Called when the user wants to save the current data as a preset
-    func saveCurrentDataAsPreset(named name: String, onCompletion: @escaping (_ presetName: String) -> Void) {
-        let preset = TerrainPresetData(
-            presetName: name,
-            presetID: "customPreset-\(name.decomposedStringWithCanonicalMapping)",
-            seed: seed.value,
-            globalScalar: globalScalar.value,
-            seaLevelOffset: seaLevelOffset.value,
-            elevationDistribution: elevationDistribution.value,
-            aridness: aridness.value,
-            moistureDistribution: moistureDistribution.value,
-            elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
-            moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
-            elevationColorWeight: elevationColorWeight.value,
-            moistureColorWeight: moistureColorWeight.value,
-            biomes: allBiomes
-        )
-        TerrainPresetLoader.savePreset(preset, onCompletion: onCompletion)
+    func saveCurrentDataAsPreset(named name: String, onCompletion completion: @escaping (_ presetName: String) -> Void) {
+        savePresetCancellable?.cancel()
+        savePresetCancellable = TerrainPresetLoader
+            .savePreset(preset(named: name))
+            .sink(receiveCompletion: { result in
+                if case let .failure(error) = result {
+                    Logger.log(error)
+                }
+            }, receiveValue: completion)
     }
 }
