@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		75092A522563B9E2008D2B31 /* Engine in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A512563B9E2008D2B31 /* Engine */; };
 		75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A532563B9E2008D2B31 /* GeneraGame */; };
-		75092A582563B9E2008D2B31 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A572563B9E2008D2B31 /* UI */; };
 		750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC825611E3600E166D4 /* SidePanelViewController.swift */; };
 		750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC925611E3600E166D4 /* GeneraWindowController.swift */; };
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
@@ -19,7 +17,6 @@
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
 		751D56CB256268F0000B0326 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C7256268F0000B0326 /* GridShaders.metal */; };
-		75EE4E192563C18700AB5DF8 /* EngineUI in Frameworks */ = {isa = PBXBuildFile; productRef = 75EE4E182563C18700AB5DF8 /* EngineUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,10 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75092A582563B9E2008D2B31 /* UI in Frameworks */,
 				75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */,
-				75EE4E192563C18700AB5DF8 /* EngineUI in Frameworks */,
-				75092A522563B9E2008D2B31 /* Engine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,10 +140,7 @@
 			);
 			name = "Genera (macOS 11)";
 			packageProductDependencies = (
-				75092A512563B9E2008D2B31 /* Engine */,
 				75092A532563B9E2008D2B31 /* GeneraGame */,
-				75092A572563B9E2008D2B31 /* UI */,
-				75EE4E182563C18700AB5DF8 /* EngineUI */,
 			);
 			productName = "Land macOS";
 			productReference = 75037994254A8538002A0C13 /* Genera.app */;
@@ -456,21 +447,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		75092A512563B9E2008D2B31 /* Engine */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Engine;
-		};
 		75092A532563B9E2008D2B31 /* GeneraGame */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GeneraGame;
-		};
-		75092A572563B9E2008D2B31 /* UI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UI;
-		};
-		75EE4E182563C18700AB5DF8 /* EngineUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = EngineUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

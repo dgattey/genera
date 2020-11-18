@@ -4,7 +4,7 @@
 import PackageDescription
 
 /// All the reusable UI that the app itself should use
-let package = Package(
+let uiPackage = Package(
     name: "UI",
     platforms: [.macOS(.v11)],
     products: [

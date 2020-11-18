@@ -4,7 +4,7 @@
 import PackageDescription
 
 /// The core of the non-engine specific game (shaders + code to run the Genera specific game)
-let package = Package(
+let generaGamePackage = Package(
     name: "GeneraGame",
     platforms: [.macOS(.v11)],
     products: [

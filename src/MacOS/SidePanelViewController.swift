@@ -3,7 +3,6 @@
 
 import AppKit
 import Debug
-import EngineUI
 import UI
 
 /// All the views that appear in our side panel, within a scrollable stack view

@@ -4,7 +4,7 @@
 import PackageDescription
 
 /// Game engine itself, used from the game & externally
-let package = Package(
+let enginePackage = Package(
     name: "Engine",
     platforms: [.macOS(.v11)],
     products: [

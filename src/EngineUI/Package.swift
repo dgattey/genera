@@ -4,7 +4,7 @@
 import PackageDescription
 
 /// All resuable engine-powered UI
-let package = Package(
+let enginueUIPackage = Package(
     name: "EngineUI",
     platforms: [.macOS(.v11)],
     products: [

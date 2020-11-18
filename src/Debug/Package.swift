@@ -4,7 +4,7 @@
 import PackageDescription
 
 /// Provides everything to debug data cross app (needs UI to be able to show views)
-let package = Package(
+let debugPackage = Package(
     name: "Debug",
     platforms: [.macOS(.v11)],
     products: [
