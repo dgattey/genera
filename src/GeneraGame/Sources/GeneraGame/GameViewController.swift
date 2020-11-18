@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Debug
 import Engine
 import EngineUI
 
@@ -13,35 +14,48 @@ enum GameViewControllerConstant {
 
 /// The game's view controller - owns the coordinator and kicks off the game itself
 public class GameViewController: NSViewController {
-    /// Just a reference to the game view itself
-    @IBOutlet var gameView: InteractableMTKView!
+    /// Debug delegate passthrough
+    public weak var debugDelegate: DebugDelegate? {
+        didSet {
+            updateDelegates()
+        }
+    }
+
+    /// Returns the current config view if existent from the current coordinator
+    public var currentConfigView: NSView? {
+        switch gameType {
+        case .terrain:
+            return terrainCoordinator?.shaderDataProvider
+        case .grid:
+            return nil
+        }
+    }
 
     /// Check `gameType` to verify what type of `GameCoordinator<T>` this should be! Unfortunately doesn't allow for
     /// a more specific use since `GameCoordinator<T>` is a generic with an associated type within it - super difficult
     private var coordinator: Any?
 
     /// Specializes the coordinator to terrain provider
-    var terrainCoordinator: GameCoordinator<TerrainChunkDataProvider>? {
+    private var terrainCoordinator: GameCoordinator<TerrainChunkDataProvider>? {
         coordinator as? GameCoordinator<TerrainChunkDataProvider>
     }
 
     /// Specializes the coordinator to grid provider
-    var gridCoordinator: GameCoordinator<GridTileChunkDataProvider>? {
+    private var gridCoordinator: GameCoordinator<GridTileChunkDataProvider>? {
         coordinator as? GameCoordinator<GridTileChunkDataProvider>
     }
 
     /// Controls which coordinator we use!
     private var gameType: GameType = .terrain
 
-    /// Debug delegate passthrough
-    public weak var debugDelegate: DebugDelegate? {
-        didSet {
-            updateDebugDelegates()
+    /// Casts the view to a game view if possible
+    private var gameView: InteractableMTKView! {
+        guard let gameView = view as? InteractableMTKView else {
+            assertionFailure("The game view isn't set correctly")
+            return nil
         }
+        return gameView
     }
-
-    /// Shader config data provider passthrough
-    public weak var gameControllerDelegate: GameControllerDelegate?
 
     /// Starts the game by creating the coordinator, then kicking it off
     public func reset(to gameType: GameType) {
@@ -53,16 +67,14 @@ public class GameViewController: NSViewController {
                 fatalError("No coordinator created")
             }
             self.coordinator = coordinator
-            gameControllerDelegate?.gameController(hasNewDataProvider: coordinator.shaderDataProvider)
-            updateDebugDelegates()
+            updateDelegates()
             coordinator.start()
         case .terrain:
             guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
                 fatalError("No coordinator created")
             }
             self.coordinator = coordinator
-            gameControllerDelegate?.gameController(hasNewDataProvider: coordinator.shaderDataProvider)
-            updateDebugDelegates()
+            updateDelegates()
             coordinator.start()
         }
     }
@@ -72,12 +84,14 @@ public class GameViewController: NSViewController {
     }
 
     /// Calls right coordinator to set the debug delegate
-    private func updateDebugDelegates() {
+    private func updateDelegates() {
         switch gameType {
         case .terrain:
             terrainCoordinator?.debugDelegate = debugDelegate
+            terrainCoordinator?.shaderDataProvider?.updateDelegate = self
         case .grid:
             gridCoordinator?.debugDelegate = debugDelegate
+            gridCoordinator?.shaderDataProvider?.updateDelegate = self
         }
     }
 }

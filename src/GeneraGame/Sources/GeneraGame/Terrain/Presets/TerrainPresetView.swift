@@ -2,8 +2,9 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Debug
 import EngineUI
-import Utility
+import UI
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime
 class TerrainPresetView: EditableValuesStackView {

@@ -2,10 +2,10 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Combine
+import Debug
 import Metal
 import simd
 import SwiftPriorityQueue
-import Utility
 
 /// Constants for the map generator
 private enum ChunkCoordinatorConstant {
@@ -103,7 +103,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
     private func setChunkData(for chunk: Chunk, to data: [DataProvider.ChunkDataType]) {
         chunkAccessSemaphore.wait()
         chunks[chunk] = data
-        debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
+        debugDelegate?.debugDataDidUpdate(.numChunks, to: chunks.count)
         chunkAccessSemaphore.signal()
     }
 
@@ -137,7 +137,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
                 generateChunkIfNeeded(Chunk(x: x, y: y))
             }
         }
-        debugDelegate?.didUpdateChunkBounds(to: region)
+        debugDelegate?.debugDataDidUpdate(.chunkBounds, to: region)
     }
 
     // MARK: - helper functions
@@ -161,14 +161,14 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         guard chunk.value.isWithin(visibleRegion),
               !chunkData(contains: chunk.value)
         else {
-            debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationCount, inProgressCount))
+            debugDelegate?.debugDataDidUpdate(.queuedChunks, to: (needsGeneration: needsGenerationCount, inProgress: inProgressCount))
             return
         }
 
         // Add it to our in progress queue and drop the semaphore
         generationAccessSemaphore.wait()
         inProgressGenerationQueue.insert(chunk.value)
-        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        debugDelegate?.debugDataDidUpdate(.queuedChunks, to: (needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         Logger.log("*** Generating! \(chunk)")
         generationAccessSemaphore.signal()
 
@@ -181,7 +181,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 
         generationAccessSemaphore.wait()
         inProgressGenerationQueue.remove(chunk.value)
-        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        debugDelegate?.debugDataDidUpdate(.queuedChunks, to: (needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         generationAccessSemaphore.signal()
 
         DispatchQueue.main.async { [weak self] in
@@ -227,7 +227,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 
         // Evict the chunk itself!
         let oldData = chunks.removeValue(forKey: evictableChunk.value)
-        debugDelegate?.didUpdateNumGeneratedChunks(to: chunks.count)
+        debugDelegate?.debugDataDidUpdate(.numChunks, to: chunks.count)
         chunkAccessSemaphore.signal()
 
         // Only notify if we actually removed something (as we may have already removed this guy)
@@ -279,7 +279,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         needsGenerationQueue.remove(countedChunk)
         needsGenerationQueue.push(countedChunk)
         Logger.log("~~~ Queued generation of \(countedChunk)")
-        debugDelegate?.didUpdateGenerationQueue(to: (needsGenerationQueue.count, inProgressGenerationQueue.count))
+        debugDelegate?.debugDataDidUpdate(.queuedChunks, to: (needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         generationAccessSemaphore.signal()
 
         // Make sure our event loop is running!

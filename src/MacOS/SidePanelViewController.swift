@@ -2,7 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import Engine
+import Debug
 import EngineUI
 import UI
 
@@ -12,6 +12,9 @@ class SidePanelViewController: NSViewController {
 
     /// The spacing between subviews
     static let interItemSpacing: CGFloat = 48
+
+    /// Minimum width of the sidebar so our toolbar header shows up fine
+    private static let minViewWidth: CGFloat = 300
 
     // MARK: - variables
 
@@ -45,10 +48,12 @@ class SidePanelViewController: NSViewController {
 
     // MARK: - functions
 
-    /// Adds a new scrollable stack view to the underlying view after configuring it properly
-    private func addScrollableStackView() {
+    /// Create a scrollable stack view in the main view
+    override func viewDidLoad() {
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
+            stackView.widthAnchor.constraint(greaterThanOrEqualToConstant: SidePanelViewController.minViewWidth),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -56,22 +61,16 @@ class SidePanelViewController: NSViewController {
         ])
     }
 
-    /// Create a scrollable stack view, adding the config and debug views to it
-    override func viewDidLoad() {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        addScrollableStackView()
-    }
-
-    /// Swaps a config view out for an existing old one
-    func resetViews<T: ShaderDataProviderProtocol>(with dataProvider: T? = nil) {
+    /// Removes non-sticky views from the stack view, adds missing sticky views, and then adds an
+    /// optional config view on top.
+    func resetViews(toIncludeConfigView configView: NSView? = nil) {
         Set(stackView.underlyingStackView.views).subtracting(stickyViews).forEach { removableView in
             removableView.removeFromSuperview()
         }
-        // Adds sticky views below config views
         Set(stickyViews).subtracting(stackView.underlyingStackView.views).forEach { viewToAdd in
             stackView.underlyingStackView.addView(viewToAdd, in: .bottom)
         }
-        if let configView = dataProvider as? NSView {
+        if let configView = configView {
             stackView.underlyingStackView.addView(configView, in: .top)
         }
     }

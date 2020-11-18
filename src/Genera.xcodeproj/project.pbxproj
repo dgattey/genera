@@ -10,7 +10,6 @@
 		75092A522563B9E2008D2B31 /* Engine in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A512563B9E2008D2B31 /* Engine */; };
 		75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A532563B9E2008D2B31 /* GeneraGame */; };
 		75092A582563B9E2008D2B31 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A572563B9E2008D2B31 /* UI */; };
-		75092A5A2563B9E2008D2B31 /* Utility in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A592563B9E2008D2B31 /* Utility */; };
 		750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC825611E3600E166D4 /* SidePanelViewController.swift */; };
 		750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC925611E3600E166D4 /* GeneraWindowController.swift */; };
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
@@ -59,7 +58,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				75092A582563B9E2008D2B31 /* UI in Frameworks */,
-				75092A5A2563B9E2008D2B31 /* Utility in Frameworks */,
 				75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */,
 				75EE4E192563C18700AB5DF8 /* EngineUI in Frameworks */,
 				75092A522563B9E2008D2B31 /* Engine in Frameworks */,
@@ -151,7 +149,6 @@
 				75092A512563B9E2008D2B31 /* Engine */,
 				75092A532563B9E2008D2B31 /* GeneraGame */,
 				75092A572563B9E2008D2B31 /* UI */,
-				75092A592563B9E2008D2B31 /* Utility */,
 				75EE4E182563C18700AB5DF8 /* EngineUI */,
 			);
 			productName = "Land macOS";
@@ -470,10 +467,6 @@
 		75092A572563B9E2008D2B31 /* UI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UI;
-		};
-		75092A592563B9E2008D2B31 /* Utility */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Utility;
 		};
 		75EE4E182563C18700AB5DF8 /* EngineUI */ = {
 			isa = XCSwiftPackageProductDependency;

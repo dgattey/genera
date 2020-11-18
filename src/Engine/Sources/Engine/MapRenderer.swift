@@ -1,6 +1,7 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Debug
 import Metal
 import MetalKit
 import simd

@@ -384,9 +384,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </customView>
-                    <connections>
-                        <outlet property="gameView" destination="Yjw-54-B3L" id="yda-SX-iUf"/>
-                    </connections>
                 </viewController>
                 <customObject id="3kV-Zz-fDz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

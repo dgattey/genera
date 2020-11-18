@@ -2,7 +2,6 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import Engine
 import GeneraGame
 
 /// Owns the views in the app and starts the game controller after an event loop on app start
@@ -27,15 +26,14 @@ class GeneraWindowController: NSWindowController {
         self.gameViewController = gameViewController
         self.sidePanelViewController = sidePanelViewController
         gameViewController.debugDelegate = sidePanelViewController.debugDelegate
-        gameViewController.gameControllerDelegate = self
 
         DispatchQueue.main.async {
-            gameViewController.reset(to: startingGameType)
+            self.changeGameType(to: startingGameType)
         }
     }
 
     /// Finds the first view controller of a certain type in the given view controller to get around Storyboards being absolute shit
-    func firstViewController<T: NSViewController>(in parentController: NSViewController) -> T? {
+    private func firstViewController<T: NSViewController>(in parentController: NSViewController) -> T? {
         for viewController in parentController.children {
             if let match = viewController as? T {
                 return match
@@ -47,15 +45,11 @@ class GeneraWindowController: NSWindowController {
 
         return nil
     }
-}
 
-// MARK: - GameControllerDelegate
-
-extension GeneraWindowController: GameControllerDelegate {
-    /// Adds the new config view to the sidebar
-    func gameController<T: ShaderDataProviderProtocol>(hasNewDataProvider dataProvider: T?) {
-        sidePanelViewController?.resetViews(with: dataProvider)
-        dataProvider?.updateDelegate = gameViewController
+    /// Actually changes the game type and orchestrates the sidebar change as a result
+    private func changeGameType(to gameType: GameType) {
+        gameViewController?.reset(to: gameType)
+        sidePanelViewController?.resetViews(toIncludeConfigView: gameViewController?.currentConfigView)
     }
 }
 
@@ -126,7 +120,7 @@ extension GeneraWindowController: NSToolbarDelegate {
         }
         let selectedItem = segmentedControl.selectedSegment
         if let gameType = GameType(rawValue: GameType.titles[selectedItem]) {
-            gameViewController?.reset(to: gameType)
+            changeGameType(to: gameType)
         }
     }
 

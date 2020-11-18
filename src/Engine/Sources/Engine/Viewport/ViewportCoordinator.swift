@@ -1,6 +1,7 @@
 // ViewportCoordinator.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Debug
 import Metal
 
 /// Private static constants for the viewport coordinator
@@ -123,7 +124,7 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
             let chunkSizeInPixels = DataProvider.ChunkDataType.chunkSizeInPixels
             visibleRegion = ViewportCoordinator<DataProvider>.visibleRegion(from: userPosition, chunkSizeInPixels: chunkSizeInPixels)
             viewportCoordinatorDelegate?.viewportCoordinator(didUpdateUserPositionTo: userPosition)
-            debugDelegate?.didUpdateUserPosition(to: userPosition)
+            debugDelegate?.debugDataDidUpdate(.userViewport, to: userPosition)
         }
     }
 
@@ -141,7 +142,7 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
     /// This is the viewport for drawing, not including translation
     private(set) var currentViewport: MTLViewport {
         didSet {
-            debugDelegate?.didUpdateCurrentViewport(to: userPosition)
+            debugDelegate?.debugDataDidUpdate(.windowViewport, to: userPosition)
         }
     }
 

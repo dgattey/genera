@@ -5,6 +5,9 @@
       location = "group:BuildTools">
    </FileRef>
    <FileRef
+      location = "group:src/Debug">
+   </FileRef>
+   <FileRef
       location = "group:src/Engine">
    </FileRef>
    <FileRef
@@ -15,9 +18,6 @@
    </FileRef>
    <FileRef
       location = "group:src/UI">
-   </FileRef>
-   <FileRef
-      location = "group:src/Utility">
    </FileRef>
    <FileRef
       location = "container:src/Genera.xcodeproj">

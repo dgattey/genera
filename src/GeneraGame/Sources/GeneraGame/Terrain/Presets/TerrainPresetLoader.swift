@@ -1,8 +1,8 @@
 // TerrainPresetLoader.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Debug
 import Foundation
-import Utility
 
 /// Loads and saves terrain presets to disk
 enum TerrainPresetLoader {

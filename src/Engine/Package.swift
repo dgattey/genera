@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/davecom/SwiftPriorityQueue", .upToNextMinor(from: "1.3.1")),
-        .package(path: "Utility"),
+        .package(path: "Debug"),
     ],
     targets: [
         /// All data structures, pure ObjC
@@ -29,7 +29,7 @@ let package = Package(
             dependencies: [
                 "SwiftPriorityQueue",
                 "EngineData",
-                "Utility",
+                "Debug",
             ]
         ),
     ]

@@ -92,7 +92,6 @@ class TerrainConfigView: NSStackView {
         let view = BiomeOverview()
         biomes.biomeChangeDelegate = view
         view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
-        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
         return view
     }()
 
