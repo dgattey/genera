@@ -25,7 +25,7 @@ enum TerrainPresetLoader {
 
     /// Location of default presets - will get created if they don't exist
     private static var defaultPresetsPath: String {
-        presetsFolderURL.appendingPathComponent(DefaultTerrainData.presetID).appendingPathExtension(fileExtension).path
+        presetsFolderURL.appendingPathComponent(TerrainPresetData.default.presetID).appendingPathExtension(fileExtension).path
     }
 
     /// Creates the presets folder itself if it's missing
@@ -41,7 +41,7 @@ enum TerrainPresetLoader {
     }
 
     /// Saves the given preset to disk in the presets folder
-    static func savePreset(_ preset: TerrainData, onCompletion: ((_ presetName: String) -> Void)? = nil) {
+    static func savePreset(_ preset: TerrainPresetData, onCompletion: ((_ presetName: String) -> Void)? = nil) {
         DispatchQueue.global(qos: .utility).async {
             createPresetsFolderIfNonexistent()
             let encoder = JSONEncoder()
@@ -61,12 +61,12 @@ enum TerrainPresetLoader {
     }
 
     /// Loads all plists in the presets folder to try converting them - doesn't run from a background queue
-    static func loadPresets(completion: (([TerrainData]) -> Void)?) {
+    static func loadPresets(completion: (([TerrainPresetData]) -> Void)?) {
         createPresetsFolderIfNonexistent()
 
         // Save default preset if missing
         if !FileManager.default.fileExists(atPath: defaultPresetsPath) {
-            savePreset(DefaultTerrainData.terrainData) { _ in
+            savePreset(TerrainPresetData.default) { _ in
                 // When we save the file, load again to pick it up
                 loadPresets(completion: completion)
             }
@@ -86,7 +86,7 @@ enum TerrainPresetLoader {
         }
 
         // Try decoding each file recursively in the subdirectory
-        var terrainDataArray: [TerrainData] = []
+        var terrainDataArray: [TerrainPresetData] = []
         for case let fileURL as URL in enumerator {
             guard let fileAttributes = try? fileURL.resourceValues(forKeys: [.isRegularFileKey]),
                   fileAttributes.isRegularFile ?? false
@@ -95,7 +95,7 @@ enum TerrainPresetLoader {
                 continue
             }
             if let fileData = try? Data(contentsOf: fileURL),
-               let terrainData = try? decoder.decode(TerrainData.self, from: fileData)
+               let terrainData = try? decoder.decode(TerrainPresetData.self, from: fileData)
             {
                 terrainDataArray.append(terrainData)
             } else {

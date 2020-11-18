@@ -35,55 +35,55 @@ class TerrainConfigView: NSStackView {
 
     /// Seed for generation of the map (string)
     private let seed = EditableConfigValue(
-        fallback: DefaultTerrainData.seed,
+        fallback: TerrainPresetData.default.seed,
         label: "Terrain seed"
     )
 
     /// Scaling constant for all coordinates on the map
     private let globalScalar = EditableConfigValue(
-        fallback: DefaultTerrainData.globalScalar,
+        fallback: TerrainPresetData.default.globalScalar,
         label: "Global scalar"
     )
 
     /// FBM values for elevation noise generation
-    private let elevationFBM = EditableFBMConfigValues(defaultData: DefaultTerrainData.elevationFBM)
+    private let elevationFBM = EditableFBMConfigValues(defaultData: TerrainPresetData.default.elevationFBM)
 
     /// As a float, how far off of zero we should make sea level
     private let seaLevelOffset = EditableConfigValue(
-        fallback: DefaultTerrainData.seaLevelOffset,
+        fallback: TerrainPresetData.default.seaLevelOffset,
         label: "Sea level offset"
     )
 
     /// The distribution of values (spiky or not) for elevation
     private let elevationDistribution = EditableConfigValue(
-        fallback: DefaultTerrainData.elevationDistribution,
+        fallback: TerrainPresetData.default.elevationDistribution,
         label: "Elevation distribution"
     )
 
     /// How much elevation contributes to color of the biome
     private let elevationColorWeight = EditableConfigValue(
-        fallback: DefaultTerrainData.elevationColorWeight,
+        fallback: TerrainPresetData.default.elevationColorWeight,
         label: "Color weight"
     )
 
     /// FBM values for moisture noise generation
-    private let moistureFBM = EditableFBMConfigValues(defaultData: DefaultTerrainData.moistureFBM)
+    private let moistureFBM = EditableFBMConfigValues(defaultData: TerrainPresetData.default.moistureFBM)
 
     /// How dry "default" is on the map
     private let aridness = EditableConfigValue(
-        fallback: DefaultTerrainData.aridness,
+        fallback: TerrainPresetData.default.aridness,
         label: "Aridness"
     )
 
     /// The distribution of values (spiky or not) for moisture
     private let moistureDistribution = EditableConfigValue(
-        fallback: DefaultTerrainData.moistureDistribution,
+        fallback: TerrainPresetData.default.moistureDistribution,
         label: "Moisture distribution"
     )
 
     /// How much moisture contributes to color of the biome
     private let moistureColorWeight = EditableConfigValue(
-        fallback: DefaultTerrainData.moistureColorWeight,
+        fallback: TerrainPresetData.default.moistureColorWeight,
         label: "Color weight"
     )
 
@@ -198,7 +198,7 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
 
 extension TerrainConfigView: TerrainPresetDelegate {
     /// Called when the user selects the given preset to change all values
-    func selectPreset(_ preset: TerrainData) {
+    func selectPreset(_ preset: TerrainPresetData) {
         seed.changeValue(to: preset.seed)
         globalScalar.changeValue(to: preset.globalScalar)
 
@@ -219,7 +219,7 @@ extension TerrainConfigView: TerrainPresetDelegate {
 
     /// Called when the user wants to save the current data as a preset
     func saveCurrentDataAsPreset(named name: String, onCompletion: @escaping (_ presetName: String) -> Void) {
-        let preset = TerrainData(
+        let preset = TerrainPresetData(
             presetName: name,
             presetID: "customPreset-\(name.decomposedStringWithCanonicalMapping)",
             seed: seed.value,

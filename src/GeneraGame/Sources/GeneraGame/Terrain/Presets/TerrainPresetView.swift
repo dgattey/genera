@@ -11,7 +11,7 @@ class TerrainPresetView: EditableValuesStackView {
     // MARK: - variables
 
     /// Collects preset name -> preset data groupings
-    private var presets: [String: TerrainData] = [:]
+    private var presets: [String: TerrainPresetData] = [:]
 
     /// Called when things happen in the presets
     weak var presetDelegate: TerrainPresetDelegate?
@@ -22,7 +22,7 @@ class TerrainPresetView: EditableValuesStackView {
         button.controlSize = .large
         button.target = self
         button.action = #selector(selectPreset)
-        button.addItem(withTitle: DefaultTerrainData.presetName)
+        button.addItem(withTitle: TerrainPresetData.default.presetName)
         return button
     }()
 
@@ -187,11 +187,11 @@ class TerrainPresetView: EditableValuesStackView {
             } else if let previousSelectedItem = previousSelectedItem, keys.contains(previousSelectedItem) {
                 strongSelf.presetChooser.selectItem(withTitle: previousSelectedItem)
             } else {
-                strongSelf.presetChooser.selectItem(withTitle: DefaultTerrainData.presetName)
+                strongSelf.presetChooser.selectItem(withTitle: TerrainPresetData.default.presetName)
             }
             strongSelf.selectPreset(strongSelf.presetChooser)
         }
-        let handlePresets = { [weak self] (presets: [TerrainData]) in
+        let handlePresets = { [weak self] (presets: [TerrainPresetData]) in
             let keys = presets.map { $0.presetName }
             self?.presets = Dictionary(uniqueKeysWithValues: zip(keys, presets))
             DispatchQueue.main.async {
