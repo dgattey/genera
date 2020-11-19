@@ -124,7 +124,7 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
             let chunkSizeInPixels = DataProvider.ChunkDataType.chunkSizeInPixels
             visibleRegion = ViewportCoordinator<DataProvider>.visibleRegion(from: userPosition, chunkSizeInPixels: chunkSizeInPixels)
             viewportCoordinatorDelegate?.viewportCoordinator(didUpdateUserPositionTo: userPosition)
-            debugDelegate?.debugDataDidUpdate(.userViewport, to: userPosition)
+            debugger?.subject(for: .userViewport).send(userPosition)
         }
     }
 
@@ -135,14 +135,14 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
 
     weak var dataProvider: DataProvider?
     weak var viewportCoordinatorDelegate: ViewportCoordinatorDelegate?
-    weak var debugDelegate: DebugDelegate?
+    weak var debugger: DebugProtocol?
 
     // MARK: - ViewportDataProvider
 
     /// This is the viewport for drawing, not including translation
     private(set) var currentViewport: MTLViewport {
         didSet {
-            debugDelegate?.debugDataDidUpdate(.windowViewport, to: userPosition)
+            debugger?.subject(for: .windowViewport).send(userPosition)
         }
     }
 
