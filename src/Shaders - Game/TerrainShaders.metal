@@ -32,8 +32,8 @@ vertex FragmentVertex terrainVertexShader(uint vertexID [[vertex_id]],
     float2 position = vertexArray[vertexID].position;
     
     // Calculate with viewport applied (translate into 0-2) range
-    float x = (position.x - (*viewport).origin.x) / (*viewport).size.x / (*viewport).scaleFactor.x;
-    float y = (position.y - (*viewport).origin.y) / (*viewport).size.y / (*viewport).scaleFactor.y;
+    float x = (position.x - (*viewport).origin.x) / (*viewport).size.x * (*viewport).scaleFactor.x;
+    float y = (position.y - (*viewport).origin.y) / (*viewport).size.y * (*viewport).scaleFactor.y;
     
     FragmentVertex out;
     out.position = float4(x, y, 0.0, 1.0);

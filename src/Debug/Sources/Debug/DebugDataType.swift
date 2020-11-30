@@ -19,4 +19,7 @@ public enum DebugDataType: String {
 
     /// The current window's viewport itself
     case windowViewport = "Window viewport"
+
+    /// Viewport buffer data to pass to GPU
+    case viewportBufferData = "Viewport Buffer Data"
 }

@@ -37,8 +37,8 @@ vertex FragmentVertex gridVertexShader(uint vertexID [[vertex_id]],
     
     // Calculate with viewport applied
     float2 roundedPixelSpacePosition = round(position * 100) / 100;
-    float x = (roundedPixelSpacePosition.x - (*viewport).origin.x) / (*viewport).size.x / (*viewport).scaleFactor.x;
-    float y = (roundedPixelSpacePosition.y - (*viewport).origin.y) / (*viewport).size.y / (*viewport).scaleFactor.y;
+    float x = (roundedPixelSpacePosition.x - (*viewport).origin.x) / (*viewport).size.x * (*viewport).scaleFactor.x;
+    float y = (roundedPixelSpacePosition.y - (*viewport).origin.y) / (*viewport).size.y * (*viewport).scaleFactor.y;
     
     FragmentVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);

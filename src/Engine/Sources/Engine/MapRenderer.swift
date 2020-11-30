@@ -15,6 +15,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
+    weak var debugger: DebugProtocol?
 
     // MARK: - variables
 
@@ -120,10 +121,11 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     /// Makes sure bytes are stored for the new user position viewport, scaling by the view's scale factor so we're
     /// drawing the same thing consistently on any screen
-    private func updateUserViewportBufferData(to viewport: MTLViewport) {
+    private func updateUserViewportBufferData(to viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
         drawingSemaphore.signal()
-        let scaleFactor = view.drawableSize / view.bounds.size
+        let scaleFactor = drawableSize / view.bounds.size
         viewportBufferData = ViewportData(viewport, scaleFactor: scaleFactor)
+        debugger?.subject(for: .viewportBufferData).send(viewportBufferData)
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
@@ -266,8 +268,8 @@ extension MapRenderer: ChunkCoordinatorDelegate {
 
 extension MapRenderer: ViewportCoordinatorDelegate {
     /// Updates viewport buffer data with the new viewport info
-    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport) {
-        updateUserViewportBufferData(to: viewport)
+    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
+        updateUserViewportBufferData(to: viewport, inDrawableSize: drawableSize)
     }
 
     /// Forwards to the chunk coordinator
