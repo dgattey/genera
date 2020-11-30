@@ -117,13 +117,13 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     /// Makes sure bytes are stored for the new user position viewport
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
+        drawingSemaphore.signal()
         viewportBufferData = [Float(viewport.originX),
                               Float(viewport.originY),
                               Float(viewport.width),
                               Float(viewport.height)]
-        view
-            .setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width,
-                                    height: viewport.height))
+        view.setNeedsDisplay(view.bounds)
+        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)

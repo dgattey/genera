@@ -198,9 +198,8 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         currentZoomLevel = max(ViewportCoordinatorConstant.ZoomLevel.min, min(ViewportCoordinatorConstant.ZoomLevel.max, currentZoomLevel * changeAmount))
 
         // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center)
-        // TODO: @dgattey this assumes pixel density of screen is 2x, figure out how to find that.
-        let normX = 4 * Double(point.x) - currentViewport.width
-        let normY = 4 * Double(point.y) - currentViewport.height
+        let normX = 2 * Double(point.x) - currentViewport.width
+        let normY = 2 * Double(point.y) - currentViewport.height
 
         // Change the origin based on where we're zooming into
         let originDeltaX = normX * prevZoom - normX * currentZoomLevel

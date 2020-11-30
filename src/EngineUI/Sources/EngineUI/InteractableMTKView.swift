@@ -76,11 +76,17 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
     /// Use the y axis's scrolling delta to zoom the viewport in or out
     override public func scrollWheel(with event: NSEvent) {
         // Trackpad is changed phase, mouse wheel is empty phase
-        guard event.phase == .changed || event.phase == [] else {
+        guard event.phase == .changed || event.phase == [],
+              let windowView = window?.contentView
+        else {
             return
         }
         let amount = Double(event.scrollingDeltaY)
-        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount), at: event.locationInWindow)
+
+        // Figures out if we're currently at pixel density of 2 or 1 (Retina vs. regular)
+        let scaleFactor = drawableSize / bounds.size
+        let convertedPoint = convert(event.locationInWindow, from: windowView)
+        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount), at: convertedPoint * scaleFactor)
     }
 
     /// If the key is a direction, add it to our array and start panning in that direction
@@ -93,11 +99,9 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
         // Insert the direction, and start the event loop for panning if needed
         keyPressDirections.insert(direction)
         if panViewEventLoop == nil {
-            panViewEventLoop = DispatchQueue.main.schedule(
-                after: DispatchQueue.SchedulerTimeType(.now()),
-                interval: InteractableMTKView.eventLoopLength,
-                panView
-            )
+            panViewEventLoop = DispatchQueue.main.schedule(after: DispatchQueue.SchedulerTimeType(.now()),
+                                                           interval: InteractableMTKView.eventLoopLength,
+                                                           panView)
         }
     }
 
@@ -130,11 +134,9 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
         // Start the event loop for panning if needed
         if panViewEventLoop == nil {
-            panViewEventLoop = DispatchQueue.main.schedule(
-                after: DispatchQueue.SchedulerTimeType(.now()),
-                interval: InteractableMTKView.eventLoopLength,
-                panView
-            )
+            panViewEventLoop = DispatchQueue.main.schedule(after: DispatchQueue.SchedulerTimeType(.now()),
+                                                           interval: InteractableMTKView.eventLoopLength,
+                                                           panView)
         }
     }
 
