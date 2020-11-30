@@ -66,7 +66,8 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
         mainDevice = device
         self.view = view
-        viewportBufferData = ViewportData(origin: view.bounds.origin, size: view.bounds.size, scaleFactor: CGSize(width: 1, height: 1))
+        let scaleFactor = view.drawableSize / view.bounds.size
+        viewportBufferData = ViewportData(origin: view.bounds.origin, size: view.bounds.size, scaleFactor: scaleFactor)
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
         self.dataProvider = dataProvider
@@ -117,10 +118,12 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
 
-    /// Makes sure bytes are stored for the new user position viewport
+    /// Makes sure bytes are stored for the new user position viewport, scaling by the view's scale factor so we're
+    /// drawing the same thing consistently on any screen
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
         drawingSemaphore.signal()
-        viewportBufferData = ViewportData(viewport, scaleFactor: CGSize(width: 1, height: 1))
+        let scaleFactor = view.drawableSize / view.bounds.size
+        viewportBufferData = ViewportData(viewport, scaleFactor: scaleFactor)
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
