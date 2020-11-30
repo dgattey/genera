@@ -5,6 +5,7 @@
 
 #import <metal_stdlib>
 #import <simd/simd.h>
+#import "ViewportData.h" // map renderer (engine), shaders
 #import "GridShaderTypes.h" // Move into folder with this file
 #import "SimplexNoise.h" // here, and all shaders (sharing between here and SimplexNoise is difficult)
 #import "ShaderIndex.h" // map renderer (engine), shaders
@@ -31,15 +32,13 @@ typedef struct {
 // This function creates color and position data for the vertices from viewport size
 vertex FragmentVertex gridVertexShader(uint vertexID [[vertex_id]],
                                        const device GridVertex *vertexArray [[buffer(ShaderIndexVertices)]],
-                                       constant float4 *viewport [[buffer(ShaderIndexViewport)]]) {
+                                       const device ViewportData *viewport [[buffer(ShaderIndexViewport)]]) {
     float2 position = vertexArray[vertexID].position;
     
     // Calculate with viewport applied
     float2 roundedPixelSpacePosition = round(position * 100) / 100;
-    float2 viewportOrigin = float2((*viewport).x, (*viewport).y);
-    float2 viewportSize = float2((*viewport).z, (*viewport).w);
-    float x = (roundedPixelSpacePosition.x - viewportOrigin.x) / viewportSize.x;
-    float y = (roundedPixelSpacePosition.y - viewportOrigin.y) / viewportSize.y;
+    float x = (roundedPixelSpacePosition.x - (*viewport).origin.x) / (*viewport).size.x / (*viewport).scaleFactor.x;
+    float y = (roundedPixelSpacePosition.y - (*viewport).origin.y) / (*viewport).size.y / (*viewport).scaleFactor.y;
     
     FragmentVertex out;
     out.position = vector_float4(x, y, 0.0, 1.0);

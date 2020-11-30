@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Debug
+import EngineData
 import Metal
 import MetalKit
 import simd
@@ -36,7 +37,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     private var vertexBuffers: [Chunk: MTLBuffer] = Dictionary()
 
     /// Keeps track of current viewport data, passed into rendering
-    private var viewportBufferData: [Float] = []
+    private var viewportBufferData: ViewportData
 
     /// Provides most data for this renderer
     private weak var dataProvider: ChunkDataProvider?
@@ -65,6 +66,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
         mainDevice = device
         self.view = view
+        viewportBufferData = ViewportData(origin: view.bounds.origin, size: view.bounds.size, scaleFactor: CGSize(width: 1, height: 1))
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
         self.dataProvider = dataProvider
@@ -118,10 +120,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     /// Makes sure bytes are stored for the new user position viewport
     private func updateUserViewportBufferData(to viewport: MTLViewport) {
         drawingSemaphore.signal()
-        viewportBufferData = [Float(viewport.originX),
-                              Float(viewport.originY),
-                              Float(viewport.width),
-                              Float(viewport.height)]
+        viewportBufferData = ViewportData(viewport, scaleFactor: CGSize(width: 1, height: 1))
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
@@ -129,7 +128,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBytes(&viewportBufferData,
-                               length: viewportBufferData.count * MemoryLayout<Float>.stride,
+                               length: MemoryLayout<ViewportData>.stride,
                                index: ShaderIndex.viewport.rawValue)
 
         for (_, vertexBuffer) in vertexBuffers {
