@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "SwiftFormat",
+        "repositoryURL": "https://github.com/nicklockwood/SwiftFormat",
+        "state": {
+          "branch": null,
+          "revision": "70f5cf51fed37f847556bb28d9d267675f337402",
+          "version": "0.47.3"
+        }
+      },
+      {
         "package": "SwiftPriorityQueue",
         "repositoryURL": "https://github.com/davecom/SwiftPriorityQueue",
         "state": {

@@ -7,144 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		750F000025611E3700E166D4 /* BiomeType+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA625611E3600E166D4 /* BiomeType+Swift.swift */; };
-		750F000125611E3700E166D4 /* BiomeOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA825611E3600E166D4 /* BiomeOverview.swift */; };
-		750F000225611E3700E166D4 /* BiomeChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */; };
-		750F000325611E3700E166D4 /* FBM+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAB25611E3600E166D4 /* FBM+Swift.swift */; };
-		750F000425611E3700E166D4 /* EditableFBMConfigValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */; };
-		750F000525611E3700E166D4 /* Biome+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAD25611E3600E166D4 /* Biome+Defaults.swift */; };
-		750F000625611E3700E166D4 /* Biome+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAE25611E3600E166D4 /* Biome+Swift.swift */; };
-		750F000725611E3700E166D4 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFAF25611E3600E166D4 /* MapRenderer.swift */; };
-		750F000825611E3700E166D4 /* ChunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB125611E3600E166D4 /* ChunkCoordinator.swift */; };
-		750F000925611E3700E166D4 /* ChunkCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB225611E3600E166D4 /* ChunkCoordinatorDelegate.swift */; };
-		750F000A25611E3700E166D4 /* DatedChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB325611E3600E166D4 /* DatedChunk.swift */; };
-		750F000B25611E3700E166D4 /* CountedChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB425611E3600E166D4 /* CountedChunk.swift */; };
-		750F000C25611E3700E166D4 /* Chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB525611E3600E166D4 /* Chunk.swift */; };
-		750F000D25611E3700E166D4 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFB925611E3600E166D4 /* SimplexNoise.metal */; };
-		750F000E25611E3700E166D4 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFBC25611E3600E166D4 /* Color.metal */; };
-		750F000F25611E3700E166D4 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFBE25611E3600E166D4 /* GameCoordinator.swift */; };
-		750F001025611E3700E166D4 /* VertexProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC025611E3600E166D4 /* VertexProtocol.swift */; };
-		750F001125611E3700E166D4 /* ChunkDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC125611E3600E166D4 /* ChunkDataProtocol.swift */; };
-		750F001225611E3700E166D4 /* ShaderDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC225611E3600E166D4 /* ShaderDataProtocol.swift */; };
-		750F001325611E3700E166D4 /* ChunkDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC325611E3600E166D4 /* ChunkDataProviderProtocol.swift */; };
-		750F001425611E3700E166D4 /* ShaderDataProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC425611E3600E166D4 /* ShaderDataProviderProtocol.swift */; };
+		75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */ = {isa = PBXBuildFile; productRef = 75092A532563B9E2008D2B31 /* GeneraGame */; };
 		750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC825611E3600E166D4 /* SidePanelViewController.swift */; };
 		750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFC925611E3600E166D4 /* GeneraWindowController.swift */; };
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
 		750F001925611E3700E166D4 /* GeneraMacOSAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */; };
-		750F001A25611E3700E166D4 /* ConfigUpdateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD025611E3600E166D4 /* ConfigUpdateDelegate.swift */; };
-		750F001B25611E3700E166D4 /* UserInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD125611E3600E166D4 /* UserInteractionDelegate.swift */; };
 		750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD225611E3600E166D4 /* AppDelegate.swift */; };
-		750F001D25611E3700E166D4 /* EditableConfigValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD425611E3600E166D4 /* EditableConfigValue.swift */; };
-		750F001E25611E3700E166D4 /* EditableValuesStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */; };
-		750F001F25611E3700E166D4 /* InteractableViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD725611E3600E166D4 /* InteractableViewProtocol.swift */; };
-		750F002025611E3700E166D4 /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD825611E3600E166D4 /* ScrollableStackView.swift */; };
-		750F002125611E3700E166D4 /* InteractableMTKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD925611E3600E166D4 /* InteractableMTKView.swift */; };
-		750F002225611E3700E166D4 /* LabeledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDA25611E3600E166D4 /* LabeledView.swift */; };
-		750F002325611E3700E166D4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDC25611E3600E166D4 /* DebugView.swift */; };
-		750F002425611E3700E166D4 /* DebugDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDD25611E3600E166D4 /* DebugDelegate.swift */; };
-		750F002525611E3700E166D4 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFDF25611E3600E166D4 /* GameViewController.swift */; };
-		750F002625611E3700E166D4 /* GameType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE025611E3600E166D4 /* GameType.swift */; };
-		750F002725611E3700E166D4 /* GameControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */; };
-		750F002825611E3700E166D4 /* TerrainConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE325611E3600E166D4 /* TerrainConfigView.swift */; };
-		750F002925611E3700E166D4 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE725611E3600E166D4 /* TerrainShaders.metal */; };
-		750F002A25611E3700E166D4 /* TerrainPresetDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */; };
-		750F002B25611E3700E166D4 /* TerrainPresetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */; };
-		750F002C25611E3700E166D4 /* TerrainPresetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */; };
-		750F002D25611E3700E166D4 /* TerrainChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */; };
-		750F002E25611E3700E166D4 /* TerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEE25611E3600E166D4 /* TerrainData.swift */; };
-		750F002F25611E3700E166D4 /* TerrainTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFEF25611E3600E166D4 /* TerrainTile.swift */; };
-		750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */; };
-		750F003125611E3700E166D4 /* GridTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF225611E3600E166D4 /* GridTile.swift */; };
-		750F003225611E3700E166D4 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF325611E3600E166D4 /* GridShaders.metal */; };
-		750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */; };
-		750F003425611E3700E166D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFF725611E3700E166D4 /* Logger.swift */; };
-		750FFFF825611E3700E166D4 /* ZoomDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9C25611E3600E166D4 /* ZoomDirection.swift */; };
-		750FFFF925611E3700E166D4 /* VectoredDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9D25611E3600E166D4 /* VectoredDirection.swift */; };
-		750FFFFA25611E3700E166D4 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFF9E25611E3600E166D4 /* Direction.swift */; };
-		750FFFFB25611E3700E166D4 /* ViewportDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA025611E3600E166D4 /* ViewportDataProvider.swift */; };
-		750FFFFC25611E3700E166D4 /* ViewportCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA125611E3600E166D4 /* ViewportCoordinator.swift */; };
-		750FFFFD25611E3700E166D4 /* ViewportCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA225611E3600E166D4 /* ViewportCoordinatorDelegate.swift */; };
-		750FFFFE25611E3700E166D4 /* EditableBiomeValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */; };
-		750FFFFF25611E3700E166D4 /* EditableBiomeValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */; };
-		757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */ = {isa = PBXBuildFile; productRef = 757DF61D254F687F005723D5 /* SwiftPriorityQueue */; };
+		751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C2256268F0000B0326 /* SimplexNoise.metal */; };
+		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
+		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
+		751D56CB256268F0000B0326 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C7256268F0000B0326 /* GridShaders.metal */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		759CE2632561EDBC00EC37FC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		75037994254A8538002A0C13 /* Genera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Genera.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		750FFF9C25611E3600E166D4 /* ZoomDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDirection.swift; sourceTree = "<group>"; };
-		750FFF9D25611E3600E166D4 /* VectoredDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VectoredDirection.swift; sourceTree = "<group>"; };
-		750FFF9E25611E3600E166D4 /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
-		750FFFA025611E3600E166D4 /* ViewportDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportDataProvider.swift; sourceTree = "<group>"; };
-		750FFFA125611E3600E166D4 /* ViewportCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportCoordinator.swift; sourceTree = "<group>"; };
-		750FFFA225611E3600E166D4 /* ViewportCoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportCoordinatorDelegate.swift; sourceTree = "<group>"; };
-		750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableBiomeValues.swift; sourceTree = "<group>"; };
-		750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableBiomeValue.swift; sourceTree = "<group>"; };
-		750FFFA625611E3600E166D4 /* BiomeType+Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BiomeType+Swift.swift"; sourceTree = "<group>"; };
-		750FFFA725611E3600E166D4 /* BiomeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BiomeType.h; sourceTree = "<group>"; };
-		750FFFA825611E3600E166D4 /* BiomeOverview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiomeOverview.swift; sourceTree = "<group>"; };
-		750FFFA925611E3600E166D4 /* Biome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Biome.h; sourceTree = "<group>"; };
-		750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiomeChangeDelegate.swift; sourceTree = "<group>"; };
-		750FFFAB25611E3600E166D4 /* FBM+Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FBM+Swift.swift"; sourceTree = "<group>"; };
-		750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableFBMConfigValues.swift; sourceTree = "<group>"; };
-		750FFFAD25611E3600E166D4 /* Biome+Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Biome+Defaults.swift"; sourceTree = "<group>"; };
-		750FFFAE25611E3600E166D4 /* Biome+Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Biome+Swift.swift"; sourceTree = "<group>"; };
-		750FFFAF25611E3600E166D4 /* MapRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRenderer.swift; sourceTree = "<group>"; };
-		750FFFB125611E3600E166D4 /* ChunkCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkCoordinator.swift; sourceTree = "<group>"; };
-		750FFFB225611E3600E166D4 /* ChunkCoordinatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkCoordinatorDelegate.swift; sourceTree = "<group>"; };
-		750FFFB325611E3600E166D4 /* DatedChunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatedChunk.swift; sourceTree = "<group>"; };
-		750FFFB425611E3600E166D4 /* CountedChunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountedChunk.swift; sourceTree = "<group>"; };
-		750FFFB525611E3600E166D4 /* Chunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chunk.swift; sourceTree = "<group>"; };
-		750FFFB625611E3600E166D4 /* NSEnum+Metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEnum+Metal.h"; sourceTree = "<group>"; };
-		750FFFB825611E3600E166D4 /* FBMData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMData.h; sourceTree = "<group>"; };
-		750FFFB925611E3600E166D4 /* SimplexNoise.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = SimplexNoise.metal; sourceTree = "<group>"; };
-		750FFFBA25611E3600E166D4 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
-		750FFFBB25611E3600E166D4 /* SimplexNoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplexNoise.h; sourceTree = "<group>"; };
-		750FFFBC25611E3600E166D4 /* Color.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
-		750FFFBD25611E3600E166D4 /* ShaderIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderIndex.h; sourceTree = "<group>"; };
-		750FFFBE25611E3600E166D4 /* GameCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
-		750FFFC025611E3600E166D4 /* VertexProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexProtocol.swift; sourceTree = "<group>"; };
-		750FFFC125611E3600E166D4 /* ChunkDataProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkDataProtocol.swift; sourceTree = "<group>"; };
-		750FFFC225611E3600E166D4 /* ShaderDataProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderDataProtocol.swift; sourceTree = "<group>"; };
-		750FFFC325611E3600E166D4 /* ChunkDataProviderProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChunkDataProviderProtocol.swift; sourceTree = "<group>"; };
-		750FFFC425611E3600E166D4 /* ShaderDataProviderProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderDataProviderProtocol.swift; sourceTree = "<group>"; };
-		750FFFC525611E3600E166D4 /* SharedTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedTypes.h; sourceTree = "<group>"; };
 		750FFFC825611E3600E166D4 /* SidePanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidePanelViewController.swift; sourceTree = "<group>"; };
 		750FFFC925611E3600E166D4 /* GeneraWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneraWindowController.swift; sourceTree = "<group>"; };
 		750FFFCA25611E3600E166D4 /* GeneraMacOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GeneraMacOS.entitlements; sourceTree = "<group>"; };
 		750FFFCC25611E3600E166D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GeneraMacOSInfo.plist; sourceTree = "<group>"; };
 		750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GeneraMacOSAssets.xcassets; sourceTree = "<group>"; };
-		750FFFD025611E3600E166D4 /* ConfigUpdateDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigUpdateDelegate.swift; sourceTree = "<group>"; };
-		750FFFD125611E3600E166D4 /* UserInteractionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionDelegate.swift; sourceTree = "<group>"; };
 		750FFFD225611E3600E166D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		750FFFD425611E3600E166D4 /* EditableConfigValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableConfigValue.swift; sourceTree = "<group>"; };
-		750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableValuesStackView.swift; sourceTree = "<group>"; };
-		750FFFD725611E3600E166D4 /* InteractableViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractableViewProtocol.swift; sourceTree = "<group>"; };
-		750FFFD825611E3600E166D4 /* ScrollableStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
-		750FFFD925611E3600E166D4 /* InteractableMTKView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractableMTKView.swift; sourceTree = "<group>"; };
-		750FFFDA25611E3600E166D4 /* LabeledView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledView.swift; sourceTree = "<group>"; };
-		750FFFDC25611E3600E166D4 /* DebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
-		750FFFDD25611E3600E166D4 /* DebugDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugDelegate.swift; sourceTree = "<group>"; };
-		750FFFDF25611E3600E166D4 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		750FFFE025611E3600E166D4 /* GameType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameType.swift; sourceTree = "<group>"; };
-		750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameControllerDelegate.swift; sourceTree = "<group>"; };
-		750FFFE325611E3600E166D4 /* TerrainConfigView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainConfigView.swift; sourceTree = "<group>"; };
-		750FFFE525611E3600E166D4 /* TerrainShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainShaderTypes.h; sourceTree = "<group>"; };
-		750FFFE625611E3600E166D4 /* TerrainShaderConfigData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainShaderConfigData.h; sourceTree = "<group>"; };
-		750FFFE725611E3600E166D4 /* TerrainShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
-		750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetDelegate.swift; sourceTree = "<group>"; };
-		750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetLoader.swift; sourceTree = "<group>"; };
-		750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainPresetView.swift; sourceTree = "<group>"; };
-		750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainChunkDataProvider.swift; sourceTree = "<group>"; };
-		750FFFEE25611E3600E166D4 /* TerrainData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainData.swift; sourceTree = "<group>"; };
-		750FFFEF25611E3600E166D4 /* TerrainTile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TerrainTile.swift; sourceTree = "<group>"; };
-		750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTerrainData.swift; sourceTree = "<group>"; };
-		750FFFF225611E3600E166D4 /* GridTile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridTile.swift; sourceTree = "<group>"; };
-		750FFFF325611E3600E166D4 /* GridShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
-		750FFFF425611E3600E166D4 /* GridShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridShaderTypes.h; sourceTree = "<group>"; };
-		750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridTileChunkDataProvider.swift; sourceTree = "<group>"; };
-		750FFFF725611E3700E166D4 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		751D56C1256268F0000B0326 /* SimplexNoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimplexNoise.h; sourceTree = "<group>"; };
+		751D56C2256268F0000B0326 /* SimplexNoise.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimplexNoise.metal; sourceTree = "<group>"; };
+		751D56C3256268F0000B0326 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		751D56C4256268F0000B0326 /* Color.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
+		751D56C5256268F0000B0326 /* TerrainShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
+		751D56C7256268F0000B0326 /* GridShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				757DF61E254F687F005723D5 /* SwiftPriorityQueue in Frameworks */,
+				75092A542563B9E2008D2B31 /* GeneraGame in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,12 +64,11 @@
 		75037986254A8537002A0C13 = {
 			isa = PBXGroup;
 			children = (
-				750FFF9A25611E3600E166D4 /* engine */,
-				750FFFDE25611E3600E166D4 /* game */,
-				750FFFC625611E3600E166D4 /* macOS */,
-				750FFFC525611E3600E166D4 /* SharedTypes.h */,
-				750FFFF625611E3700E166D4 /* util */,
+				751D56A925625905000B0326 /* Shaders - Engine */,
+				750FFFF125611E3600E166D4 /* Shaders - Game */,
+				750FFFC625611E3600E166D4 /* MacOS */,
 				75037995254A8538002A0C13 /* Products */,
+				7586162E2561E51600B61C32 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,232 +80,45 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		750FFF9A25611E3600E166D4 /* engine */ = {
+		750FFFC625611E3600E166D4 /* MacOS */ = {
 			isa = PBXGroup;
 			children = (
-				750FFF9B25611E3600E166D4 /* directions */,
-				750FFF9F25611E3600E166D4 /* viewport */,
-				750FFFA325611E3600E166D4 /* biomes */,
-				750FFFAF25611E3600E166D4 /* MapRenderer.swift */,
-				750FFFB025611E3600E166D4 /* chunks */,
-				750FFFB625611E3600E166D4 /* NSEnum+Metal.h */,
-				750FFFB725611E3600E166D4 /* shaders */,
-				750FFFBE25611E3600E166D4 /* GameCoordinator.swift */,
-				750FFFBF25611E3600E166D4 /* data providers */,
-			);
-			path = engine;
-			sourceTree = "<group>";
-		};
-		750FFF9B25611E3600E166D4 /* directions */ = {
-			isa = PBXGroup;
-			children = (
-				750FFF9C25611E3600E166D4 /* ZoomDirection.swift */,
-				750FFF9D25611E3600E166D4 /* VectoredDirection.swift */,
-				750FFF9E25611E3600E166D4 /* Direction.swift */,
-			);
-			path = directions;
-			sourceTree = "<group>";
-		};
-		750FFF9F25611E3600E166D4 /* viewport */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFA025611E3600E166D4 /* ViewportDataProvider.swift */,
-				750FFFA125611E3600E166D4 /* ViewportCoordinator.swift */,
-				750FFFA225611E3600E166D4 /* ViewportCoordinatorDelegate.swift */,
-			);
-			path = viewport;
-			sourceTree = "<group>";
-		};
-		750FFFA325611E3600E166D4 /* biomes */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFA425611E3600E166D4 /* EditableBiomeValues.swift */,
-				750FFFA525611E3600E166D4 /* EditableBiomeValue.swift */,
-				750FFFA625611E3600E166D4 /* BiomeType+Swift.swift */,
-				750FFFA725611E3600E166D4 /* BiomeType.h */,
-				750FFFA825611E3600E166D4 /* BiomeOverview.swift */,
-				750FFFA925611E3600E166D4 /* Biome.h */,
-				750FFFAA25611E3600E166D4 /* BiomeChangeDelegate.swift */,
-				750FFFAB25611E3600E166D4 /* FBM+Swift.swift */,
-				750FFFAC25611E3600E166D4 /* EditableFBMConfigValues.swift */,
-				750FFFAD25611E3600E166D4 /* Biome+Defaults.swift */,
-				750FFFAE25611E3600E166D4 /* Biome+Swift.swift */,
-			);
-			path = biomes;
-			sourceTree = "<group>";
-		};
-		750FFFB025611E3600E166D4 /* chunks */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFB125611E3600E166D4 /* ChunkCoordinator.swift */,
-				750FFFB225611E3600E166D4 /* ChunkCoordinatorDelegate.swift */,
-				750FFFB325611E3600E166D4 /* DatedChunk.swift */,
-				750FFFB425611E3600E166D4 /* CountedChunk.swift */,
-				750FFFB525611E3600E166D4 /* Chunk.swift */,
-			);
-			path = chunks;
-			sourceTree = "<group>";
-		};
-		750FFFB725611E3600E166D4 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFB825611E3600E166D4 /* FBMData.h */,
-				750FFFB925611E3600E166D4 /* SimplexNoise.metal */,
-				750FFFBA25611E3600E166D4 /* Color.h */,
-				750FFFBB25611E3600E166D4 /* SimplexNoise.h */,
-				750FFFBC25611E3600E166D4 /* Color.metal */,
-				750FFFBD25611E3600E166D4 /* ShaderIndex.h */,
-			);
-			path = shaders;
-			sourceTree = "<group>";
-		};
-		750FFFBF25611E3600E166D4 /* data providers */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFC025611E3600E166D4 /* VertexProtocol.swift */,
-				750FFFC125611E3600E166D4 /* ChunkDataProtocol.swift */,
-				750FFFC225611E3600E166D4 /* ShaderDataProtocol.swift */,
-				750FFFC325611E3600E166D4 /* ChunkDataProviderProtocol.swift */,
-				750FFFC425611E3600E166D4 /* ShaderDataProviderProtocol.swift */,
-			);
-			path = "data providers";
-			sourceTree = "<group>";
-		};
-		750FFFC625611E3600E166D4 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFC725611E3600E166D4 /* view controllers */,
+				750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */,
+				750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */,
 				750FFFCA25611E3600E166D4 /* GeneraMacOS.entitlements */,
 				750FFFCB25611E3600E166D4 /* Main.storyboard */,
-				750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */,
-				750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */,
-				750FFFCF25611E3600E166D4 /* delegates */,
-				750FFFD325611E3600E166D4 /* editable values */,
-				750FFFD625611E3600E166D4 /* views */,
-				750FFFDB25611E3600E166D4 /* debug */,
-			);
-			path = macOS;
-			sourceTree = "<group>";
-		};
-		750FFFC725611E3600E166D4 /* view controllers */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFC825611E3600E166D4 /* SidePanelViewController.swift */,
-				750FFFC925611E3600E166D4 /* GeneraWindowController.swift */,
-			);
-			path = "view controllers";
-			sourceTree = "<group>";
-		};
-		750FFFCF25611E3600E166D4 /* delegates */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFD025611E3600E166D4 /* ConfigUpdateDelegate.swift */,
-				750FFFD125611E3600E166D4 /* UserInteractionDelegate.swift */,
 				750FFFD225611E3600E166D4 /* AppDelegate.swift */,
+				750FFFC925611E3600E166D4 /* GeneraWindowController.swift */,
+				750FFFC825611E3600E166D4 /* SidePanelViewController.swift */,
 			);
-			path = delegates;
+			path = MacOS;
 			sourceTree = "<group>";
 		};
-		750FFFD325611E3600E166D4 /* editable values */ = {
+		750FFFF125611E3600E166D4 /* Shaders - Game */ = {
 			isa = PBXGroup;
 			children = (
-				750FFFD425611E3600E166D4 /* EditableConfigValue.swift */,
-				750FFFD525611E3600E166D4 /* EditableValuesStackView.swift */,
+				751D56C7256268F0000B0326 /* GridShaders.metal */,
+				751D56C5256268F0000B0326 /* TerrainShaders.metal */,
 			);
-			path = "editable values";
+			path = "Shaders - Game";
 			sourceTree = "<group>";
 		};
-		750FFFD625611E3600E166D4 /* views */ = {
+		751D56A925625905000B0326 /* Shaders - Engine */ = {
 			isa = PBXGroup;
 			children = (
-				750FFFD725611E3600E166D4 /* InteractableViewProtocol.swift */,
-				750FFFD825611E3600E166D4 /* ScrollableStackView.swift */,
-				750FFFD925611E3600E166D4 /* InteractableMTKView.swift */,
-				750FFFDA25611E3600E166D4 /* LabeledView.swift */,
+				751D56C3256268F0000B0326 /* Color.h */,
+				751D56C1256268F0000B0326 /* SimplexNoise.h */,
+				751D56C4256268F0000B0326 /* Color.metal */,
+				751D56C2256268F0000B0326 /* SimplexNoise.metal */,
 			);
-			path = views;
+			path = "Shaders - Engine";
 			sourceTree = "<group>";
 		};
-		750FFFDB25611E3600E166D4 /* debug */ = {
+		7586162E2561E51600B61C32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				750FFFDC25611E3600E166D4 /* DebugView.swift */,
-				750FFFDD25611E3600E166D4 /* DebugDelegate.swift */,
 			);
-			path = debug;
-			sourceTree = "<group>";
-		};
-		750FFFDE25611E3600E166D4 /* game */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFDF25611E3600E166D4 /* GameViewController.swift */,
-				750FFFE025611E3600E166D4 /* GameType.swift */,
-				750FFFE125611E3600E166D4 /* GameControllerDelegate.swift */,
-				750FFFE225611E3600E166D4 /* terrain */,
-				750FFFF125611E3600E166D4 /* grid */,
-			);
-			path = game;
-			sourceTree = "<group>";
-		};
-		750FFFE225611E3600E166D4 /* terrain */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFE325611E3600E166D4 /* TerrainConfigView.swift */,
-				750FFFE425611E3600E166D4 /* shaders */,
-				750FFFE825611E3600E166D4 /* presets */,
-				750FFFEC25611E3600E166D4 /* data */,
-			);
-			path = terrain;
-			sourceTree = "<group>";
-		};
-		750FFFE425611E3600E166D4 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFE525611E3600E166D4 /* TerrainShaderTypes.h */,
-				750FFFE625611E3600E166D4 /* TerrainShaderConfigData.h */,
-				750FFFE725611E3600E166D4 /* TerrainShaders.metal */,
-			);
-			path = shaders;
-			sourceTree = "<group>";
-		};
-		750FFFE825611E3600E166D4 /* presets */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFE925611E3600E166D4 /* TerrainPresetDelegate.swift */,
-				750FFFEA25611E3600E166D4 /* TerrainPresetLoader.swift */,
-				750FFFEB25611E3600E166D4 /* TerrainPresetView.swift */,
-			);
-			path = presets;
-			sourceTree = "<group>";
-		};
-		750FFFEC25611E3600E166D4 /* data */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFED25611E3600E166D4 /* TerrainChunkDataProvider.swift */,
-				750FFFEE25611E3600E166D4 /* TerrainData.swift */,
-				750FFFEF25611E3600E166D4 /* TerrainTile.swift */,
-				750FFFF025611E3600E166D4 /* DefaultTerrainData.swift */,
-			);
-			path = data;
-			sourceTree = "<group>";
-		};
-		750FFFF125611E3600E166D4 /* grid */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFF225611E3600E166D4 /* GridTile.swift */,
-				750FFFF325611E3600E166D4 /* GridShaders.metal */,
-				750FFFF425611E3600E166D4 /* GridShaderTypes.h */,
-				750FFFF525611E3600E166D4 /* GridTileChunkDataProvider.swift */,
-			);
-			path = grid;
-			sourceTree = "<group>";
-		};
-		750FFFF625611E3700E166D4 /* util */ = {
-			isa = PBXGroup;
-			children = (
-				750FFFF725611E3700E166D4 /* Logger.swift */,
-			);
-			path = util;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -418,6 +132,7 @@
 				75037990254A8538002A0C13 /* Sources */,
 				75037991254A8538002A0C13 /* Frameworks */,
 				75037992254A8538002A0C13 /* Resources */,
+				759CE2632561EDBC00EC37FC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -425,7 +140,7 @@
 			);
 			name = "Genera (macOS 11)";
 			packageProductDependencies = (
-				757DF61D254F687F005723D5 /* SwiftPriorityQueue */,
+				75092A532563B9E2008D2B31 /* GeneraGame */,
 			);
 			productName = "Land macOS";
 			productReference = 75037994254A8538002A0C13 /* Genera.app */;
@@ -497,7 +212,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "# Formats Swift files\n${SRCROOT}/../buildTools/format-swift.zsh\n";
+			shellScript = "# Formats Swift files\n${SRCROOT}/../BuildTools/format-swift.zsh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -506,64 +221,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				750F002025611E3700E166D4 /* ScrollableStackView.swift in Sources */,
-				750F001F25611E3700E166D4 /* InteractableViewProtocol.swift in Sources */,
-				750F000A25611E3700E166D4 /* DatedChunk.swift in Sources */,
-				750FFFF825611E3700E166D4 /* ZoomDirection.swift in Sources */,
-				750F000725611E3700E166D4 /* MapRenderer.swift in Sources */,
-				750F003425611E3700E166D4 /* Logger.swift in Sources */,
-				750F000825611E3700E166D4 /* ChunkCoordinator.swift in Sources */,
-				750F000225611E3700E166D4 /* BiomeChangeDelegate.swift in Sources */,
-				750F001225611E3700E166D4 /* ShaderDataProtocol.swift in Sources */,
-				750F000E25611E3700E166D4 /* Color.metal in Sources */,
-				750F000F25611E3700E166D4 /* GameCoordinator.swift in Sources */,
-				750FFFFD25611E3700E166D4 /* ViewportCoordinatorDelegate.swift in Sources */,
-				750F002B25611E3700E166D4 /* TerrainPresetLoader.swift in Sources */,
-				750F001A25611E3700E166D4 /* ConfigUpdateDelegate.swift in Sources */,
-				750F001425611E3700E166D4 /* ShaderDataProviderProtocol.swift in Sources */,
-				750F000325611E3700E166D4 /* FBM+Swift.swift in Sources */,
-				750F001B25611E3700E166D4 /* UserInteractionDelegate.swift in Sources */,
-				750F000525611E3700E166D4 /* Biome+Defaults.swift in Sources */,
-				750F002825611E3700E166D4 /* TerrainConfigView.swift in Sources */,
+				751D56CA256268F0000B0326 /* Color.metal in Sources */,
+				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,
-				750F002625611E3700E166D4 /* GameType.swift in Sources */,
-				750F001E25611E3700E166D4 /* EditableValuesStackView.swift in Sources */,
-				750F000B25611E3700E166D4 /* CountedChunk.swift in Sources */,
-				750FFFF925611E3700E166D4 /* VectoredDirection.swift in Sources */,
-				750F002F25611E3700E166D4 /* TerrainTile.swift in Sources */,
-				750FFFFE25611E3700E166D4 /* EditableBiomeValues.swift in Sources */,
-				750F000D25611E3700E166D4 /* SimplexNoise.metal in Sources */,
-				750F003225611E3700E166D4 /* GridShaders.metal in Sources */,
-				750F000025611E3700E166D4 /* BiomeType+Swift.swift in Sources */,
-				750F000125611E3700E166D4 /* BiomeOverview.swift in Sources */,
-				750F000925611E3700E166D4 /* ChunkCoordinatorDelegate.swift in Sources */,
-				750F000C25611E3700E166D4 /* Chunk.swift in Sources */,
-				750F002925611E3700E166D4 /* TerrainShaders.metal in Sources */,
-				750F002425611E3700E166D4 /* DebugDelegate.swift in Sources */,
-				750F002C25611E3700E166D4 /* TerrainPresetView.swift in Sources */,
-				750F000625611E3700E166D4 /* Biome+Swift.swift in Sources */,
-				750FFFFB25611E3700E166D4 /* ViewportDataProvider.swift in Sources */,
-				750F003025611E3700E166D4 /* DefaultTerrainData.swift in Sources */,
-				750F001D25611E3700E166D4 /* EditableConfigValue.swift in Sources */,
 				750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */,
-				750FFFFA25611E3700E166D4 /* Direction.swift in Sources */,
-				750F002725611E3700E166D4 /* GameControllerDelegate.swift in Sources */,
-				750FFFFF25611E3700E166D4 /* EditableBiomeValue.swift in Sources */,
-				750F002225611E3700E166D4 /* LabeledView.swift in Sources */,
-				750F001025611E3700E166D4 /* VertexProtocol.swift in Sources */,
-				750F000425611E3700E166D4 /* EditableFBMConfigValues.swift in Sources */,
-				750FFFFC25611E3700E166D4 /* ViewportCoordinator.swift in Sources */,
-				750F003325611E3700E166D4 /* GridTileChunkDataProvider.swift in Sources */,
-				750F002E25611E3700E166D4 /* TerrainData.swift in Sources */,
-				750F002A25611E3700E166D4 /* TerrainPresetDelegate.swift in Sources */,
-				750F002D25611E3700E166D4 /* TerrainChunkDataProvider.swift in Sources */,
-				750F002525611E3700E166D4 /* GameViewController.swift in Sources */,
-				750F001325611E3700E166D4 /* ChunkDataProviderProtocol.swift in Sources */,
-				750F002325611E3700E166D4 /* DebugView.swift in Sources */,
+				751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */,
+				751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */,
 				750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */,
-				750F003125611E3700E166D4 /* GridTile.swift in Sources */,
-				750F001125611E3700E166D4 /* ChunkDataProtocol.swift in Sources */,
-				750F002125611E3700E166D4 /* InteractableMTKView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +297,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_ENABLE_MODULES = YES;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -686,6 +351,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_ENABLE_MODULES = YES;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -697,28 +363,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/GeneraMacOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MacOS/GeneraMacOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				EXCLUDED_SOURCE_FILE_NAMES = "$SRCROOT/../buildTools/*";
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
-				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
+				INFOPLIST_FILE = MacOS/GeneraMacOSInfo.plist;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_INDEX_STORE = YES;
 				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -729,28 +390,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/GeneraMacOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MacOS/GeneraMacOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				EXCLUDED_SOURCE_FILE_NAMES = "$SRCROOT/../buildTools/*";
 				HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
-				INFOPLIST_FILE = macOS/GeneraMacOSInfo.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
-					"@executable_path/../Frameworks",
-				);
+				INFOPLIST_FILE = MacOS/GeneraMacOSInfo.plist;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_INDEX_STORE = YES;
 				MTL_HEADER_SEARCH_PATHS = "$PROJECT_DIR/**";
 				PRODUCT_BUNDLE_IDENTIFIER = me.dgattey.Genera;
 				PRODUCT_NAME = Genera;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_OBJC_BRIDGING_HEADER = SharedTypes.h;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -791,10 +447,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		757DF61D254F687F005723D5 /* SwiftPriorityQueue */ = {
+		75092A532563B9E2008D2B31 /* GeneraGame */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 757DF61C254F687F005723D5 /* XCRemoteSwiftPackageReference "SwiftPriorityQueue" */;
-			productName = SwiftPriorityQueue;
+			productName = GeneraGame;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
