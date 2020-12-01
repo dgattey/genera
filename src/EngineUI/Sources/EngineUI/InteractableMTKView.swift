@@ -19,6 +19,9 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
     /// Scales mouse move values to make them cleaner
     private static let mouseMoveScalar: Double = 0.25
 
+    /// Extra padding to add to the titlebar view to make it appear correctly
+    private static let titlebarPadding: CGFloat = 10
+
     /// Converts a key press event into a direction using key code
     private static func direction(fromKeyPressEvent event: NSEvent) -> VectoredDirection<Double>? {
         guard let direction = Direction(from: event.keyCode) else {
@@ -58,6 +61,61 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
     /// Runs the processer for pans to notify the viewport
     private var panViewEventLoop: Cancellable?
+
+    /// Keeps track of the tracking area for making changes to the titlebar view's visibility
+    private var titlebarTrackingArea: NSTrackingArea?
+
+    /// A dummy view that sits where the titlebar does (frame matches) and gives a little indication that this is the titlebar
+    private var titlebarView: NSView = {
+        let view = NSView(frame: .zero)
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.windowBackgroundColor.withAlphaComponent(0.5).cgColor
+        view.layer?.borderColor = NSColor.windowFrameTextColor.withAlphaComponent(0.3).cgColor
+        view.layer?.borderWidth = 1.0
+        view.isHidden = true
+        return view
+    }()
+
+    // MARK: - config
+
+    /// Makes sure our titlebar view is properly added & set up
+    override public func viewDidMoveToSuperview() {
+        guard titlebarView.superview == nil else {
+            return
+        }
+        if superview == nil {
+            titlebarView.removeFromSuperview()
+        } else {
+            addSubview(titlebarView)
+        }
+    }
+
+    /// Allows us to keep track (haha) of where the mouse is to check how close it is to the titlebar
+    override public func updateTrackingAreas() {
+        if titlebarTrackingArea != nil, let trackingArea = titlebarTrackingArea {
+            removeTrackingArea(trackingArea)
+        }
+        let trackingArea = NSTrackingArea(rect: bounds,
+                                          options: [.mouseMoved, .mouseEnteredAndExited, .activeAlways],
+                                          owner: self,
+                                          userInfo: nil)
+        addTrackingArea(trackingArea)
+        titlebarTrackingArea = trackingArea
+    }
+
+    /// Ensures our titlebar view is sized right, since we're not using constraints (padded a bit!)
+    override public func resizeSubviews(withOldSize _: NSSize) {
+        guard let layoutRect = window?.contentLayoutRect else {
+            return
+        }
+        let intersectionRect = frame.intersection(layoutRect)
+        titlebarView.animator().isHidden = true
+        titlebarView.frame = CGRect(x: frame.minX - InteractableMTKView.titlebarPadding,
+                                    y: intersectionRect.origin.y + intersectionRect.size.height,
+                                    width: frame.size.width + 2 * InteractableMTKView.titlebarPadding,
+                                    height: frame.size.height - intersectionRect.size.height + InteractableMTKView
+                                        .titlebarPadding)
+    }
 
     // MARK: - handle events
 
@@ -107,6 +165,16 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
         }
     }
 
+    /// When the mouse leaves the view, no more tracking it!
+    override public func mouseExited(with _: NSEvent) {
+        titlebarView.animator().isHidden = true
+    }
+
+    /// See if the mouse is close to the titlebar view to highlight it if so (uses double the height to add a bit of extra space)
+    override public func mouseMoved(with event: NSEvent) {
+        adjustTitlebar(usingMousePoint: event.locationInWindow)
+    }
+
     /// Figure out which direction we're dragging in and pan that way
     override public func mouseDragged(with event: NSEvent) {
         // If the click is outside the effective bounds of this view (outside the content layout rect)
@@ -153,5 +221,11 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
         if !nonCancellableDirections.isEmpty {
             userInteractionDelegate?.userDidPanViewport(nonCancellableDirections)
         }
+    }
+
+    /// Either hides or shows the titlebar based on the mouse's x value (assumes titlebar spans full width)
+    private func adjustTitlebar(usingMousePoint mousePoint: NSPoint) {
+        let convertedPoint = convert(mousePoint, to: titlebarView)
+        titlebarView.animator().isHidden = convertedPoint.y < 0
     }
 }
