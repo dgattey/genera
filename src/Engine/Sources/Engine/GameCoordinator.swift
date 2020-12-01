@@ -31,12 +31,11 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
     // MARK: delegated delegates
 
-    /// For logging things to the debug delegate
-    public weak var debugDelegate: DebugDelegate? {
+    /// For logging things to the debugger
+    public weak var debugger: DebugProtocol? {
         didSet {
-            renderer.debugDelegate = debugDelegate
-            chunkCoordinator.debugDelegate = debugDelegate
-            viewportCoordinator.debugDelegate = debugDelegate
+            chunkCoordinator.debugger = debugger
+            viewportCoordinator.debugger = debugger
         }
     }
 

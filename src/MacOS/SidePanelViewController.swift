@@ -40,8 +40,8 @@ class SidePanelViewController: NSViewController {
         return stackView
     }()
 
-    /// Debug delegate passthrough
-    weak var debugDelegate: DebugDelegate? {
+    /// Debugger exposure to other classes
+    var debugger: DebugProtocol {
         debugView
     }
 

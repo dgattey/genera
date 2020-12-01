@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Combine
 import Debug
 import EngineUI
 import UI
@@ -13,6 +14,9 @@ class TerrainPresetView: EditableValuesStackView {
     /// Collects preset name -> preset data groupings
     private var presets: [String: TerrainPresetData] = [:]
 
+    /// Used to keep track of the publisher loading presets
+    private var loadPresetsCancellable: AnyCancellable?
+
     /// Called when things happen in the presets
     weak var presetDelegate: TerrainPresetDelegate?
 
@@ -22,7 +26,8 @@ class TerrainPresetView: EditableValuesStackView {
         button.controlSize = .large
         button.target = self
         button.action = #selector(selectPreset)
-        button.addItem(withTitle: TerrainPresetData.default.presetName)
+        button.addItem(withTitle: "Loading...")
+        button.isEnabled = false
         return button
     }()
 
@@ -68,7 +73,7 @@ class TerrainPresetView: EditableValuesStackView {
 
     /// Adds the correct views + reload presets to start with from disk
     func populatePresets() {
-        reloadPresets()
+        reloadPresetsAndReset()
 
         if let menu = NSApp.menu, !menu.items.contains(where: { $0.title == menubarPresetsMenu.title }) {
             menu.insertItem(menubarPresetsMenu, at: 1)
@@ -177,6 +182,10 @@ class TerrainPresetView: EditableValuesStackView {
                 return
             }
             let keys = Array(strongSelf.presets.keys).sorted()
+            guard !keys.isEmpty else {
+                assertionFailure("No presets!")
+                return
+            }
             let previousSelectedItem = strongSelf.presetChooser.selectedItem?.title
             strongSelf.presetChooser.removeAllItems()
             strongSelf.presetChooser.addItems(withTitles: keys)
@@ -190,16 +199,18 @@ class TerrainPresetView: EditableValuesStackView {
                 strongSelf.presetChooser.selectItem(withTitle: TerrainPresetData.default.presetName)
             }
             strongSelf.selectPreset(strongSelf.presetChooser)
+            strongSelf.presetChooser.isEnabled = true
         }
-        let handlePresets = { [weak self] (presets: [TerrainPresetData]) in
-            let keys = presets.map { $0.presetName }
-            self?.presets = Dictionary(uniqueKeysWithValues: zip(keys, presets))
-            DispatchQueue.main.async {
-                resetPicker()
+
+        // Load more
+        loadPresetsCancellable?.cancel()
+        loadPresetsCancellable = TerrainPresetLoader.loadPresets().sink { result in
+            if case let .failure(error) = result {
+                Logger.log(error)
             }
-        }
-        DispatchQueue.global(qos: .utility).async {
-            TerrainPresetLoader.loadPresets(completion: handlePresets)
+        } receiveValue: { [weak self] namedPresets in
+            self?.presets = namedPresets
+            resetPicker()
         }
     }
 }

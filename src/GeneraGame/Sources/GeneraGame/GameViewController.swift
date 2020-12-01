@@ -14,8 +14,8 @@ enum GameViewControllerConstant {
 
 /// The game's view controller - owns the coordinator and kicks off the game itself
 public class GameViewController: NSViewController {
-    /// Debug delegate passthrough
-    public weak var debugDelegate: DebugDelegate? {
+    /// Allows for debugging data
+    public weak var debugger: DebugProtocol? {
         didSet {
             updateDelegates()
         }
@@ -87,10 +87,10 @@ public class GameViewController: NSViewController {
     private func updateDelegates() {
         switch gameType {
         case .terrain:
-            terrainCoordinator?.debugDelegate = debugDelegate
+            terrainCoordinator?.debugger = debugger
             terrainCoordinator?.shaderDataProvider?.updateDelegate = self
         case .grid:
-            gridCoordinator?.debugDelegate = debugDelegate
+            gridCoordinator?.debugger = debugger
             gridCoordinator?.shaderDataProvider?.updateDelegate = self
         }
     }

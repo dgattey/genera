@@ -25,7 +25,7 @@ class GeneraWindowController: NSWindowController {
         }
         self.gameViewController = gameViewController
         self.sidePanelViewController = sidePanelViewController
-        gameViewController.debugDelegate = sidePanelViewController.debugDelegate
+        gameViewController.debugger = sidePanelViewController.debugger
 
         DispatchQueue.main.async {
             self.changeGameType(to: startingGameType)

@@ -14,7 +14,6 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
-    weak var debugDelegate: DebugDelegate?
 
     // MARK: - variables
 

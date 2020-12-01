@@ -13,6 +13,7 @@
 		750F001725611E3700E166D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCB25611E3600E166D4 /* Main.storyboard */; };
 		750F001925611E3700E166D4 /* GeneraMacOSAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */; };
 		750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FFFD225611E3600E166D4 /* AppDelegate.swift */; };
+		7511BE592566661A00EBAC9C /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7511BE582566661A00EBAC9C /* DebugView.swift */; };
 		751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C2256268F0000B0326 /* SimplexNoise.metal */; };
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
@@ -41,6 +42,7 @@
 		750FFFCD25611E3600E166D4 /* GeneraMacOSInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GeneraMacOSInfo.plist; sourceTree = "<group>"; };
 		750FFFCE25611E3600E166D4 /* GeneraMacOSAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GeneraMacOSAssets.xcassets; sourceTree = "<group>"; };
 		750FFFD225611E3600E166D4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7511BE582566661A00EBAC9C /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		751D56C1256268F0000B0326 /* SimplexNoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimplexNoise.h; sourceTree = "<group>"; };
 		751D56C2256268F0000B0326 /* SimplexNoise.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimplexNoise.metal; sourceTree = "<group>"; };
 		751D56C3256268F0000B0326 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				750FFFD225611E3600E166D4 /* AppDelegate.swift */,
 				750FFFC925611E3600E166D4 /* GeneraWindowController.swift */,
 				750FFFC825611E3600E166D4 /* SidePanelViewController.swift */,
+				7511BE582566661A00EBAC9C /* DebugView.swift */,
 			);
 			path = MacOS;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,
 				750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */,
+				7511BE592566661A00EBAC9C /* DebugView.swift in Sources */,
 				751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */,
 				751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */,
 				750F001C25611E3700E166D4 /* AppDelegate.swift in Sources */,
