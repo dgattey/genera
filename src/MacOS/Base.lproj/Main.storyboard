@@ -335,7 +335,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="C8EBF028-1B18-4A8E-91F7-D3136539DFEA" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="Jul-at-Bb0">
+                        <toolbar key="toolbar" implicitIdentifier="C8EBF028-1B18-4A8E-91F7-D3136539DFEA" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="Jul-at-Bb0">
                             <allowedToolbarItems/>
                             <defaultToolbarItems/>
                             <connections>

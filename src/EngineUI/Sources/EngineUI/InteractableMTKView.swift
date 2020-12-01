@@ -14,10 +14,10 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
     private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(5)
 
     /// How much the mouse has to drag for it to be considered a pan in any direction
-    private static let mouseMoveThreshold: CGFloat = 1.0
+    private static let mouseMoveThreshold: CGFloat = 0.25
 
     /// Scales mouse move values to make them cleaner
-    private static let mouseMoveScalar: Double = 0.15
+    private static let mouseMoveScalar: Double = 0.25
 
     /// Converts a key press event into a direction using key code
     private static func direction(fromKeyPressEvent event: NSEvent) -> VectoredDirection<Double>? {
@@ -58,18 +58,6 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
     /// Runs the processer for pans to notify the viewport
     private var panViewEventLoop: Cancellable?
-
-    /// Makes sure we can zooms and key presses
-    override public var acceptsFirstResponder: Bool {
-        true
-    }
-
-    /// Make sure mouse down doesn't move the window so we can drag around
-    override public var mouseDownCanMoveWindow: Bool {
-        false
-    }
-
-    // MARK: - initialization
 
     // MARK: - handle events
 
@@ -121,6 +109,11 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
     /// Figure out which direction we're dragging in and pan that way
     override public func mouseDragged(with event: NSEvent) {
+        // If the click is outside the effective bounds of this view (outside the content layout rect)
+        // then we don't want to allow it to do anything
+        guard window?.contentLayoutRect.contains(event.locationInWindow) ?? false else {
+            return
+        }
         mouseDirections = InteractableMTKView.directions(fromMouseEvent: event)
         guard !mouseDirections.isEmpty else {
             // We're not panning enough to matter in any direction, so cancel the event loop if no key presses
