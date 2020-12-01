@@ -11,6 +11,6 @@ public protocol UserInteractionDelegate: NSObject {
     /// Called in response to resizing of the viewport to a new size
     func userDidResizeViewport(to size: CGSize) -> Void
 
-    /// Called in response to a zoom of the viewport in a given direction at a point onscreen
-    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint) -> Void
+    /// Called in response to a zoom of the viewport in a given direction at a point onscreen within a given size
+    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint, withinSize size: CGSize) -> Void
 }

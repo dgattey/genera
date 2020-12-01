@@ -82,11 +82,10 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
             return
         }
         let amount = Double(event.scrollingDeltaY)
-
-        // Figures out if we're currently at pixel density of 2 or 1 (Retina vs. regular)
-        let scaleFactor = drawableSize / bounds.size
         let convertedPoint = convert(event.locationInWindow, from: windowView)
-        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount), at: convertedPoint * scaleFactor)
+        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount),
+                                                     at: convertedPoint,
+                                                     withinSize: bounds.size)
     }
 
     /// If the key is a direction, add it to our array and start panning in that direction

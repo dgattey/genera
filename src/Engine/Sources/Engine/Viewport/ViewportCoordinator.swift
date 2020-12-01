@@ -189,7 +189,8 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
     /// Function for zooming a viewport in or out of the screen, constrained to levels set in constants
     private func viewport(byZooming viewport: MTLViewport,
                           in direction: ZoomDirection,
-                          at point: NSPoint) -> MTLViewport
+                          at point: NSPoint,
+                          withinSize size: CGSize) -> MTLViewport
     {
         // Change the current zoom level based on direction, bounded to min/max levels
         var changeAmount = 1.0
@@ -203,16 +204,17 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         currentZoomLevel = max(ViewportCoordinatorConstant.ZoomLevel.min,
                                min(ViewportCoordinatorConstant.ZoomLevel.max, currentZoomLevel * changeAmount))
 
-        // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center)
-        let normX = 2 * Double(point.x) - currentViewport.width
-        let normY = 2 * Double(point.y) - currentViewport.height
+        // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center), paying attention to pixel density
+        let pixelDensity = currentDrawableSize / size
+        let normX = Double(pixelDensity.width) * 2 * Double(point.x) - currentViewport.width
+        let normY = Double(pixelDensity.height) * 2 * Double(point.y) - currentViewport.height
 
         // Change the origin based on where we're zooming into
         let originDeltaX = normX * prevZoom - normX * currentZoomLevel
         let originDeltaY = normY * prevZoom - normY * currentZoomLevel
 
-        return MTLViewport(originX: viewport.originX + originDeltaX,
-                           originY: viewport.originY + originDeltaY,
+        return MTLViewport(originX: viewport.originX + originDeltaX / Double(pixelDensity.width),
+                           originY: viewport.originY + originDeltaY / Double(pixelDensity.width),
                            width: currentViewport.width * currentZoomLevel,
                            height: currentViewport.height * currentZoomLevel,
                            znear: viewport.znear,
@@ -237,7 +239,7 @@ extension ViewportCoordinator: UserInteractionDelegate {
     }
 
     /// Zooms both the user position and the actual viewport by a certain amount
-    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint) {
-        userPosition = viewport(byZooming: userPosition, in: direction, at: point)
+    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint, withinSize size: CGSize) {
+        userPosition = viewport(byZooming: userPosition, in: direction, at: point, withinSize: size)
     }
 }
