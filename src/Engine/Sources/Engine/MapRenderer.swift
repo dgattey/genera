@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Debug
+import EngineData
 import Metal
 import MetalKit
 import simd
@@ -14,6 +15,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
+    weak var debugger: DebugProtocol?
 
     // MARK: - variables
 
@@ -36,7 +38,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     private var vertexBuffers: [Chunk: MTLBuffer] = Dictionary()
 
     /// Keeps track of current viewport data, passed into rendering
-    private var viewportBufferData: [Float] = []
+    private var viewportBufferData: ViewportData
 
     /// Provides most data for this renderer
     private weak var dataProvider: ChunkDataProvider?
@@ -65,6 +67,8 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
         mainDevice = device
         self.view = view
+        let scaleFactor = view.drawableSize / view.bounds.size
+        viewportBufferData = ViewportData(origin: view.bounds.origin, size: view.bounds.size, scaleFactor: scaleFactor)
         self.commandQueue = commandQueue
         self.renderPipelineState = renderPipelineState
         self.dataProvider = dataProvider
@@ -115,21 +119,21 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
 
-    /// Makes sure bytes are stored for the new user position viewport
-    private func updateUserViewportBufferData(to viewport: MTLViewport) {
-        viewportBufferData = [Float(viewport.originX),
-                              Float(viewport.originY),
-                              Float(viewport.width),
-                              Float(viewport.height)]
-        view
-            .setNeedsDisplay(NSRect(x: viewport.originX, y: viewport.originY, width: viewport.width,
-                                    height: viewport.height))
+    /// Makes sure bytes are stored for the new user position viewport, scaling by the view's scale factor so we're
+    /// drawing the same thing consistently on any screen
+    private func updateUserViewportBufferData(to viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
+        drawingSemaphore.signal()
+        let scaleFactor = drawableSize / view.bounds.size
+        viewportBufferData = ViewportData(viewport, scaleFactor: scaleFactor)
+        debugger?.subject(for: .viewportBufferData).send(viewportBufferData)
+        view.setNeedsDisplay(view.bounds)
+        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
     private func drawShapes(to encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBytes(&viewportBufferData,
-                               length: viewportBufferData.count * MemoryLayout<Float>.stride,
+                               length: MemoryLayout<ViewportData>.stride,
                                index: ShaderIndex.viewport.rawValue)
 
         for (_, vertexBuffer) in vertexBuffers {
@@ -264,8 +268,8 @@ extension MapRenderer: ChunkCoordinatorDelegate {
 
 extension MapRenderer: ViewportCoordinatorDelegate {
     /// Updates viewport buffer data with the new viewport info
-    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport) {
-        updateUserViewportBufferData(to: viewport)
+    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
+        updateUserViewportBufferData(to: viewport, inDrawableSize: drawableSize)
     }
 
     /// Forwards to the chunk coordinator

@@ -5,6 +5,7 @@
 
 #import <metal_stdlib>
 #import <simd/simd.h>
+#import "ViewportData.h" // map renderer (engine), shaders
 #import "TerrainShaderTypes.h" // Move into folder with this file
 #import "TerrainShaderConfigData.h" // Shared with GeneraGame (TerrainConfigView), and here
 #import "SimplexNoise.h" // here, and all shaders (sharing between here and SimplexNoise is difficult)
@@ -27,14 +28,12 @@ typedef struct {
 // This function creates color position and clip space postion data for the vertices from viewport size
 vertex FragmentVertex terrainVertexShader(uint vertexID [[vertex_id]],
                                           const device TerrainVertex *vertexArray [[buffer(ShaderIndexVertices)]],
-                                          constant float4 *viewport [[buffer(ShaderIndexViewport)]]) {
+                                          const device ViewportData *viewport [[buffer(ShaderIndexViewport)]]) {
     float2 position = vertexArray[vertexID].position;
     
     // Calculate with viewport applied (translate into 0-2) range
-    float2 viewportOrigin = float2((*viewport).x, (*viewport).y);
-    float2 viewportSize = float2((*viewport).z, (*viewport).w);
-    float x = (position.x - viewportOrigin.x) / viewportSize.x;
-    float y = (position.y - viewportOrigin.y) / viewportSize.y;
+    float x = (position.x - (*viewport).origin.x) / (*viewport).size.x * (*viewport).scaleFactor.x;
+    float y = (position.y - (*viewport).origin.y) / (*viewport).size.y * (*viewport).scaleFactor.y;
     
     FragmentVertex out;
     out.position = float4(x, y, 0.0, 1.0);

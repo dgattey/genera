@@ -36,6 +36,7 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         didSet {
             chunkCoordinator.debugger = debugger
             viewportCoordinator.debugger = debugger
+            renderer.debugger = debugger
         }
     }
 

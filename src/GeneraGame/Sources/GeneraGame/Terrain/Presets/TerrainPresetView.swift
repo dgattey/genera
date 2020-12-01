@@ -9,6 +9,11 @@ import UI
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime
 class TerrainPresetView: EditableValuesStackView {
+    // MARK: - constants
+
+    /// The index of the preset menu in the main NSApp titlebar menu
+    private static let presetAppMenuIndex = 1
+
     // MARK: - variables
 
     /// Collects preset name -> preset data groupings
@@ -60,24 +65,33 @@ class TerrainPresetView: EditableValuesStackView {
         return actionButton
     }()
 
-    /// Remove the menu bar item we added if we're destroying this view
-    deinit {
-        if let menu = NSApp.menu,
-           let index = menu.items.firstIndex(where: { $0.title == menubarPresetsMenu.title })
+    // MARK: - API
+
+    /// Adds and removes the menu item for Presets when the view is added/removed from a parent
+    override func viewDidMoveToSuperview() {
+        guard let menu = NSApp.menu, menu.items.count > 2 else {
+            return
+        }
+        let representedObject = menu.items[TerrainPresetView.presetAppMenuIndex].representedObject as? TerrainPresetView
+
+        // We want to remove the existing menu bar item if one exists - either because we're moving away from this view
+        // entirely, or because we want to add a new item with updated targets so we can handle the ⌘ commands
+        if let representedObject = representedObject,
+           superview == nil && representedObject === self || superview != nil && representedObject !== self
         {
-            menu.removeItem(at: index)
+            menu.removeItem(at: TerrainPresetView.presetAppMenuIndex)
+        }
+
+        // Add the menu item if we're moving to a new view, tracking which view added it with representedObject
+        if superview != nil {
+            menubarPresetsMenu.representedObject = self
+            menu.insertItem(menubarPresetsMenu, at: TerrainPresetView.presetAppMenuIndex)
         }
     }
-
-    // MARK: - API
 
     /// Adds the correct views + reload presets to start with from disk
     func populatePresets() {
         reloadPresetsAndReset()
-
-        if let menu = NSApp.menu, !menu.items.contains(where: { $0.title == menubarPresetsMenu.title }) {
-            menu.insertItem(menubarPresetsMenu, at: 1)
-        }
 
         let presetChooserStack = NSStackView()
         presetChooserStack.distribution = .equalSpacing
