@@ -2,7 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Debug
-import MetalKit
+import Metal
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
 public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {

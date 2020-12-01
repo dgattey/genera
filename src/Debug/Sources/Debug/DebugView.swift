@@ -2,7 +2,6 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import Foundation
 import UI
 
 // MARK: - DebugView

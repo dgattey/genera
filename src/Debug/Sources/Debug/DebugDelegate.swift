@@ -2,7 +2,6 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Foundation
-import MetalKit
 
 /// Anything that shows debug data implements this
 public protocol DebugDelegate: NSObject {
