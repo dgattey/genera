@@ -105,24 +105,21 @@ extension GeneraWindowController: NSToolbarDelegate {
 
     /// Builds a selector for game mode out of all possible game modes - if this grows, will have to do a different kind of control
     private func buildGameTypeSelector() -> NSView {
-        let selector = NSSegmentedControl()
-        selector.segmentCount = GameType.titles.count
-        for (index, title) in GameType.titles.enumerated() {
-            selector.setLabel(title, forSegment: index)
+        let selector = NSPopUpButton()
+        for title in GameType.titles {
+            selector.addItem(withTitle: title)
         }
-        selector.setSelected(true, forSegment: 0)
         selector.target = self
         selector.action = #selector(GeneraWindowController.didChangeGameType)
-        selector.controlSize = .large
         return selector
     }
 
     /// Called in response to changing the game type from the toolbar - changes it on the gameViewController
     @objc func didChangeGameType(_ sender: AnyObject) {
-        guard let segmentedControl = sender as? NSSegmentedControl else {
+        guard let selector = sender as? NSPopUpButton else {
             return
         }
-        let selectedItem = segmentedControl.selectedSegment
+        let selectedItem = selector.indexOfSelectedItem
         if let gameType = GameType(rawValue: GameType.titles[selectedItem]) {
             changeGameType(to: gameType)
         }
