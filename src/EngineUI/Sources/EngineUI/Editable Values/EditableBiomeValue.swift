@@ -29,8 +29,10 @@ class EditableBiomeValue {
         let colorWell = NSColorWell()
         colorWell.isBordered = true
         colorWell.controlSize = .large
-        colorWell.widthAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize).isActive = true
-        colorWell.heightAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize).isActive = true
+        colorWell.widthAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize)
+            .isActive = true
+        colorWell.heightAnchor.constraint(greaterThanOrEqualToConstant: EditableBiomeValue.colorWellMinSize)
+            .isActive = true
         colorWell.action = #selector(userDidPickColor)
         colorWell.target = self
         return colorWell
@@ -85,18 +87,17 @@ class EditableBiomeValue {
 
     /// Constructs a biome out of the fields' current data
     var value: Biome {
-        return Biome(
-            type: biomeType,
-            color: vector_float3(
-                Float(colorWell.color.redComponent),
-                Float(colorWell.color.greenComponent),
-                Float(colorWell.color.blueComponent)
-            ),
-            minElevation: minElevation.value,
-            maxElevation: maxElevation.value,
-            maxMoisture: maxMoisture.value,
-            blendRange: blendRange.value
-        )
+        guard let convertedColor = colorWell.color.usingColorSpace(.deviceRGB) else {
+            fatalError("Couldn't convert color")
+        }
+        return Biome(type: biomeType,
+                     color: vector_float3(Float(convertedColor.redComponent),
+                                          Float(convertedColor.greenComponent),
+                                          Float(convertedColor.blueComponent)),
+                     minElevation: minElevation.value,
+                     maxElevation: maxElevation.value,
+                     maxMoisture: maxMoisture.value,
+                     blendRange: blendRange.value)
     }
 
     /// Called when the user picks a color
