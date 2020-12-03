@@ -15,6 +15,21 @@ class GeneraWindowController: NSWindowController {
     /// The content view controller for the whole app
     private var appViewController: AppViewController?
 
+    /// A toolbar item for the sidebar collapsing
+    private var collapseSidebarToolbarItem: NSToolbarItem = {
+        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: toolbarItemToggleSidebar))
+        item.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: "Toggle sidebar")
+        item.action = #selector(toggleSidebar)
+        return item
+    }()
+
+    /// A toolbar item for changing the game type
+    private var gameTypeToolbarItem: NSToolbarItem = {
+        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: toolbarItemGameType))
+        item.view = buildGameTypeSelector()
+        return item
+    }()
+
     /// Sets up whole app, using the next run loop to make sure the window has resized at least once before creating the coordinator
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -66,12 +81,21 @@ extension GeneraWindowController: NSToolbarDelegate {
     private static let toolbarItemGameType = "dgattey.gameType"
 
     /// Default items for the toolbar itself (all to left of sidebar divider)
-    private static let defaultToolbarIDs: [NSToolbarItem.Identifier] = [
-        NSToolbarItem.Identifier(toolbarItemGameType),
-        .flexibleSpace,
-        NSToolbarItem.Identifier(toolbarItemToggleSidebar),
-        .sidebarTrackingSeparator,
-    ]
+    private static let defaultToolbarIDs: [NSToolbarItem.Identifier] =
+        [NSToolbarItem.Identifier(toolbarItemGameType),
+         .flexibleSpace,
+         NSToolbarItem.Identifier(toolbarItemToggleSidebar),
+         .sidebarTrackingSeparator]
+
+    /// Builds a selector for game mode out of all possible game modes - if this grows, will have to do a different kind of control
+    private static func buildGameTypeSelector() -> NSView {
+        let selector = NSPopUpButton()
+        for title in GameType.titles {
+            selector.addItem(withTitle: title)
+        }
+        selector.action = #selector(GeneraWindowController.didChangeGameType)
+        return selector
+    }
 
     func toolbarDefaultItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
         GeneraWindowController.defaultToolbarIDs
@@ -89,29 +113,16 @@ extension GeneraWindowController: NSToolbarDelegate {
         let item: NSToolbarItem
         switch itemIdentifier {
         case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemToggleSidebar):
-            item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: "Toggle sidebar")
-            item.target = self
-            item.action = #selector(toggleSidebar)
+            item = collapseSidebarToolbarItem
         case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemGameType):
-            item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.view = buildGameTypeSelector()
+            item = gameTypeToolbarItem
         default:
             item = NSToolbarItem(itemIdentifier: itemIdentifier)
         }
+        item.view?.translatesAutoresizingMaskIntoConstraints = false
+        item.target = self
         item.menuFormRepresentation = nil
         return item
-    }
-
-    /// Builds a selector for game mode out of all possible game modes - if this grows, will have to do a different kind of control
-    private func buildGameTypeSelector() -> NSView {
-        let selector = NSPopUpButton()
-        for title in GameType.titles {
-            selector.addItem(withTitle: title)
-        }
-        selector.target = self
-        selector.action = #selector(GeneraWindowController.didChangeGameType)
-        return selector
     }
 
     /// Called in response to changing the game type from the toolbar - changes it on the gameViewController
