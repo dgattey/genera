@@ -13,11 +13,9 @@ let debugPackage = Package(
             targets: ["Debug"]
         ),
     ],
-    dependencies: [.package(path: "UI")],
     targets: [
         .target(
-            name: "Debug",
-            dependencies: ["UI"]
+            name: "Debug"
         ),
     ]
 )
