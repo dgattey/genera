@@ -2,7 +2,6 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import Engine
 import EngineData
 
 /// Adds color support to Biome
