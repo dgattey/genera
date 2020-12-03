@@ -18,6 +18,8 @@
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
 		751D56CB256268F0000B0326 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C7256268F0000B0326 /* GridShaders.metal */; };
+		75206A3B257737A7001D7B9B /* AppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75206A3A257737A7001D7B9B /* AppViewController.swift */; };
+		75A090D92577457F008D759F /* HideableTitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A090D82577457F008D759F /* HideableTitlebarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,8 @@
 		751D56C4256268F0000B0326 /* Color.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
 		751D56C5256268F0000B0326 /* TerrainShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
 		751D56C7256268F0000B0326 /* GridShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
+		75206A3A257737A7001D7B9B /* AppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewController.swift; sourceTree = "<group>"; };
+		75A090D82577457F008D759F /* HideableTitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideableTitlebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,8 @@
 				750FFFCA25611E3600E166D4 /* GeneraMacOS.entitlements */,
 				750FFFCB25611E3600E166D4 /* Main.storyboard */,
 				750FFFD225611E3600E166D4 /* AppDelegate.swift */,
+				75206A3A257737A7001D7B9B /* AppViewController.swift */,
+				75A090D82577457F008D759F /* HideableTitlebarView.swift */,
 				750FFFC925611E3600E166D4 /* GeneraWindowController.swift */,
 				750FFFC825611E3600E166D4 /* SidePanelViewController.swift */,
 				7511BE582566661A00EBAC9C /* DebugView.swift */,
@@ -226,6 +232,8 @@
 			files = (
 				751D56CA256268F0000B0326 /* Color.metal in Sources */,
 				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
+				75206A3B257737A7001D7B9B /* AppViewController.swift in Sources */,
+				75A090D92577457F008D759F /* HideableTitlebarView.swift in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,
 				750F001625611E3700E166D4 /* GeneraWindowController.swift in Sources */,
 				7511BE592566661A00EBAC9C /* DebugView.swift in Sources */,

@@ -101,14 +101,19 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
         return stateObject
     }
 
-    // . Configures the view itself once with everything it needs to start to render - uses Dark Mode background color
+    // . Configures the view itself once with everything it needs to start to render
     private static func configure(view: MTKView, device: MTLDevice) {
         view.device = device
-        view.clearColor = MTLClearColor(red: 56 / 255,
-                                        green: 57 / 255,
-                                        blue: 58 / 255,
-                                        alpha: 1)
         view.enableSetNeedsDisplay = true
+        guard let backgroundColor = view.layer?.backgroundColor?.components,
+              backgroundColor.count == 4
+        else {
+            return
+        }
+        view.clearColor = MTLClearColor(red: Double(backgroundColor[0]),
+                                        green: Double(backgroundColor[1]),
+                                        blue: Double(backgroundColor[2]),
+                                        alpha: Double(backgroundColor[3]))
     }
 
     // MARK: - drawing functions

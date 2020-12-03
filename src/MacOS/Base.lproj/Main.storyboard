@@ -326,7 +326,7 @@
         <scene sceneID="3iN-t0-Pbf">
             <objects>
                 <windowController id="Tc3-vS-wKE" customClass="GeneraWindowController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Genera" subtitle="A map generator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" appearanceType="darkAqua" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="TZz-3d-sxH">
+                    <window key="window" title="Genera" subtitle="A map generator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="TZz-3d-sxH">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="245" y="310" width="800" height="600"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
@@ -355,11 +355,11 @@
             </objects>
             <point key="canvasLocation" x="-420" y="276"/>
         </scene>
-        <!--Split View Controller-->
+        <!--App View Controller-->
         <scene sceneID="Obk-lJ-gL1">
             <objects>
                 <customObject id="5aY-08-fDA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <splitViewController id="cXq-wP-lTF" sceneMemberID="viewController">
+                <splitViewController id="cXq-wP-lTF" customClass="AppViewController" customModule="Genera" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="YUL-eT-BZ6"/>
                         <splitViewItem id="ONr-fy-irV"/>
