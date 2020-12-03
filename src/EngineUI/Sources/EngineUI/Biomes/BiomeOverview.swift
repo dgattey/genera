@@ -3,6 +3,7 @@
 
 import AppKit
 import Engine
+import EngineData
 
 /// Shows all biomes in a grid
 public class BiomeOverview: NSView {
