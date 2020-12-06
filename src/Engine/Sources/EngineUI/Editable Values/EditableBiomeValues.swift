@@ -33,14 +33,10 @@ public class EditableBiomeValues {
     // MARK: - variables
 
     /// All editable biome values to keep internally - the useful values are exposed elsewhere
-    private var editableValues: [EditableBiomeValue] {
-        didSet {
-            data = editableValues.map { ($0.label, $0.biome) }
-        }
-    }
+    private let editableValues: [EditableBiomeValue]
 
     /// Exposes the data captured by this class, for anything that needs it
-    public private(set) var data: [(label: String, biome: CurrentValueSubject<Biome, Never>)] = []
+    public let data: [(label: String, biome: CurrentValueSubject<Biome, Never>)]
 
     /// Update delegate passthrough
     public weak var updateDelegate: ConfigUpdateDelegate? {
@@ -54,11 +50,7 @@ public class EditableBiomeValues {
     /// Creates a list of biome data using a list of biomes to start
     public init(biomes: [Biome] = []) {
         editableValues = EditableBiomeValues.biomeValues(from: biomes)
-    }
-
-    /// Modifies all biomes to a new set of values (useful for presets resetting data)
-    public func changeValues(to biomes: [Biome]) {
-        editableValues = EditableBiomeValues.biomeValues(from: biomes)
+        data = editableValues.map { ($0.label, $0.biome) }
     }
 
     /// Adds all biome edit fields to a stack view and one overview biome view

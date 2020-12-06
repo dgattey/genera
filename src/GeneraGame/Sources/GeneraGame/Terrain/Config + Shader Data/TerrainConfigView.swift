@@ -84,7 +84,7 @@ class TerrainConfigView: NSStackView {
     }()
 
     /// All current biome values, defaulted to all default biomes
-    private let biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
+    private var biomes = EditableBiomeValues(biomes: Biome.defaultBiomes)
 
     /// The biome views
     private let biomeView = EditableValuesStackView()
@@ -135,6 +135,7 @@ class TerrainConfigView: NSStackView {
     }
 
     private func resetBiomesView() {
+        biomes.updateDelegate = updateDelegate
         biomeView.views.forEach { $0.removeFromSuperview() }
         biomeView.addView(biomeOverviewView, in: .bottom)
         biomeOverviewView.connect(to: biomes)
@@ -192,7 +193,7 @@ extension TerrainConfigView: TerrainPresetDelegate {
         moistureColorWeight.changeValue(to: preset.moistureColorWeight)
 
         /// Reset the biome views entirely
-        biomes.changeValues(to: preset.biomes)
+        biomes = EditableBiomeValues(biomes: preset.biomes)
         resetBiomesView()
     }
 
