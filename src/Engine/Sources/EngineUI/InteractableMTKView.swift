@@ -11,7 +11,7 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
     // MARK: - constants
 
     /// The length of the event loop where we process key presses/mouse movement
-    private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(5)
+    private static let eventLoopLength: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(30)
 
     /// How much the mouse has to drag for it to be considered a pan in any direction
     private static let mouseMoveThreshold: CGFloat = 0.25
@@ -58,6 +58,11 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
     /// Runs the processer for pans to notify the viewport
     private var panViewEventLoop: Cancellable?
+
+    /// Makes sure we can zooms and key presses
+    override public var acceptsFirstResponder: Bool {
+        true
+    }
 
     // MARK: - config
 

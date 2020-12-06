@@ -48,12 +48,10 @@ public class EditableFBMConfigValues {
 
     /// Creates FBMData from all fields with a provided seed
     public func value(withSeed seed: uint) -> FBMData {
-        FBMData(
-            octaves: octaves.value,
-            persistence: persistence.value,
-            scale: scale.value,
-            compression: compression.value,
-            seed: seed
-        )
+        FBMData(octaves: octaves.value,
+                persistence: persistence.value,
+                scale: scale.value,
+                compression: compression.value,
+                seed: seed)
     }
 }
