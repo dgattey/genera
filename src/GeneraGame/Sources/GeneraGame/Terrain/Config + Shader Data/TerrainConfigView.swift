@@ -17,6 +17,9 @@ class TerrainConfigView: NSStackView {
     /// To keep track of saving the preset
     private var savePresetCancellable: AnyCancellable?
 
+    /// To keep track of handling actions
+    private var actionCancellable: AnyCancellable?
+
     /// Update delegate, needs to be set for ALLLL the values. This is tedious
     weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
@@ -107,7 +110,6 @@ class TerrainConfigView: NSStackView {
         spacing = TerrainConfigView.interItemSpacing
 
         let presetView = TerrainPresetView(title: "Presets")
-        presetView.presetDelegate = self
         presetView.populatePresets()
         addView(presetView)
 
@@ -132,6 +134,18 @@ class TerrainConfigView: NSStackView {
 
         addView(biomeView)
         resetBiomesView()
+
+        // Start listening to actions from the preset view
+        actionCancellable = presetView.sink { [unowned self] action in
+            switch action {
+            case let .selectPreset(withData: data):
+                selectPreset(data)
+                return
+            case let .saveCurrentData(asPresetNamed: name, onCompletion: completion):
+                saveCurrentDataAsPreset(named: name, onCompletion: completion)
+                return
+            }
+        }
     }
 
     private func resetBiomesView() {
@@ -141,26 +155,9 @@ class TerrainConfigView: NSStackView {
         biomeOverviewView.connect(to: biomes)
         biomes.addValues(to: biomeView)
     }
-}
 
-// MARK: - ShaderDataProviderProtocol
+    // MARK: - Presets
 
-/// Creates a bunch of biomes & offers config support from this view's text fields
-extension TerrainConfigView: ShaderDataProviderProtocol {
-    /// Config data for generation of noise, pulls data from text fields if they exist
-    var configData: TerrainShaderConfigData {
-        preset().shaderConfigData
-    }
-
-    /// Bunch of biomes with different elevation and moistures
-    var allBiomes: [Biome] {
-        biomes.data.map(\.biome.value)
-    }
-}
-
-// MARK: - TerrainPresetDelegate
-
-extension TerrainConfigView: TerrainPresetDelegate {
     /// Creates a preset with the current data and a preset name
     private func preset(named name: String = "") -> TerrainPresetData {
         TerrainPresetData(presetName: name,
@@ -209,5 +206,20 @@ extension TerrainConfigView: TerrainPresetDelegate {
                     Logger.log(error)
                 }
             }, receiveValue: completion)
+    }
+}
+
+// MARK: - ShaderDataProviderProtocol
+
+/// Creates a bunch of biomes & offers config support from this view's text fields
+extension TerrainConfigView: ShaderDataProviderProtocol {
+    /// Config data for generation of noise, pulls data from text fields if they exist
+    var configData: TerrainShaderConfigData {
+        preset().shaderConfigData
+    }
+
+    /// Bunch of biomes with different elevation and moistures
+    var allBiomes: [Biome] {
+        biomes.data.map(\.biome.value)
     }
 }

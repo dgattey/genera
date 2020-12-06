@@ -9,6 +9,17 @@ import UI
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime
 class TerrainPresetView: EditableValuesStackView {
+    // MARK: - types
+
+    /// Possible actions a user can take on this view for someone to listen to
+    enum Action {
+        /// Marks a preset as selected with some given data
+        case selectPreset(withData: TerrainPresetData)
+
+        /// Saves the current data as a preset with the given name, using a callback function when done
+        case saveCurrentData(asPresetNamed: String, onCompletion: (String?) -> Void)
+    }
+
     // MARK: - constants
 
     /// The index of the preset menu in the main NSApp titlebar menu
@@ -22,8 +33,8 @@ class TerrainPresetView: EditableValuesStackView {
     /// Used to keep track of the publisher loading presets
     private var loadPresetsCancellable: AnyCancellable?
 
-    /// Called when things happen in the presets
-    weak var presetDelegate: TerrainPresetDelegate?
+    /// Publishes actions to anyone who wants to listen
+    private let publisher = PassthroughSubject<Action, Never>()
 
     /// Allows choosing between different preset values as the fallback
     private lazy var presetChooser: NSPopUpButton = {
@@ -91,8 +102,6 @@ class TerrainPresetView: EditableValuesStackView {
 
     /// Adds the correct views + reload presets to start with from disk
     func populatePresets() {
-        reloadPresetsAndReset()
-
         let presetChooserStack = NSStackView()
         presetChooserStack.distribution = .equalSpacing
         presetChooserStack.setClippingResistancePriority(.required, for: .horizontal)
@@ -100,6 +109,8 @@ class TerrainPresetView: EditableValuesStackView {
         presetChooserStack.addView(presetChooser, in: .leading)
         presetChooserStack.addView(actionsMenuButton, in: .trailing)
         addView(presetChooserStack, in: .bottom)
+
+        reloadPresetsAndReset()
     }
 
     /// Opens the actions menu from the button
@@ -125,7 +136,7 @@ class TerrainPresetView: EditableValuesStackView {
            let menuItem = popupButton.selectedItem,
            let preset = presets[menuItem.title]
         {
-            presetDelegate?.selectPreset(preset)
+            publisher.send(.selectPreset(withData: preset))
         }
     }
 
@@ -138,13 +149,11 @@ class TerrainPresetView: EditableValuesStackView {
         WindowCoordinator.promptForReply(from: window,
                                          withTitle: "Save as...",
                                          details: "Name your preset to finish saving it",
-                                         placeholder: "My Favorite Map") { name, success in
+                                         placeholder: "My Favorite Map") { [unowned self] name, success in
             guard success else {
                 return
             }
-            self.presetDelegate?.saveCurrentDataAsPreset(named: name, onCompletion: { [weak self] presetName in
-                self?.reloadPresetsAndReset(bySelecting: presetName)
-            })
+            publisher.send(.saveCurrentData(asPresetNamed: name, onCompletion: reloadPresetsAndReset))
         }
     }
 
@@ -226,5 +235,19 @@ class TerrainPresetView: EditableValuesStackView {
             self?.presets = namedPresets
             resetPicker()
         }
+    }
+}
+
+/// Allows us to actually use this view as a publisher
+extension TerrainPresetView: Publisher {
+    typealias Output = Action
+    typealias Failure = Never
+
+    func receive<S>(subscriber: S)
+        where S: Subscriber,
+        TerrainPresetView.Failure == S.Failure,
+        TerrainPresetView.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
     }
 }
