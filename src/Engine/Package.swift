@@ -11,7 +11,7 @@ let enginePackage = Package(
         /// Combine the data from the game engine and the engine itself
         .library(
             name: "Engine",
-            targets: ["Engine", "EngineData", "EngineUI"]
+            targets: ["Engine"]
         ),
     ],
     dependencies: [
@@ -24,10 +24,15 @@ let enginePackage = Package(
         .target(
             name: "EngineData"
         ),
+        /// All common data for the UI layer and the non-UI layer, pure ObjC
+        .target(
+            name: "EngineCore",
+            dependencies: ["EngineData"]
+        ),
         /// All resuable engine-powered UI
         .target(
             name: "EngineUI",
-            dependencies: ["Engine", "UI"]
+            dependencies: ["EngineCore", "UI"]
         ),
         /// Data extensions + rest of the engine
         .target(
@@ -35,7 +40,9 @@ let enginePackage = Package(
             dependencies: [
                 "SwiftPriorityQueue",
                 "Debug",
+                "EngineCore",
                 "EngineData",
+                "EngineUI",
             ]
         ),
     ]

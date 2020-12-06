@@ -3,6 +3,7 @@
 
 import Combine
 import Debug
+import EngineCore
 import Metal
 import simd
 import SwiftPriorityQueue

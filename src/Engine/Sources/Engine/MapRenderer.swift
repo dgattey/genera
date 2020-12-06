@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Debug
+import EngineCore
 import EngineData
 import Metal
 import MetalKit

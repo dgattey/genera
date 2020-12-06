@@ -1,6 +1,7 @@
 // ShaderDataProviderProtocol.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineCore
 import EngineData
 import Foundation
 

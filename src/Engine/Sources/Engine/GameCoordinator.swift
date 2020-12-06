@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import Debug
+import EngineCore
 import Metal
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate

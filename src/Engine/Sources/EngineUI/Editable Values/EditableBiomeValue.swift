@@ -2,7 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
-import Engine
+import EngineCore
 import EngineData
 import UI
 

@@ -5,7 +5,6 @@ import AppKit
 import Combine
 import Debug
 import Engine
-import EngineUI
 
 /// A stack view containing text fields for certain configurable data
 class TerrainConfigView: NSStackView {

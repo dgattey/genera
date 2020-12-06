@@ -4,7 +4,7 @@
 import AppKit
 import Combine
 import Debug
-import EngineUI
+import Engine
 import UI
 
 /// Allows choosing different preset values for terrain that you can save and load at runtime

@@ -3,7 +3,7 @@
 
 // TODO: @dgattey try to remove dependency on AppKit
 import AppKit
-import Engine
+import EngineCore
 
 /// So we can use constants in this file
 private enum EditableConfigValueConstant {

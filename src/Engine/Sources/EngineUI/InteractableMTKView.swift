@@ -3,7 +3,7 @@
 
 import AppKit
 import Combine
-import Engine
+import EngineCore
 import MetalKit
 
 /// A subclass of MTKView that handles key presses + mouse movements to update the viewport

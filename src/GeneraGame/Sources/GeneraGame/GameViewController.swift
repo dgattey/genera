@@ -4,7 +4,6 @@
 import AppKit
 import Debug
 import Engine
-import EngineUI
 
 /// All constants for the generic game view controller
 enum GameViewControllerConstant {
