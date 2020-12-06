@@ -38,63 +38,47 @@ class TerrainConfigView: NSStackView {
     }
 
     /// Seed for generation of the map (string)
-    private let seed = EditableConfigValue(
-        fallback: TerrainPresetData.default.seed,
-        label: "Terrain seed"
-    )
+    private let seed = EditableConfigValue(fallback: TerrainPresetData.default.seed,
+                                           label: "Terrain seed")
 
     /// Scaling constant for all coordinates on the map
-    private let globalScalar = EditableConfigValue(
-        fallback: TerrainPresetData.default.globalScalar,
-        label: "Global scalar"
-    )
+    private let globalScalar = EditableConfigValue(fallback: TerrainPresetData.default.globalScalar,
+                                                   label: "Global scalar")
 
     /// FBM values for elevation noise generation
     private let elevationFBM = EditableFBMConfigValues(defaultData: TerrainPresetData.default.elevationFBM)
 
     /// As a float, how far off of zero we should make sea level
-    private let seaLevelOffset = EditableConfigValue(
-        fallback: TerrainPresetData.default.seaLevelOffset,
-        label: "Sea level offset"
-    )
+    private let seaLevelOffset = EditableConfigValue(fallback: TerrainPresetData.default.seaLevelOffset,
+                                                     label: "Sea level offset")
 
     /// The distribution of values (spiky or not) for elevation
-    private let elevationDistribution = EditableConfigValue(
-        fallback: TerrainPresetData.default.elevationDistribution,
-        label: "Elevation distribution"
-    )
+    private let elevationDistribution = EditableConfigValue(fallback: TerrainPresetData.default.elevationDistribution,
+                                                            label: "Elevation distribution")
 
     /// How much elevation contributes to color of the biome
-    private let elevationColorWeight = EditableConfigValue(
-        fallback: TerrainPresetData.default.elevationColorWeight,
-        label: "Color weight"
-    )
+    private let elevationColorWeight = EditableConfigValue(fallback: TerrainPresetData.default.elevationColorWeight,
+                                                           label: "Color weight")
 
     /// FBM values for moisture noise generation
     private let moistureFBM = EditableFBMConfigValues(defaultData: TerrainPresetData.default.moistureFBM)
 
     /// How dry "default" is on the map
-    private let aridness = EditableConfigValue(
-        fallback: TerrainPresetData.default.aridness,
-        label: "Aridness"
-    )
+    private let aridness = EditableConfigValue(fallback: TerrainPresetData.default.aridness,
+                                               label: "Aridness")
 
     /// The distribution of values (spiky or not) for moisture
-    private let moistureDistribution = EditableConfigValue(
-        fallback: TerrainPresetData.default.moistureDistribution,
-        label: "Moisture distribution"
-    )
+    private let moistureDistribution = EditableConfigValue(fallback: TerrainPresetData.default.moistureDistribution,
+                                                           label: "Moisture distribution")
 
     /// How much moisture contributes to color of the biome
-    private let moistureColorWeight = EditableConfigValue(
-        fallback: TerrainPresetData.default.moistureColorWeight,
-        label: "Color weight"
-    )
+    private let moistureColorWeight = EditableConfigValue(fallback: TerrainPresetData.default.moistureColorWeight,
+                                                          label: "Color weight")
 
     /// A grid view for all the biome color data at a glance
     private lazy var biomeOverviewView: BiomeOverview = {
         let view = BiomeOverview()
-        biomes.biomeChangeDelegate = view
+        view.connect(to: biomes)
         view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
         return view
     }()
@@ -110,10 +94,8 @@ class TerrainConfigView: NSStackView {
     /// Adds a nested stack view with equal widths
     private func addView(_ view: EditableValuesStackView) {
         addView(view, in: .bottom)
-        NSLayoutConstraint.activate([
-            view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+        NSLayoutConstraint.activate([view.leadingAnchor.constraint(equalTo: leadingAnchor),
+                                     view.trailingAnchor.constraint(equalTo: trailingAnchor)])
     }
 
     /// Add our views!
@@ -155,6 +137,7 @@ class TerrainConfigView: NSStackView {
     private func resetBiomesView() {
         biomeView.views.forEach { $0.removeFromSuperview() }
         biomeView.addView(biomeOverviewView, in: .bottom)
+        biomeOverviewView.connect(to: biomes)
         biomes.addValues(to: biomeView)
     }
 }
@@ -165,12 +148,12 @@ class TerrainConfigView: NSStackView {
 extension TerrainConfigView: ShaderDataProviderProtocol {
     /// Config data for generation of noise, pulls data from text fields if they exist
     var configData: TerrainShaderConfigData {
-        return preset().shaderConfigData
+        preset().shaderConfigData
     }
 
     /// Bunch of biomes with different elevation and moistures
     var allBiomes: [Biome] {
-        return biomes.values
+        biomes.data.map(\.biome.value)
     }
 }
 
@@ -179,20 +162,18 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
 extension TerrainConfigView: TerrainPresetDelegate {
     /// Creates a preset with the current data and a preset name
     private func preset(named name: String = "") -> TerrainPresetData {
-        return TerrainPresetData(
-            presetName: name,
-            seed: seed.value,
-            globalScalar: globalScalar.value,
-            seaLevelOffset: seaLevelOffset.value,
-            elevationDistribution: elevationDistribution.value,
-            aridness: aridness.value,
-            moistureDistribution: moistureDistribution.value,
-            elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
-            moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
-            elevationColorWeight: elevationColorWeight.value,
-            moistureColorWeight: moistureColorWeight.value,
-            biomes: allBiomes
-        )
+        TerrainPresetData(presetName: name,
+                          seed: seed.value,
+                          globalScalar: globalScalar.value,
+                          seaLevelOffset: seaLevelOffset.value,
+                          elevationDistribution: elevationDistribution.value,
+                          aridness: aridness.value,
+                          moistureDistribution: moistureDistribution.value,
+                          elevationFBM: elevationFBM.value(withSeed: Self.seed(from: seed.value)),
+                          moistureFBM: moistureFBM.value(withSeed: Self.seed(from: seed.value)),
+                          elevationColorWeight: elevationColorWeight.value,
+                          moistureColorWeight: moistureColorWeight.value,
+                          biomes: allBiomes)
     }
 
     /// Called when the user selects the given preset to change all values
@@ -216,7 +197,9 @@ extension TerrainConfigView: TerrainPresetDelegate {
     }
 
     /// Called when the user wants to save the current data as a preset
-    func saveCurrentDataAsPreset(named name: String, onCompletion completion: @escaping (_ presetName: String) -> Void) {
+    func saveCurrentDataAsPreset(named name: String,
+                                 onCompletion completion: @escaping (_ presetName: String) -> Void)
+    {
         savePresetCancellable?.cancel()
         savePresetCancellable = TerrainPresetLoader
             .savePreset(preset(named: name))

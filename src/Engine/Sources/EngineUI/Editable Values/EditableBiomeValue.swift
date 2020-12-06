@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Combine
 import EngineCore
 import EngineData
 import UI
@@ -10,17 +11,6 @@ import UI
 class EditableBiomeValue {
     /// The min size of the color well
     private static let colorWellMinSize: CGFloat = 60
-
-    /// To notify with biome changes
-    weak var biomeChangeDelegate: BiomeChangeDelegate? {
-        didSet {
-            // Make sure it gets updated once
-            guard !label.isEmpty else {
-                return
-            }
-            biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
-        }
-    }
 
     /// The immutable biome type
     private let biomeType: BiomeType
@@ -52,13 +42,35 @@ class EditableBiomeValue {
     private let blendRange: EditableConfigValue<Float>
 
     /// The label this value has if it's contained in the view
-    private(set) var label: String = ""
+    let label: String
+
+    /// Sends the latest value of this value + label to anyone listening
+    let biome: CurrentValueSubject<Biome, Never>
+
+    /// Constructs a biome out of the fields' current data - used to update `biome`
+    private var value: Biome {
+        guard let convertedColor = colorWell.color.usingColorSpace(.deviceRGB) else {
+            fatalError("Couldn't convert color")
+        }
+        return Biome(type: biomeType,
+                     color: vector_float3(Float(convertedColor.redComponent),
+                                          Float(convertedColor.greenComponent),
+                                          Float(convertedColor.blueComponent)),
+                     minElevation: minElevation.value,
+                     maxElevation: maxElevation.value,
+                     maxMoisture: maxMoisture.value,
+                     blendRange: blendRange.value)
+    }
 
     /// Update delegate passthrough
     weak var updateDelegate: ConfigUpdateDelegate?
 
-    /// Creates fields out of the initial values
-    init(_ initialValue: Biome) {
+    /// Creates fields out of the initial values and the index of where we're at
+    init(_ initialValue: Biome, index: Int) {
+        let suffix = index > 1 ? " \(index)" : ""
+        label = "\(initialValue.type.description) \(suffix)"
+        biome = CurrentValueSubject(initialValue)
+
         biomeType = initialValue.type
         minElevation = EditableConfigValue(fallback: initialValue.minElevation, label: "Min elevation")
         maxElevation = EditableConfigValue(fallback: initialValue.maxElevation, label: "Max elevation")
@@ -73,32 +85,13 @@ class EditableBiomeValue {
     }
 
     /// Adds the config values saved here to a given stack view
-    func addValues(to stackView: EditableValuesStackView, index: Int) {
-        let suffix = index > 1 ? " \(index)" : ""
-        label = "\(biomeType.description) \(suffix)"
+    func addValues(to stackView: EditableValuesStackView) {
         LabeledView.addLabel(label, style: .smallSection, toStack: stackView)
         stackView.addView(colorWell, in: .bottom)
         EditableValuesStackView.addValue(stackView)(minElevation)
         EditableValuesStackView.addValue(stackView)(maxElevation)
         EditableValuesStackView.addValue(stackView)(maxMoisture)
         EditableValuesStackView.addValue(stackView)(blendRange)
-
-        biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
-    }
-
-    /// Constructs a biome out of the fields' current data
-    var value: Biome {
-        guard let convertedColor = colorWell.color.usingColorSpace(.deviceRGB) else {
-            fatalError("Couldn't convert color")
-        }
-        return Biome(type: biomeType,
-                     color: vector_float3(Float(convertedColor.redComponent),
-                                          Float(convertedColor.greenComponent),
-                                          Float(convertedColor.blueComponent)),
-                     minElevation: minElevation.value,
-                     maxElevation: maxElevation.value,
-                     maxMoisture: maxMoisture.value,
-                     blendRange: blendRange.value)
     }
 
     /// Called when the user picks a color
@@ -113,6 +106,6 @@ extension EditableBiomeValue: ConfigUpdateDelegate {
     /// Notifies both our update delegate and the biome delegate
     func configDidUpdate<T>(from: T?, to: T?) {
         updateDelegate?.configDidUpdate(from: from, to: to)
-        biomeChangeDelegate?.biome(withIdentifier: label, didUpdateTo: value)
+        biome.send(value)
     }
 }

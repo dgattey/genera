@@ -1,6 +1,7 @@
 // EditableBiomeValues.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import EngineCore
 import EngineData
 import Foundation
@@ -16,47 +17,56 @@ public class EditableBiomeValues {
         }
     }
 
-    /// All editable biome values (list)
-    private var biomeValues: [EditableBiomeValue]
+    // MARK: - static helpers
+
+    /// Creates all the editable values from a list of unsorted biomes
+    private static func biomeValues(from biomes: [Biome]) -> [EditableBiomeValue] {
+        var counts: [BiomeType: Int] = [:]
+        return sortedBiomes(biomes).map { biome in
+            // Keep track of how many of this type we have so we can index them
+            let count = (counts[biome.type] ?? 0) + 1
+            counts[biome.type] = count
+            return EditableBiomeValue(biome, index: count)
+        }
+    }
+
+    // MARK: - variables
+
+    /// All editable biome values to keep internally - the useful values are exposed elsewhere
+    private var editableValues: [EditableBiomeValue] {
+        didSet {
+            data = editableValues.map { ($0.label, $0.biome) }
+        }
+    }
+
+    /// Exposes the data captured by this class, for anything that needs it
+    public private(set) var data: [(label: String, biome: CurrentValueSubject<Biome, Never>)] = []
 
     /// Update delegate passthrough
     public weak var updateDelegate: ConfigUpdateDelegate? {
         didSet {
-            biomeValues.forEach { $0.updateDelegate = updateDelegate }
+            editableValues.forEach { $0.updateDelegate = updateDelegate }
         }
     }
 
-    /// Biome change delegate passthrough
-    public weak var biomeChangeDelegate: BiomeChangeDelegate? {
-        didSet {
-            biomeValues.forEach { $0.biomeChangeDelegate = biomeChangeDelegate }
-        }
-    }
-
-    /// The list of values, turned into their current values
-    public var values: [Biome] {
-        biomeValues.map(\.value)
-    }
+    // MARK: - value manipulation
 
     /// Creates a list of biome data using a list of biomes to start
     public init(biomes: [Biome] = []) {
-        biomeValues = EditableBiomeValues.sortedBiomes(biomes).map { EditableBiomeValue($0) }
+        editableValues = EditableBiomeValues.biomeValues(from: biomes)
+    }
+
+    /// Modifies all biomes to a new set of values (useful for presets resetting data)
+    public func changeValues(to biomes: [Biome]) {
+        editableValues = EditableBiomeValues.biomeValues(from: biomes)
     }
 
     /// Adds all biome edit fields to a stack view and one overview biome view
     public func addValues(to stackView: EditableValuesStackView) {
         LabeledView.addLabel("Biomes", style: .section, toStack: stackView)
-        var counts: [BiomeType: Int] = [:]
-        for biomeValue in biomeValues {
+        for biomeValue in editableValues {
             biomeValue.updateDelegate = updateDelegate
-            biomeValue.biomeChangeDelegate = biomeChangeDelegate
-            counts[biomeValue.value.type] = (counts[biomeValue.value.type] ?? 0) + 1
-            biomeValue.addValues(to: stackView, index: counts[biomeValue.value.type] ?? 0)
+            biomeValue.addValues(to: stackView)
         }
-    }
-
-    /// Modifies all biomes to a new set of values (useful for presets resetting data)
-    public func changeValues(to biomes: [Biome]) {
-        biomeValues = EditableBiomeValues.sortedBiomes(biomes).map { EditableBiomeValue($0) }
     }
 }
