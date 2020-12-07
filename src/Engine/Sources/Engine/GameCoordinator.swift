@@ -32,7 +32,7 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     private let resizeClosure: () -> Void
 
     /// A cancellable for the chunk coordinator's connection
-    private var coordinatorCancellable: AnyCancellable?
+    private var coordinatorCancellables = Set<AnyCancellable>()
 
     // MARK: delegated delegates
 
@@ -96,11 +96,14 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         renderer.viewportDataProvider = viewportCoordinator
 
         // Chunk coordinator + viewport coordinator delegates
-        coordinatorCancellable = chunkCoordinator.sink(receiveValue: { [unowned self] action in
+        let cancellable1 = chunkCoordinator.sink(receiveValue: { [unowned self] action in
             _ = self.renderer.receive(action)
         })
-
-        viewportCoordinator.viewportCoordinatorDelegate = renderer
+        let cancellable2 = viewportCoordinator.sink(receiveValue: { [unowned self] action in
+            _ = self.renderer.receive(action)
+        })
+        coordinatorCancellables.insert(cancellable1)
+        coordinatorCancellables.insert(cancellable2)
     }
 }
 

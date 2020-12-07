@@ -16,21 +16,10 @@ private enum ChunkCoordinatorConstant {
 
 /// Generic class for generating a map. Parameterized with a type of data to use
 class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
-    // MARK: - types
-
-    /// All possible actions this coordinator might generate
-    enum Action {
-        /// Evicts one chunk from the list of existing chunks
-        case evictChunk(Chunk)
-
-        /// Generates one chunk in the list of existing chunks
-        case generateChunk(Chunk)
-    }
-
     // MARK: - variables
 
     /// Publishes actionsto anyone who listens
-    private let publisher = PassthroughSubject<Action, Never>()
+    private let publisher = PassthroughSubject<RendererAction, Never>()
 
     /// Basic dict of chunk -> array of ChunkData
     private var chunks = [Chunk: [DataProvider.ChunkDataType]]()
@@ -312,7 +301,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 // MARK: - Publisher
 
 extension ChunkCoordinator: Publisher {
-    public typealias Output = Action
+    public typealias Output = RendererAction
     public typealias Failure = Never
 
     /// Connect the built-in publisher to the subscriber sent

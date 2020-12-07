@@ -216,25 +216,31 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
 /// Subscribes the map renderer to a chunk coordinator's actions
 extension MapRenderer: Subscriber {
-    typealias Input = ChunkCoordinator<ChunkDataProvider>.Action
+    typealias Input = RendererAction
     typealias Failure = Never
 
-    /// No-op
-    func receive(subscription _: Subscription) {}
-
-    /// No-op
-    func receive(completion _: Subscribers.Completion<Never>) {}
+    /// Request unlimited items
+    func receive(subscription: Subscription) {
+        subscription.request(.unlimited)
+    }
 
     /// Delegate to the right built in function
-    func receive(_ action: ChunkCoordinator<ChunkDataProvider>.Action) -> Subscribers.Demand {
+    func receive(_ action: RendererAction) -> Subscribers.Demand {
         switch action {
         case let .evictChunk(chunk):
             deleteChunk(chunk)
         case let .generateChunk(chunk):
             createChunk(chunk)
+        case let .updateUserPosition(to: userPosition, inDrawableSize: drawableSize):
+            updateUserViewportBufferData(to: userPosition, inDrawableSize: drawableSize)
+        case let .updateVisibleRegion(to: region):
+            updateVisibleRegion(to: region)
         }
-        return .unlimited
+        return .none
     }
+
+    /// No-op
+    func receive(completion _: Subscribers.Completion<Never>) {}
 
     /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
     private func createChunk(_ chunk: Chunk) {
@@ -289,18 +295,9 @@ extension MapRenderer: Subscriber {
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
     }
-}
-
-// MARK: - ViewportCoordinatorDelegate
-
-extension MapRenderer: ViewportCoordinatorDelegate {
-    /// Updates viewport buffer data with the new viewport info
-    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
-        updateUserViewportBufferData(to: viewport, inDrawableSize: drawableSize)
-    }
 
     /// Forwards to the chunk coordinator
-    func viewportCoordinator(didUpdateVisibleRegionTo visibleRegion: (x: Range<Int>, y: Range<Int>)) {
+    private func updateVisibleRegion(to visibleRegion: ChunkRegion) {
         chunkCoordinator?.handle(updatedVisibleRegion: visibleRegion)
     }
 }

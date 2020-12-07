@@ -1,6 +1,7 @@
 // ViewportCoordinator.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import Debug
 import EngineCore
 import Metal
@@ -14,6 +15,8 @@ private enum ViewportCoordinatorConstant {
     /// or mouse, resulting in the same diagonal movement when applied to both the
     /// horizontal and the vertical translation
     static let diagonalTranslationStep: Double = translationStep * sin(45)
+
+    // MARK: - types
 
     /// All zoom levels
     enum ZoomLevel {
@@ -61,8 +64,8 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
         let endY = convertToChunkSpace(viewport.originY + viewport.height, chunkSizeInPixels: chunkSizeInPixels)
 
         let pad: (Range<Int>) -> Range<Int> = { range in
-            let distance: Int = max((range.endIndex - range.startIndex) / 3,
-                                    ViewportCoordinatorConstant.minChunkPadAmount)
+            let distance: Int = Swift.max((range.endIndex - range.startIndex) / 3,
+                                          ViewportCoordinatorConstant.minChunkPadAmount)
             return (range.startIndex - distance ..< range.endIndex + distance)
         }
         return (pad(startX ..< endX), pad(startY ..< endY))
@@ -119,14 +122,16 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
 
     // MARK: - variables
 
+    /// Publishes actionsto anyone who listens
+    private let publisher = PassthroughSubject<RendererAction, Never>()
+
     /// This is the user position, including zooming and translation, which sets visibleRegion on set
     private var userPosition: MTLViewport {
         didSet {
             let chunkSizeInPixels = DataProvider.ChunkDataType.chunkSizeInPixels
             visibleRegion = ViewportCoordinator<DataProvider>
                 .visibleRegion(from: userPosition, chunkSizeInPixels: chunkSizeInPixels)
-            viewportCoordinatorDelegate?.viewportCoordinator(didUpdateUserPositionTo: userPosition,
-                                                             inDrawableSize: currentDrawableSize)
+            publisher.send(.updateUserPosition(to: userPosition, inDrawableSize: currentDrawableSize))
             debugger?.subject(for: .userViewport).send(userPosition)
         }
     }
@@ -140,7 +145,6 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
     // MARK: - delegates
 
     weak var dataProvider: DataProvider?
-    weak var viewportCoordinatorDelegate: ViewportCoordinatorDelegate?
     weak var debugger: DebugProtocol?
 
     // MARK: - ViewportDataProvider
@@ -155,7 +159,7 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
     /// A rect dictating which chunks are currently visible (in whole chunk-units)
     private(set) var visibleRegion: ChunkRegion {
         didSet {
-            viewportCoordinatorDelegate?.viewportCoordinator(didUpdateVisibleRegionTo: visibleRegion)
+            publisher.send(.updateVisibleRegion(to: visibleRegion))
         }
     }
 
@@ -202,8 +206,9 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
             changeAmount += amount * ViewportCoordinatorConstant.ZoomLevel.multiplier
         }
         let prevZoom = currentZoomLevel
-        currentZoomLevel = max(ViewportCoordinatorConstant.ZoomLevel.min,
-                               min(ViewportCoordinatorConstant.ZoomLevel.max, currentZoomLevel * changeAmount))
+        currentZoomLevel = Swift.max(ViewportCoordinatorConstant.ZoomLevel.min,
+                                     Swift.min(ViewportCoordinatorConstant.ZoomLevel.max,
+                                               currentZoomLevel * changeAmount))
 
         // Convert the screen point (0,0 in lower left) to Metal space (0,0 in center), paying attention to pixel density
         let pixelDensity = currentDrawableSize / size
@@ -220,6 +225,22 @@ class ViewportCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject, Vi
                            height: currentViewport.height * currentZoomLevel,
                            znear: viewport.znear,
                            zfar: viewport.zfar)
+    }
+}
+
+// MARK: - Publisher
+
+extension ViewportCoordinator: Publisher {
+    public typealias Output = RendererAction
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        ViewportCoordinator.Failure == S.Failure,
+        ViewportCoordinator.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
     }
 }
 
