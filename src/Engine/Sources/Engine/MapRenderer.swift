@@ -15,9 +15,11 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 {
     // MARK: - delegates
 
-    weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
     weak var debugger: DebugProtocol?
+
+    /// Publishes actions to anyone who listens
+    private let publisher = PassthroughSubject<ViewportAction, Never>()
 
     // MARK: - variables
 
@@ -170,7 +172,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     /// Tell our change delegate we've resized
     func mtkView(_: MTKView, drawableSizeWillChange size: CGSize) {
-        userInteractionDelegate?.userDidResizeViewport(to: size)
+        publisher.send(.resizeViewport(to: size))
     }
 
     /// Updates map state and draws it to the screen
@@ -212,12 +214,27 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     }
 }
 
+// MARK: - Publisher
+
+extension MapRenderer: Publisher {
+    public typealias Output = ViewportAction
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        MapRenderer.Failure == S.Failure,
+        MapRenderer.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
+    }
+}
+
 // MARK: - Subscriber
 
 /// Subscribes the map renderer to a chunk coordinator's actions
 extension MapRenderer: Subscriber {
     typealias Input = RendererAction
-    typealias Failure = Never
 
     /// Request unlimited items
     func receive(subscription: Subscription) {

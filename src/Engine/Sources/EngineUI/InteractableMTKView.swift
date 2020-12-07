@@ -7,7 +7,7 @@ import EngineCore
 import MetalKit
 
 /// A subclass of MTKView that handles key presses + mouse movements to update the viewport
-public class InteractableMTKView: MTKView, InteractableViewProtocol {
+public class InteractableMTKView: MTKView {
     // MARK: - constants
 
     /// The length of the event loop where we process key presses/mouse movement
@@ -47,9 +47,6 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
 
     // MARK: - variables
 
-    /// Called in response to user interaction
-    public weak var userInteractionDelegate: UserInteractionDelegate?
-
     /// The directions key presses are currently sending us
     private var keyPressDirections = Set<VectoredDirection<Double>>()
 
@@ -63,6 +60,9 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
     override public var acceptsFirstResponder: Bool {
         true
     }
+
+    /// Publishes actions to anyone who listens
+    private let publisher = PassthroughSubject<ViewportAction, Never>()
 
     // MARK: - config
 
@@ -96,9 +96,7 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
         }
         let amount = Double(event.scrollingDeltaY)
         let convertedPoint = convert(event.locationInWindow, from: windowView)
-        userInteractionDelegate?.userDidZoomViewport(ZoomDirection(amount),
-                                                     at: convertedPoint,
-                                                     withinSize: bounds.size)
+        publisher.send(.zoomViewport(direction: ZoomDirection(amount), point: convertedPoint, withinSize: bounds.size))
     }
 
     /// If the key is a direction, add it to our array and start panning in that direction
@@ -176,7 +174,23 @@ public class InteractableMTKView: MTKView, InteractableViewProtocol {
         let directions = mouseDirections.union(keyPressDirections)
         let nonCancellableDirections = VectoredDirection<Double>.nonCancelledDirections(from: directions)
         if !nonCancellableDirections.isEmpty {
-            userInteractionDelegate?.userDidPanViewport(nonCancellableDirections)
+            publisher.send(.panViewport(directions: nonCancellableDirections))
         }
+    }
+}
+
+// MARK: - Publisher
+
+extension InteractableMTKView: Publisher {
+    public typealias Output = ViewportAction
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        InteractableMTKView.Failure == S.Failure,
+        InteractableMTKView.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
     }
 }

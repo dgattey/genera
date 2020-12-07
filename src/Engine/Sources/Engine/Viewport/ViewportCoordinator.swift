@@ -244,24 +244,48 @@ extension ViewportCoordinator: Publisher {
     }
 }
 
-// MARK: - UserInteractionDelegate
+// MARK: - Subscriber
 
-extension ViewportCoordinator: UserInteractionDelegate {
+/// Subscribes the map renderer to a chunk coordinator's actions
+extension ViewportCoordinator: Subscriber {
+    typealias Input = ViewportAction
+
+    /// Request unlimited items
+    func receive(subscription: Subscription) {
+        subscription.request(.unlimited)
+    }
+
+    /// Delegate to the right built in function
+    func receive(_ action: ViewportAction) -> Subscribers.Demand {
+        switch action {
+        case let .panViewport(directions: directions):
+            panViewport(in: directions)
+        case let .resizeViewport(to: size):
+            resizeViewport(to: size)
+        case let .zoomViewport(direction: direction, point: point, withinSize: size):
+            zoomViewport(direction, at: point, withinSize: size)
+        }
+        return .none
+    }
+
+    /// No-op
+    func receive(completion _: Subscribers.Completion<Never>) {}
+
     /// Change the user position only, not the actual viewport
-    func userDidPanViewport(_ directions: Set<VectoredDirection<Double>>) {
+    private func panViewport(in directions: Set<VectoredDirection<Double>>) {
         userPosition = ViewportCoordinator.viewport(byTranslating: userPosition, in: directions,
                                                     atZoom: currentZoomLevel)
     }
 
     /// Resize both the user position and the actual viewport
-    func userDidResizeViewport(to size: CGSize) {
+    private func resizeViewport(to size: CGSize) {
         currentDrawableSize = size
         userPosition = ViewportCoordinator.viewport(byResizing: userPosition, to: size, atZoom: currentZoomLevel)
         currentViewport = ViewportCoordinator.viewport(byResizing: currentViewport, to: size)
     }
 
     /// Zooms both the user position and the actual viewport by a certain amount
-    func userDidZoomViewport(_ direction: ZoomDirection, at point: NSPoint, withinSize size: CGSize) {
+    private func zoomViewport(_ direction: ZoomDirection, at point: NSPoint, withinSize size: CGSize) {
         userPosition = viewport(byZooming: userPosition, in: direction, at: point, withinSize: size)
     }
 }

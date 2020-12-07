@@ -46,7 +46,7 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
-    public init?(view: InteractableViewProtocol) {
+    public init?(view: InteractableMTKView) {
         let dataProvider = ChunkDataProvider()
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
@@ -82,11 +82,11 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     }
 
     /// Creates connections between the objects via delegate pattern
-    private func setupInitialDelegates(with view: InteractableViewProtocol) {
+    private func setupInitialDelegates(with view: InteractableMTKView) {
         // User interaction delegates first
         view.delegate = renderer
-        view.userInteractionDelegate = viewportCoordinator
-        renderer.userInteractionDelegate = viewportCoordinator
+        view.subscribe(viewportCoordinator)
+        renderer.subscribe(viewportCoordinator)
 
         // Viewport data provider
         chunkCoordinator.viewportDataProvider = viewportCoordinator
