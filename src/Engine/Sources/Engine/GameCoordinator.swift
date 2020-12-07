@@ -1,6 +1,7 @@
 // GameCoordinator.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import Debug
 import EngineCore
 import Metal
@@ -30,6 +31,9 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     /// This gets set in init to a function that resizes the view
     private let resizeClosure: () -> Void
 
+    /// A cancellable for the chunk coordinator's connection
+    private var coordinatorCancellable: AnyCancellable?
+
     // MARK: delegated delegates
 
     /// For logging things to the debugger
@@ -50,12 +54,10 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>(
-                  view: view,
-                  device: defaultDevice,
-                  dataProvider: dataProvider,
-                  chunkCoordinator: chunkCoordinator
-              )
+              let renderer = MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>(view: view,
+                                                                                                      device: defaultDevice,
+                                                                                                      dataProvider: dataProvider,
+                                                                                                      chunkCoordinator: chunkCoordinator)
         else {
             assertionFailure("Game coordinator cannot be initialized")
             return nil
@@ -94,7 +96,10 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         renderer.viewportDataProvider = viewportCoordinator
 
         // Chunk coordinator + viewport coordinator delegates
-        chunkCoordinator.chunkCoordinatorDelegate = renderer
+        coordinatorCancellable = chunkCoordinator.sink(receiveValue: { [unowned self] action in
+            _ = self.renderer.receive(action)
+        })
+
         viewportCoordinator.viewportCoordinatorDelegate = renderer
     }
 }

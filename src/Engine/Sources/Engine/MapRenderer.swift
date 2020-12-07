@@ -1,6 +1,7 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import Debug
 import EngineCore
 import EngineData
@@ -211,11 +212,32 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     }
 }
 
-// MARK: - ChunkCoordinatorDelegate
+// MARK: - Subscriber
 
-extension MapRenderer: ChunkCoordinatorDelegate {
+/// Subscribes the map renderer to a chunk coordinator's actions
+extension MapRenderer: Subscriber {
+    typealias Input = ChunkCoordinator<ChunkDataProvider>.Action
+    typealias Failure = Never
+
+    /// No-op
+    func receive(subscription _: Subscription) {}
+
+    /// No-op
+    func receive(completion _: Subscribers.Completion<Never>) {}
+
+    /// Delegate to the right built in function
+    func receive(_ action: ChunkCoordinator<ChunkDataProvider>.Action) -> Subscribers.Demand {
+        switch action {
+        case let .evictChunk(chunk):
+            deleteChunk(chunk)
+        case let .generateChunk(chunk):
+            createChunk(chunk)
+        }
+        return .unlimited
+    }
+
     /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
-    func chunkCoordinator(didGenerate chunk: Chunk) {
+    private func createChunk(_ chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
         let savedBuffer = vertexBuffers[chunk]
         let buffer: MTLBuffer
@@ -260,9 +282,8 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         }
     }
 
-    /// Deletes data for the chunk
-    func chunkCoordinator(didDelete chunk: Chunk) {
-        // Delete the buffer
+    /// Deletes data for the chunk by deleting the vertex buffer's value
+    private func deleteChunk(_ chunk: Chunk) {
         vertexBuffers.removeValue(forKey: chunk)
         drawingSemaphore.signal()
         view.setNeedsDisplay(view.bounds)

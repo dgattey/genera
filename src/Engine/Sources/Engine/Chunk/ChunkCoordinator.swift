@@ -16,7 +16,21 @@ private enum ChunkCoordinatorConstant {
 
 /// Generic class for generating a map. Parameterized with a type of data to use
 class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
+    // MARK: - types
+
+    /// All possible actions this coordinator might generate
+    enum Action {
+        /// Evicts one chunk from the list of existing chunks
+        case evictChunk(Chunk)
+
+        /// Generates one chunk in the list of existing chunks
+        case generateChunk(Chunk)
+    }
+
     // MARK: - variables
+
+    /// Publishes actionsto anyone who listens
+    private let publisher = PassthroughSubject<Action, Never>()
 
     /// Basic dict of chunk -> array of ChunkData
     private var chunks = [Chunk: [DataProvider.ChunkDataType]]()
@@ -39,9 +53,6 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 
     /// Used to find out what's visible
     weak var viewportDataProvider: ViewportDataProvider?
-
-    /// Used to update the delegate with new chunk info
-    weak var chunkCoordinatorDelegate: ChunkCoordinatorDelegate?
 
     /// For debug printing
     weak var debugger: DebugProtocol?
@@ -162,14 +173,16 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         guard chunk.value.isWithin(visibleRegion),
               !chunkData(contains: chunk.value)
         else {
-            debugger?.subject(for: .queuedChunks).send((needsGeneration: needsGenerationCount, inProgress: inProgressCount))
+            debugger?.subject(for: .queuedChunks)
+                .send((needsGeneration: needsGenerationCount, inProgress: inProgressCount))
             return
         }
 
         // Add it to our in progress queue and drop the semaphore
         generationAccessSemaphore.wait()
         inProgressGenerationQueue.insert(chunk.value)
-        debugger?.subject(for: .queuedChunks).send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
+        debugger?.subject(for: .queuedChunks)
+            .send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         Logger.log("*** Generating! \(chunk)")
         generationAccessSemaphore.signal()
 
@@ -182,11 +195,12 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
 
         generationAccessSemaphore.wait()
         inProgressGenerationQueue.remove(chunk.value)
-        debugger?.subject(for: .queuedChunks).send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
+        debugger?.subject(for: .queuedChunks)
+            .send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         generationAccessSemaphore.signal()
 
         DispatchQueue.main.async { [weak self] in
-            self?.chunkCoordinatorDelegate?.chunkCoordinator(didGenerate: chunk.value)
+            self?.publisher.send(.generateChunk(chunk.value))
         }
     }
 
@@ -234,7 +248,7 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         // Only notify if we actually removed something (as we may have already removed this guy)
         if oldData != nil {
             DispatchQueue.main.async { [weak self] in
-                self?.chunkCoordinatorDelegate?.chunkCoordinator(didDelete: evictableChunk.value)
+                self?.publisher.send(.evictChunk(evictableChunk.value))
             }
         }
     }
@@ -246,11 +260,11 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         }
 
         // We have too many chunks - let's evict until we have nothing new to evict
-        evictionEventLoop = DispatchQueue.global(qos: .userInteractive).schedule(
-            after: DispatchQueue.SchedulerTimeType(.now()),
-            interval: ChunkCoordinatorConstant.eventLoopInterval,
-            evictOldestChunk
-        )
+        evictionEventLoop = DispatchQueue.global(qos: .userInteractive)
+            .schedule(after: DispatchQueue.SchedulerTimeType(.now()),
+                      interval: ChunkCoordinatorConstant
+                          .eventLoopInterval,
+                      evictOldestChunk)
     }
 
     /// Asynchronously generates a chunk of data and notifies our delegate on
@@ -280,16 +294,33 @@ class ChunkCoordinator<DataProvider: ChunkDataProviderProtocol>: NSObject {
         needsGenerationQueue.remove(countedChunk)
         needsGenerationQueue.push(countedChunk)
         Logger.log("~~~ Queued generation of \(countedChunk)")
-        debugger?.subject(for: .queuedChunks).send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
+        debugger?.subject(for: .queuedChunks)
+            .send((needsGeneration: needsGenerationQueue.count, inProgress: inProgressGenerationQueue.count))
         generationAccessSemaphore.signal()
 
         // Make sure our event loop is running!
         if generationEventLoop == nil {
-            generationEventLoop = DispatchQueue.global(qos: .userInitiated).schedule(
-                after: DispatchQueue.SchedulerTimeType(.now()),
-                interval: ChunkCoordinatorConstant.eventLoopInterval,
-                generateClosestChunk
-            )
+            generationEventLoop = DispatchQueue.global(qos: .userInitiated)
+                .schedule(after: DispatchQueue.SchedulerTimeType(.now()),
+                          interval: ChunkCoordinatorConstant
+                              .eventLoopInterval,
+                          generateClosestChunk)
         }
+    }
+}
+
+// MARK: - Publisher
+
+extension ChunkCoordinator: Publisher {
+    public typealias Output = Action
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        ChunkCoordinator.Failure == S.Failure,
+        ChunkCoordinator.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
     }
 }
