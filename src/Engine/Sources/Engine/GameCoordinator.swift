@@ -31,9 +31,6 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     /// This gets set in init to a function that resizes the view
     private let resizeClosure: () -> Void
 
-    /// A cancellable for the chunk coordinator's connection
-    private var coordinatorCancellables = Set<AnyCancellable>()
-
     // MARK: delegated delegates
 
     /// For logging things to the debugger
@@ -96,14 +93,8 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         renderer.viewportDataProvider = viewportCoordinator
 
         // Chunk coordinator + viewport coordinator delegates
-        let cancellable1 = chunkCoordinator.sink(receiveValue: { [unowned self] action in
-            _ = self.renderer.receive(action)
-        })
-        let cancellable2 = viewportCoordinator.sink(receiveValue: { [unowned self] action in
-            _ = self.renderer.receive(action)
-        })
-        coordinatorCancellables.insert(cancellable1)
-        coordinatorCancellables.insert(cancellable2)
+        chunkCoordinator.subscribe(renderer)
+        viewportCoordinator.subscribe(renderer)
     }
 }
 
