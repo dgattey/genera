@@ -1,8 +1,8 @@
 // EditableConfigValue.swift
 // Copyright (c) 2020 Dylan Gattey
 
-// TODO: @dgattey try to remove dependency on AppKit
 import AppKit
+import Combine
 import EngineCore
 
 /// So we can use constants in this file
@@ -27,9 +27,6 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
 
     // MARK: - variables
 
-    /// The update delegate to call when we change data
-    public weak var updateDelegate: ConfigUpdateDelegate?
-
     /// The text field where the user can edit the value
     let field: NSTextField
 
@@ -53,6 +50,9 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
         formatter.roundingMode = .down
         return formatter
     }()
+
+    /// Publishes the actions this value emits
+    private let publisher = PassthroughSubject<EditableConfigAction, Never>()
 
     /// Returns the value of the field as a casted optional value or the saved fallback value
     public var value: T {
@@ -124,21 +124,18 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
     public func changeValue(to value: Any) {
         switch valueType {
         case .decimalNumber:
-            let previous = field.floatValue
             field.formatter = floatFormatter // in case it's not currently set
             field.stringValue = String(describing: value)
             stepper?.floatValue = field.floatValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.floatValue)
+            publisher.send(.changeValue)
         case .wholeNumber:
-            let previous = field.integerValue
             field.stringValue = String(describing: value)
             stepper?.intValue = field.intValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.integerValue)
+            publisher.send(.changeValue)
         case .string:
-            let previous = field.stringValue
             field.stringValue = String(describing: value)
             stepper?.stringValue = field.stringValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.stringValue)
+            publisher.send(.changeValue)
         }
     }
 
@@ -150,14 +147,12 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
         }
         switch valueType {
         case .decimalNumber:
-            let previous = field.floatValue
             field.formatter = floatFormatter // in case it's not currently set
             field.floatValue = stepper.floatValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.floatValue)
+            publisher.send(.changeValue)
         case .wholeNumber:
-            let previous = field.integerValue
             field.integerValue = stepper.integerValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.integerValue)
+            publisher.send(.changeValue)
         case .string:
             assertionFailure("Strings should not have steppers")
         }
@@ -179,9 +174,8 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
         case .decimalNumber:
             defer {
                 // Make sure the update the stepper & update the delegate
-                let previous = field.floatValue
                 stepper?.floatValue = field.floatValue
-                updateDelegate?.configDidUpdate(from: previous, to: field.floatValue)
+                publisher.send(.changeValue)
             }
             field.formatter = nil
             let unformattedValue = field.stringValue
@@ -206,13 +200,28 @@ public class EditableConfigValue<T: LosslessStringConvertible>: NSObject, NSText
 
         // Update the stepper and delegate
         case .wholeNumber:
-            let previous = field.integerValue
             stepper?.integerValue = field.integerValue
-            updateDelegate?.configDidUpdate(from: previous, to: field.integerValue)
+            publisher.send(.changeValue)
 
         // No changes needed, but update the delegate
         case .string:
-            updateDelegate?.configDidUpdate(from: nil, to: field.stringValue)
+            publisher.send(.changeValue)
         }
+    }
+}
+
+// MARK: - Publisher
+
+extension EditableConfigValue: Publisher {
+    public typealias Output = EditableConfigAction
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        EditableConfigValue.Failure == S.Failure,
+        EditableConfigValue.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
     }
 }

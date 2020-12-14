@@ -38,13 +38,6 @@ public class EditableBiomeValues {
     /// Exposes the data captured by this class, for anything that needs it
     public let data: [(label: String, biome: CurrentValueSubject<Biome, Never>)]
 
-    /// Update delegate passthrough
-    public weak var updateDelegate: ConfigUpdateDelegate? {
-        didSet {
-            editableValues.forEach { $0.updateDelegate = updateDelegate }
-        }
-    }
-
     // MARK: - value manipulation
 
     /// Creates a list of biome data using a list of biomes to start
@@ -57,8 +50,23 @@ public class EditableBiomeValues {
     public func addValues(to stackView: EditableValuesStackView) {
         LabeledView.addLabel("Biomes", style: .section, toStack: stackView)
         for biomeValue in editableValues {
-            biomeValue.updateDelegate = updateDelegate
             biomeValue.addValues(to: stackView)
         }
+    }
+}
+
+// MARK: - Publisher
+
+extension EditableBiomeValues: Publisher {
+    public typealias Output = EditableConfigAction
+    public typealias Failure = Never
+
+    /// Connect the fields' publishers to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        EditableBiomeValues.Failure == S.Failure,
+        EditableBiomeValues.Output == S.Input
+    {
+        Publishers.MergeMany(editableValues).subscribe(subscriber)
     }
 }

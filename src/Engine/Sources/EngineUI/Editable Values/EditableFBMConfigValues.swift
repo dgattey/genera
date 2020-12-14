@@ -1,22 +1,13 @@
 // EditableFBMConfigValues.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import EngineCore
 import EngineData
 import Foundation
 
 /// Creates and holds onto a group of editable config values for FBMData
 public class EditableFBMConfigValues {
-    /// Update delegate passthrough
-    public weak var updateDelegate: ConfigUpdateDelegate? {
-        didSet {
-            octaves.updateDelegate = updateDelegate
-            persistence.updateDelegate = updateDelegate
-            scale.updateDelegate = updateDelegate
-            compression.updateDelegate = updateDelegate
-        }
-    }
-
     public let octaves: EditableConfigValue<Int32>
     public let persistence: EditableConfigValue<Float>
     public let scale: EditableConfigValue<Float>
@@ -53,5 +44,25 @@ public class EditableFBMConfigValues {
                 scale: scale.value,
                 compression: compression.value,
                 seed: seed)
+    }
+}
+
+// MARK: - Publisher
+
+extension EditableFBMConfigValues: Publisher {
+    public typealias Output = EditableConfigAction
+    public typealias Failure = Never
+
+    /// Connect the fields' publishers to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        EditableFBMConfigValues.Failure == S.Failure,
+        EditableFBMConfigValues.Output == S.Input
+    {
+        let publishers = [octaves.eraseToAnyPublisher(),
+                          persistence.eraseToAnyPublisher(),
+                          scale.eraseToAnyPublisher(),
+                          compression.eraseToAnyPublisher()]
+        Publishers.MergeMany(publishers).subscribe(subscriber)
     }
 }

@@ -20,25 +20,8 @@ class TerrainConfigView: NSStackView {
     /// To keep track of handling actions
     private var actionCancellable: AnyCancellable?
 
-    /// Update delegate, needs to be set for ALLLL the values. This is tedious
-    weak var updateDelegate: ConfigUpdateDelegate? {
-        didSet {
-            seed.updateDelegate = updateDelegate
-            globalScalar.updateDelegate = updateDelegate
-
-            elevationFBM.updateDelegate = updateDelegate
-            seaLevelOffset.updateDelegate = updateDelegate
-            elevationDistribution.updateDelegate = updateDelegate
-            elevationColorWeight.updateDelegate = updateDelegate
-
-            moistureFBM.updateDelegate = updateDelegate
-            aridness.updateDelegate = updateDelegate
-            moistureDistribution.updateDelegate = updateDelegate
-            moistureColorWeight.updateDelegate = updateDelegate
-
-            biomes.updateDelegate = updateDelegate
-        }
-    }
+    /// To (re) publish actions to listeners
+    private let editableActionPublisher = PassthroughSubject<EditableConfigAction, Never>()
 
     /// Seed for generation of the map (string)
     private let seed = EditableConfigValue(fallback: TerrainPresetData.default.seed,
@@ -148,12 +131,29 @@ class TerrainConfigView: NSStackView {
         }
     }
 
+    /// Resets biome view and biome overview view
     private func resetBiomesView() {
-        biomes.updateDelegate = updateDelegate
         biomeView.views.forEach { $0.removeFromSuperview() }
         biomeView.addView(biomeOverviewView, in: .bottom)
         biomeOverviewView.connect(to: biomes)
         biomes.addValues(to: biomeView)
+        resubscribe()
+    }
+
+    /// Resubscribes self to all current values
+    private func resubscribe() {
+        let publishers = [seed.eraseToAnyPublisher(),
+                          globalScalar.eraseToAnyPublisher(),
+                          elevationFBM.eraseToAnyPublisher(),
+                          seaLevelOffset.eraseToAnyPublisher(),
+                          elevationDistribution.eraseToAnyPublisher(),
+                          elevationColorWeight.eraseToAnyPublisher(),
+                          moistureFBM.eraseToAnyPublisher(),
+                          aridness.eraseToAnyPublisher(),
+                          moistureDistribution.eraseToAnyPublisher(),
+                          moistureColorWeight.eraseToAnyPublisher(),
+                          biomes.eraseToAnyPublisher()]
+        Publishers.MergeMany(publishers).subscribe(self)
     }
 
     // MARK: - Presets
@@ -222,4 +222,41 @@ extension TerrainConfigView: ShaderDataProviderProtocol {
     var allBiomes: [Biome] {
         biomes.data.map(\.biome.value)
     }
+}
+
+// MARK: - Publisher
+
+extension TerrainConfigView: Publisher {
+    public typealias Output = EditableConfigAction
+    public typealias Failure = Never
+
+    /// Connect the built-in editable action publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        TerrainConfigView.Failure == S.Failure,
+        TerrainConfigView.Output == S.Input
+    {
+        editableActionPublisher.subscribe(subscriber)
+    }
+}
+
+// MARK: - Subscriber
+
+/// Subscribes this view to just republish to the editable action publisher
+extension TerrainConfigView: Subscriber {
+    typealias Input = EditableConfigAction
+
+    /// Request unlimited items
+    func receive(subscription: Subscription) {
+        subscription.request(.unlimited)
+    }
+
+    /// Re-send to the never-changing editable action publisher
+    func receive(_ action: EditableConfigAction) -> Subscribers.Demand {
+        editableActionPublisher.send(action)
+        return .none
+    }
+
+    /// No-op
+    func receive(completion _: Subscribers.Completion<Never>) {}
 }

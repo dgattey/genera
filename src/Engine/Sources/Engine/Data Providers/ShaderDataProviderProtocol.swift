@@ -10,9 +10,6 @@ public protocol ShaderDataProviderProtocol: AnyObject {
     /// The type of data stored in by this provider
     associatedtype ShaderDataType: ShaderDataProtocol
 
-    /// Weakly held update delegate for use with sending updates out
-    var updateDelegate: ConfigUpdateDelegate? { get set }
-
     /// Returns an instance of config data for use with passing to shader
     var configData: ShaderDataType { get }
 
@@ -32,11 +29,6 @@ public extension ShaderDataProviderProtocol {
 
 /// Used for no data views
 public class EmptyShaderDataProvider: ShaderDataProviderProtocol {
-    public var updateDelegate: ConfigUpdateDelegate? {
-        set {}
-        get { nil }
-    }
-
     public var configData: EmptyShaderData {
         fatalError("Cannot be constructed")
     }

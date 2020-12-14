@@ -47,6 +47,12 @@ class EditableBiomeValue {
     /// Sends the latest value of this value + label to anyone listening
     let biome: CurrentValueSubject<Biome, Never>
 
+    /// The current cancellable for listening to all the values
+    private var cancellables: Set<AnyCancellable> = []
+
+    /// To (re) publish actions to listeners
+    private let editableActionPublisher = PassthroughSubject<EditableConfigAction, Never>()
+
     /// Constructs a biome out of the fields' current data - used to update `biome`
     private var value: Biome {
         guard let convertedColor = colorWell.color.usingColorSpace(.deviceRGB) else {
@@ -62,9 +68,6 @@ class EditableBiomeValue {
                      blendRange: blendRange.value)
     }
 
-    /// Update delegate passthrough
-    weak var updateDelegate: ConfigUpdateDelegate?
-
     /// Creates fields out of the initial values and the index of where we're at
     init(_ initialValue: Biome, index: Int) {
         let suffix = index > 1 ? " \(index)" : ""
@@ -78,10 +81,35 @@ class EditableBiomeValue {
         blendRange = EditableConfigValue(fallback: initialValue.maxMoisture, label: "Range of color blending")
         colorWell.color = initialValue.nsColor
 
-        minElevation.updateDelegate = self
-        maxElevation.updateDelegate = self
-        maxMoisture.updateDelegate = self
-        blendRange.updateDelegate = self
+        setupSubscribersAndPublishers()
+    }
+
+    /// When the value gets created, sets up internal publishers/subscribers so we
+    /// can republish to whoever wants to listen to changes
+    private func setupSubscribersAndPublishers() {
+        let publishers = [minElevation,
+                          maxElevation,
+                          maxMoisture,
+                          blendRange]
+        let combinedPublisher = Publishers.MergeMany(publishers)
+
+        // Any of the values changing should JUST update the biome
+        let cancellable1 = combinedPublisher.sink(receiveValue: { [unowned self] action in
+            switch action {
+            case .changeValue:
+                biome.send(value)
+            }
+        })
+
+        // Sink on the biome and republish to the editable action republisher
+        let cancellable2 = biome.sink(receiveValue: { [unowned self] _ in
+            editableActionPublisher.send(.changeValue)
+        })
+
+        // Update the cancellables so we don't lose a reference
+        cancellables.removeAll()
+        cancellables.insert(cancellable1)
+        cancellables.insert(cancellable2)
     }
 
     /// Adds the config values saved here to a given stack view
@@ -94,18 +122,24 @@ class EditableBiomeValue {
         EditableValuesStackView.addValue(stackView)(blendRange)
     }
 
-    /// Called when the user picks a color
+    /// Called when the user picks a color to update the biome
     @objc func userDidPickColor() {
-        configDidUpdate(from: nil, to: colorWell.color)
+        biome.send(value)
     }
 }
 
-// MARK: ConfigUpdateDelegate
+// MARK: - Publisher
 
-extension EditableBiomeValue: ConfigUpdateDelegate {
-    /// Notifies both our update delegate and the biome delegate
-    func configDidUpdate<T>(from: T?, to: T?) {
-        updateDelegate?.configDidUpdate(from: from, to: to)
-        biome.send(value)
+extension EditableBiomeValue: Publisher {
+    public typealias Output = EditableConfigAction
+    public typealias Failure = Never
+
+    /// Connect the re-publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        EditableBiomeValue.Failure == S.Failure,
+        EditableBiomeValue.Output == S.Input
+    {
+        editableActionPublisher.receive(subscriber: subscriber)
     }
 }

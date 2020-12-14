@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Combine
 import Debug
 import Engine
 
@@ -56,6 +57,9 @@ public class GameViewController: NSViewController {
         return gameView
     }
 
+    /// The cancellable to keep track of current sink
+    private var cancellable: AnyCancellable?
+
     /// Starts the game by creating the coordinator, then kicking it off
     public func reset(to gameType: GameType) {
         gameView.delegate = nil // reset in preparation
@@ -87,23 +91,16 @@ public class GameViewController: NSViewController {
         switch gameType {
         case .terrain:
             terrainCoordinator?.debugger = debugger
-            terrainCoordinator?.shaderDataProvider?.updateDelegate = self
+            cancellable?.cancel()
+            cancellable = terrainCoordinator?.shaderDataProvider?.sink(receiveValue: { action in
+                switch action {
+                case .changeValue:
+                    self.terrainCoordinator?.configDidUpdate()
+                }
+            })
         case .grid:
             gridCoordinator?.debugger = debugger
-            gridCoordinator?.shaderDataProvider?.updateDelegate = self
-        }
-    }
-}
-
-/// Passes through to the coordinator
-extension GameViewController: ConfigUpdateDelegate {
-    /// Called when a value changes to another value
-    public func configDidUpdate<T>(from: T?, to: T?) {
-        switch gameType {
-        case .terrain:
-            terrainCoordinator?.configDidUpdate(from: from, to: to)
-        case .grid:
-            gridCoordinator?.configDidUpdate(from: from, to: to)
+            cancellable?.cancel()
         }
     }
 }
