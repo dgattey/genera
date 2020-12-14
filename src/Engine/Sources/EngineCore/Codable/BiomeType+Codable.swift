@@ -1,6 +1,7 @@
 // BiomeType+Codable.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineData
 import Foundation
 
 // MARK: - Codable

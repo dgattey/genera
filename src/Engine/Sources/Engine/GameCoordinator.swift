@@ -1,7 +1,9 @@
 // GameCoordinator.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import Debug
+import EngineCore
 import Metal
 
 /// Coordinates the game of a certain type of data, created from a Metal view and an optional debug delegate
@@ -44,17 +46,15 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
 
     /// Initialization will fail if Metal is missing or the renderer isn't
     /// created correctly. Otherwise, sets everything up.
-    public init?(view: InteractableViewProtocol) {
+    public init?(view: InteractableMTKView) {
         let dataProvider = ChunkDataProvider()
         let viewportCoordinator = ViewportCoordinator(initialSize: view.drawableSize, dataProvider: dataProvider)
         let chunkCoordinator = ChunkCoordinator(dataProvider: dataProvider)
         guard let defaultDevice = MTLCreateSystemDefaultDevice(),
-              let renderer = MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>(
-                  view: view,
-                  device: defaultDevice,
-                  dataProvider: dataProvider,
-                  chunkCoordinator: chunkCoordinator
-              )
+              let renderer = MapRenderer<ChunkDataProvider, ChunkDataProvider.ShaderDataProviderType>(view: view,
+                                                                                                      device: defaultDevice,
+                                                                                                      dataProvider: dataProvider,
+                                                                                                      chunkCoordinator: chunkCoordinator)
         else {
             assertionFailure("Game coordinator cannot be initialized")
             return nil
@@ -68,6 +68,15 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         resizeClosure = { renderer.mtkView(view, drawableSizeWillChange: view.drawableSize) }
 
         setupInitialDelegates(with: view)
+
+        // If we have a publisher of shader data, remap it to RendererAction
+        let mappedPublisher = shaderDataProvider?.asPublisher?.map { action -> RendererAction in
+            switch action {
+            case .changeValue:
+                return .redrawMap
+            }
+        }
+        mappedPublisher?.subscribe(renderer)
     }
 
     deinit {
@@ -82,25 +91,18 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
     }
 
     /// Creates connections between the objects via delegate pattern
-    private func setupInitialDelegates(with view: InteractableViewProtocol) {
+    private func setupInitialDelegates(with view: InteractableMTKView) {
         // User interaction delegates first
         view.delegate = renderer
-        view.userInteractionDelegate = viewportCoordinator
-        renderer.userInteractionDelegate = viewportCoordinator
+        view.subscribe(viewportCoordinator)
+        renderer.subscribe(viewportCoordinator)
 
         // Viewport data provider
         chunkCoordinator.viewportDataProvider = viewportCoordinator
         renderer.viewportDataProvider = viewportCoordinator
 
         // Chunk coordinator + viewport coordinator delegates
-        chunkCoordinator.chunkCoordinatorDelegate = renderer
-        viewportCoordinator.viewportCoordinatorDelegate = renderer
-    }
-}
-
-/// Just re-renders the renderer, no matter what value updated
-extension GameCoordinator: ConfigUpdateDelegate {
-    public func configDidUpdate<T>(from _: T?, to _: T?) {
-        renderer.configDidUpdate()
+        chunkCoordinator.subscribe(renderer)
+        viewportCoordinator.subscribe(renderer)
     }
 }

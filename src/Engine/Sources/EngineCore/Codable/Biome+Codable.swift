@@ -1,6 +1,7 @@
 // Biome+Codable.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineData
 import Foundation
 
 /// This is defined in .h file so putting it here for conformance

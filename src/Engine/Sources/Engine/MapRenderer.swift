@@ -1,7 +1,9 @@
 // MapRenderer.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import Debug
+import EngineCore
 import EngineData
 import Metal
 import MetalKit
@@ -13,9 +15,11 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 {
     // MARK: - delegates
 
-    weak var userInteractionDelegate: UserInteractionDelegate?
     weak var viewportDataProvider: ViewportDataProvider?
     weak var debugger: DebugProtocol?
+
+    /// Publishes actions to anyone who listens
+    private let publisher = PassthroughSubject<ViewportAction, Never>()
 
     // MARK: - variables
 
@@ -118,7 +122,8 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     // MARK: - drawing functions
 
-    func configDidUpdate() {
+    /// Marks the view as should be redrawn at the next loop
+    private func redrawView() {
         drawingSemaphore.signal()
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
@@ -127,12 +132,10 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     /// Makes sure bytes are stored for the new user position viewport, scaling by the view's scale factor so we're
     /// drawing the same thing consistently on any screen
     private func updateUserViewportBufferData(to viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
-        drawingSemaphore.signal()
         let scaleFactor = drawableSize / view.bounds.size
         viewportBufferData = ViewportData(viewport, scaleFactor: scaleFactor)
         debugger?.subject(for: .viewportBufferData).send(viewportBufferData)
-        view.setNeedsDisplay(view.bounds)
-        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
+        redrawView()
     }
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
@@ -168,7 +171,7 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     /// Tell our change delegate we've resized
     func mtkView(_: MTKView, drawableSizeWillChange size: CGSize) {
-        userInteractionDelegate?.userDidResizeViewport(to: size)
+        publisher.send(.resizeViewport(to: size))
     }
 
     /// Updates map state and draws it to the screen
@@ -210,11 +213,55 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     }
 }
 
-// MARK: - ChunkCoordinatorDelegate
+// MARK: - Publisher
 
-extension MapRenderer: ChunkCoordinatorDelegate {
+extension MapRenderer: Publisher {
+    public typealias Output = ViewportAction
+    public typealias Failure = Never
+
+    /// Connect the built-in publisher to the subscriber sent
+    public func receive<S>(subscriber: S)
+        where S: Subscriber,
+        MapRenderer.Failure == S.Failure,
+        MapRenderer.Output == S.Input
+    {
+        publisher.subscribe(subscriber)
+    }
+}
+
+// MARK: - Subscriber
+
+/// Subscribes the map renderer to a chunk coordinator's actions
+extension MapRenderer: Subscriber {
+    typealias Input = RendererAction
+
+    /// Request unlimited items
+    func receive(subscription: Subscription) {
+        subscription.request(.unlimited)
+    }
+
+    /// Delegate to the right built in function
+    func receive(_ action: RendererAction) -> Subscribers.Demand {
+        switch action {
+        case let .evictChunk(chunk):
+            deleteChunk(chunk)
+        case let .generateChunk(chunk):
+            createChunk(chunk)
+        case let .updateUserPosition(to: userPosition, inDrawableSize: drawableSize):
+            updateUserViewportBufferData(to: userPosition, inDrawableSize: drawableSize)
+        case let .updateVisibleRegion(to: region):
+            updateVisibleRegion(to: region)
+        case .redrawMap:
+            redrawView()
+        }
+        return .none
+    }
+
+    /// No-op
+    func receive(completion _: Subscribers.Completion<Never>) {}
+
     /// On a background thread, copies all data to the buffers, then set needs display for the chunk.
-    func chunkCoordinator(didGenerate chunk: Chunk) {
+    private func createChunk(_ chunk: Chunk) {
         // Create the buffers if they don't exist, on the main thread
         let savedBuffer = vertexBuffers[chunk]
         let buffer: MTLBuffer
@@ -259,26 +306,14 @@ extension MapRenderer: ChunkCoordinatorDelegate {
         }
     }
 
-    /// Deletes data for the chunk
-    func chunkCoordinator(didDelete chunk: Chunk) {
-        // Delete the buffer
+    /// Deletes data for the chunk by deleting the vertex buffer's value
+    private func deleteChunk(_ chunk: Chunk) {
         vertexBuffers.removeValue(forKey: chunk)
-        drawingSemaphore.signal()
-        view.setNeedsDisplay(view.bounds)
-        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
-    }
-}
-
-// MARK: - ViewportCoordinatorDelegate
-
-extension MapRenderer: ViewportCoordinatorDelegate {
-    /// Updates viewport buffer data with the new viewport info
-    func viewportCoordinator(didUpdateUserPositionTo viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
-        updateUserViewportBufferData(to: viewport, inDrawableSize: drawableSize)
+        redrawView()
     }
 
     /// Forwards to the chunk coordinator
-    func viewportCoordinator(didUpdateVisibleRegionTo visibleRegion: (x: Range<Int>, y: Range<Int>)) {
+    private func updateVisibleRegion(to visibleRegion: ChunkRegion) {
         chunkCoordinator?.handle(updatedVisibleRegion: visibleRegion)
     }
 }

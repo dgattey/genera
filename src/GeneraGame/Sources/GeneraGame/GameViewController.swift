@@ -2,9 +2,9 @@
 // Copyright (c) 2020 Dylan Gattey
 
 import AppKit
+import Combine
 import Debug
 import Engine
-import EngineUI
 
 /// All constants for the generic game view controller
 enum GameViewControllerConstant {
@@ -17,7 +17,8 @@ public class GameViewController: NSViewController {
     /// Allows for debugging data
     public weak var debugger: DebugProtocol? {
         didSet {
-            updateDelegates()
+            gridCoordinator?.debugger = debugger
+            terrainCoordinator?.debugger = debugger
         }
     }
 
@@ -66,45 +67,20 @@ public class GameViewController: NSViewController {
             guard let coordinator = GameCoordinator<GridTileChunkDataProvider>(view: gameView) else {
                 fatalError("No coordinator created")
             }
+            coordinator.debugger = debugger
             self.coordinator = coordinator
-            updateDelegates()
             coordinator.start()
         case .terrain:
             guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
                 fatalError("No coordinator created")
             }
+            coordinator.debugger = debugger
             self.coordinator = coordinator
-            updateDelegates()
             coordinator.start()
         }
     }
 
     override public func viewDidLoad() {
         view.widthAnchor.constraint(greaterThanOrEqualToConstant: GameViewControllerConstant.minWidth).isActive = true
-    }
-
-    /// Calls right coordinator to set the debug delegate
-    private func updateDelegates() {
-        switch gameType {
-        case .terrain:
-            terrainCoordinator?.debugger = debugger
-            terrainCoordinator?.shaderDataProvider?.updateDelegate = self
-        case .grid:
-            gridCoordinator?.debugger = debugger
-            gridCoordinator?.shaderDataProvider?.updateDelegate = self
-        }
-    }
-}
-
-/// Passes through to the coordinator
-extension GameViewController: ConfigUpdateDelegate {
-    /// Called when a value changes to another value
-    public func configDidUpdate<T>(from: T?, to: T?) {
-        switch gameType {
-        case .terrain:
-            terrainCoordinator?.configDidUpdate(from: from, to: to)
-        case .grid:
-            gridCoordinator?.configDidUpdate(from: from, to: to)
-        }
     }
 }

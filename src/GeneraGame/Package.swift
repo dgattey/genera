@@ -15,7 +15,6 @@ let generaGamePackage = Package(
     ],
     dependencies: [
         .package(path: "Engine"),
-        .package(path: "EngineUI"),
     ],
     targets: [
         /// The shader types that power the game
@@ -29,7 +28,6 @@ let generaGamePackage = Package(
             dependencies: [
                 "GeneraGameData",
                 "Engine",
-                "EngineUI",
             ]
         ),
     ]

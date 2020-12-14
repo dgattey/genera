@@ -1,6 +1,7 @@
 // ChunkDataProviderProtocol.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineCore
 import Foundation
 
 // A protocol any provider of chunk data must conform to

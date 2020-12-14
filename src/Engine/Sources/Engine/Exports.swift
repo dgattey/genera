@@ -3,5 +3,6 @@
 
 import Foundation
 
-// Make sure that anything in this module can use EngineData
-@_exported import EngineData
+/// This file needs to export all the modules we need access to elsewhere, even if we don't import them by name elsewhere
+@_exported import EngineCore
+@_exported import EngineUI

@@ -12,3 +12,7 @@ there are few restrictions.
 
 Contains the game engine itself, plus data structures used in other modules like `Chunk` and `Direction`. Also contains extensions to
 the C-defined header data structures of `DataStructures`.
+
+## EngineUI
+
+All UI for the engine, mostly related to Biomes, etc.

@@ -1,6 +1,7 @@
 // CountedChunk.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineCore
 import Foundation
 
 /// Represents a chunk that has a count, used for comparing

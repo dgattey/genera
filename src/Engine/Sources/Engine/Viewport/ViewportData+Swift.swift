@@ -1,6 +1,7 @@
 // ViewportData+Swift.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import EngineData
 import Foundation
 import Metal
 
