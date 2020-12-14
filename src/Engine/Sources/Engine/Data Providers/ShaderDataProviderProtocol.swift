@@ -1,6 +1,7 @@
 // ShaderDataProviderProtocol.swift
 // Copyright (c) 2020 Dylan Gattey
 
+import Combine
 import EngineCore
 import EngineData
 import Foundation
@@ -9,6 +10,9 @@ import Foundation
 public protocol ShaderDataProviderProtocol: AnyObject {
     /// The type of data stored in by this provider
     associatedtype ShaderDataType: ShaderDataProtocol
+
+    /// Casts this object to a publisher if possible
+    var asPublisher: AnyPublisher<EditableConfigAction, Never>? { get }
 
     /// Returns an instance of config data for use with passing to shader
     var configData: ShaderDataType { get }
@@ -29,6 +33,10 @@ public extension ShaderDataProviderProtocol {
 
 /// Used for no data views
 public class EmptyShaderDataProvider: ShaderDataProviderProtocol {
+    public var asPublisher: AnyPublisher<EditableConfigAction, Never>? {
+        nil
+    }
+
     public var configData: EmptyShaderData {
         fatalError("Cannot be constructed")
     }

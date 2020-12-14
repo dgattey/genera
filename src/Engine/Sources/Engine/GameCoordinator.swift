@@ -68,6 +68,15 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         resizeClosure = { renderer.mtkView(view, drawableSizeWillChange: view.drawableSize) }
 
         setupInitialDelegates(with: view)
+
+        // If we have a publisher of shader data, remap it to RendererAction
+        let mappedPublisher = shaderDataProvider?.asPublisher?.map { action -> RendererAction in
+            switch action {
+            case .changeValue:
+                return .redrawMap
+            }
+        }
+        mappedPublisher?.subscribe(renderer)
     }
 
     deinit {
@@ -95,12 +104,5 @@ public class GameCoordinator<ChunkDataProvider: ChunkDataProviderProtocol> {
         // Chunk coordinator + viewport coordinator delegates
         chunkCoordinator.subscribe(renderer)
         viewportCoordinator.subscribe(renderer)
-    }
-}
-
-/// Just re-renders the renderer, no matter what value updated
-extension GameCoordinator: ConfigUpdateDelegate {
-    public func configDidUpdate<T>(from _: T?, to _: T?) {
-        renderer.configDidUpdate()
     }
 }

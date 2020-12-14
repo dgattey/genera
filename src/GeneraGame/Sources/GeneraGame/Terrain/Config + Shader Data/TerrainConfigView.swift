@@ -213,6 +213,11 @@ class TerrainConfigView: NSStackView {
 
 /// Creates a bunch of biomes & offers config support from this view's text fields
 extension TerrainConfigView: ShaderDataProviderProtocol {
+    /// Converts self to a publisher of the right data
+    var asPublisher: AnyPublisher<EditableConfigAction, Never>? {
+        eraseToAnyPublisher()
+    }
+
     /// Config data for generation of noise, pulls data from text fields if they exist
     var configData: TerrainShaderConfigData {
         preset().shaderConfigData

@@ -17,7 +17,8 @@ public class GameViewController: NSViewController {
     /// Allows for debugging data
     public weak var debugger: DebugProtocol? {
         didSet {
-            updateDelegates()
+            gridCoordinator?.debugger = debugger
+            terrainCoordinator?.debugger = debugger
         }
     }
 
@@ -57,9 +58,6 @@ public class GameViewController: NSViewController {
         return gameView
     }
 
-    /// The cancellable to keep track of current sink
-    private var cancellable: AnyCancellable?
-
     /// Starts the game by creating the coordinator, then kicking it off
     public func reset(to gameType: GameType) {
         gameView.delegate = nil // reset in preparation
@@ -69,38 +67,20 @@ public class GameViewController: NSViewController {
             guard let coordinator = GameCoordinator<GridTileChunkDataProvider>(view: gameView) else {
                 fatalError("No coordinator created")
             }
+            coordinator.debugger = debugger
             self.coordinator = coordinator
-            updateDelegates()
             coordinator.start()
         case .terrain:
             guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
                 fatalError("No coordinator created")
             }
+            coordinator.debugger = debugger
             self.coordinator = coordinator
-            updateDelegates()
             coordinator.start()
         }
     }
 
     override public func viewDidLoad() {
         view.widthAnchor.constraint(greaterThanOrEqualToConstant: GameViewControllerConstant.minWidth).isActive = true
-    }
-
-    /// Calls right coordinator to set the debug delegate
-    private func updateDelegates() {
-        switch gameType {
-        case .terrain:
-            terrainCoordinator?.debugger = debugger
-            cancellable?.cancel()
-            cancellable = terrainCoordinator?.shaderDataProvider?.sink(receiveValue: { action in
-                switch action {
-                case .changeValue:
-                    self.terrainCoordinator?.configDidUpdate()
-                }
-            })
-        case .grid:
-            gridCoordinator?.debugger = debugger
-            cancellable?.cancel()
-        }
     }
 }

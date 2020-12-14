@@ -17,4 +17,7 @@ enum RendererAction {
 
     /// Updates the visible region to a new chunk region
     case updateVisibleRegion(to: ChunkRegion)
+
+    /// Just redraws whatever's in range
+    case redrawMap
 }

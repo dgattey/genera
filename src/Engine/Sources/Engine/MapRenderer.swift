@@ -122,7 +122,8 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
 
     // MARK: - drawing functions
 
-    func configDidUpdate() {
+    /// Marks the view as should be redrawn at the next loop
+    private func redrawView() {
         drawingSemaphore.signal()
         view.setNeedsDisplay(view.bounds)
         _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
@@ -131,12 +132,10 @@ class MapRenderer<ChunkDataProvider: ChunkDataProviderProtocol,
     /// Makes sure bytes are stored for the new user position viewport, scaling by the view's scale factor so we're
     /// drawing the same thing consistently on any screen
     private func updateUserViewportBufferData(to viewport: MTLViewport, inDrawableSize drawableSize: CGSize) {
-        drawingSemaphore.signal()
         let scaleFactor = drawableSize / view.bounds.size
         viewportBufferData = ViewportData(viewport, scaleFactor: scaleFactor)
         debugger?.subject(for: .viewportBufferData).send(viewportBufferData)
-        view.setNeedsDisplay(view.bounds)
-        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
+        redrawView()
     }
 
     /// Draws the shapes as specified in all our chunked buffers (will loop over all chunks)
@@ -252,6 +251,8 @@ extension MapRenderer: Subscriber {
             updateUserViewportBufferData(to: userPosition, inDrawableSize: drawableSize)
         case let .updateVisibleRegion(to: region):
             updateVisibleRegion(to: region)
+        case .redrawMap:
+            redrawView()
         }
         return .none
     }
@@ -308,9 +309,7 @@ extension MapRenderer: Subscriber {
     /// Deletes data for the chunk by deleting the vertex buffer's value
     private func deleteChunk(_ chunk: Chunk) {
         vertexBuffers.removeValue(forKey: chunk)
-        drawingSemaphore.signal()
-        view.setNeedsDisplay(view.bounds)
-        _ = drawingSemaphore.wait(timeout: DispatchTime.distantFuture)
+        redrawView()
     }
 
     /// Forwards to the chunk coordinator
