@@ -23,13 +23,6 @@ class GeneraWindowController: NSWindowController {
         return item
     }()
 
-    /// A toolbar item for changing the game type
-    private var gameTypeToolbarItem: NSToolbarItem = {
-        let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: toolbarItemGameType))
-        item.view = buildGameTypeSelector()
-        return item
-    }()
-
     /// Sets up whole app, using the next run loop to make sure the window has resized at least once before creating the coordinator
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -77,25 +70,10 @@ extension GeneraWindowController: NSToolbarDelegate {
     /// The identifer for toggling the sidebar (custom button for it)
     private static let toolbarItemToggleSidebar = "dgattey.toggleSidebar"
 
-    /// The identifer for the game type dropdown
-    private static let toolbarItemGameType = "dgattey.gameType"
-
     /// Default items for the toolbar itself (all to left of sidebar divider)
     private static let defaultToolbarIDs: [NSToolbarItem.Identifier] =
-        [NSToolbarItem.Identifier(toolbarItemGameType),
-         .flexibleSpace,
-         NSToolbarItem.Identifier(toolbarItemToggleSidebar),
+        [NSToolbarItem.Identifier(toolbarItemToggleSidebar),
          .sidebarTrackingSeparator]
-
-    /// Builds a selector for game mode out of all possible game modes - if this grows, will have to do a different kind of control
-    private static func buildGameTypeSelector() -> NSView {
-        let selector = NSPopUpButton()
-        for title in GameType.titles {
-            selector.addItem(withTitle: title)
-        }
-        selector.action = #selector(GeneraWindowController.didChangeGameType)
-        return selector
-    }
 
     func toolbarDefaultItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
         GeneraWindowController.defaultToolbarIDs
@@ -114,8 +92,6 @@ extension GeneraWindowController: NSToolbarDelegate {
         switch itemIdentifier {
         case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemToggleSidebar):
             item = collapseSidebarToolbarItem
-        case NSToolbarItem.Identifier(GeneraWindowController.toolbarItemGameType):
-            item = gameTypeToolbarItem
         default:
             item = NSToolbarItem(itemIdentifier: itemIdentifier)
         }

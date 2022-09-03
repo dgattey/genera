@@ -22,7 +22,7 @@ let generaGamePackage = Package(
             name: "GeneraGameData",
             dependencies: ["Engine"]
         ),
-        /// In charge of running the Genera game (terrain + grid) in Swift
+        /// In charge of running the Genera game (terrain) in Swift
         .target(
             name: "GeneraGame",
             dependencies: [

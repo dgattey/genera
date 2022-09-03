@@ -5,5 +5,4 @@ import Engine
 
 // MARK: - extensions to conform to VertexProtocol
 
-extension GridVertex: VertexProtocol {}
 extension TerrainVertex: VertexProtocol {}
