@@ -17,29 +17,17 @@ public class GameViewController: NSViewController {
     /// Allows for debugging data
     public weak var debugger: DebugProtocol? {
         didSet {
-            terrainCoordinator?.debugger = debugger
+            coordinator?.debugger = debugger
         }
     }
 
     /// Returns the current config view if existent from the current coordinator
     public var currentConfigView: NSView? {
-        switch gameType {
-        case .terrain:
-            return terrainCoordinator?.shaderDataProvider
-        }
+        return coordinator?.shaderDataProvider
     }
-
-    /// Check `gameType` to verify what type of `GameCoordinator<T>` this should be! Unfortunately doesn't allow for
-    /// a more specific use since `GameCoordinator<T>` is a generic with an associated type within it - super difficult
-    private var coordinator: Any?
 
     /// Specializes the coordinator to terrain provider
-    private var terrainCoordinator: GameCoordinator<TerrainChunkDataProvider>? {
-        coordinator as? GameCoordinator<TerrainChunkDataProvider>
-    }
-
-    /// Controls which coordinator we use!
-    private var gameType: GameType = .terrain
+    private var coordinator: GameCoordinator<TerrainChunkDataProvider>?
 
     /// Casts the view to a game view if possible
     private var gameView: InteractableMTKView! {
@@ -51,18 +39,14 @@ public class GameViewController: NSViewController {
     }
 
     /// Starts the game by creating the coordinator, then kicking it off
-    public func reset(to gameType: GameType) {
+    public func reset() {
         gameView.delegate = nil // reset in preparation
-        self.gameType = gameType
-        switch gameType {
-        case .terrain:
-            guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
-                fatalError("No coordinator created")
-            }
-            coordinator.debugger = debugger
-            self.coordinator = coordinator
-            coordinator.start()
+        guard let coordinator = GameCoordinator<TerrainChunkDataProvider>(view: gameView) else {
+            fatalError("No coordinator created")
         }
+        coordinator.debugger = debugger
+        self.coordinator = coordinator
+        coordinator.start()
     }
 
     override public func viewDidLoad() {

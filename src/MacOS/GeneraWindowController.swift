@@ -28,8 +28,7 @@ class GeneraWindowController: NSWindowController {
         super.windowDidLoad()
         guard let contentViewController = window?.contentViewController,
               let gameViewController: GameViewController = firstViewController(in: contentViewController),
-              let sidePanelViewController: SidePanelViewController = firstViewController(in: contentViewController),
-              let startingGameType = GameType(rawValue: GameType.titles.first ?? "")
+              let sidePanelViewController: SidePanelViewController = firstViewController(in: contentViewController)
         else {
             assertionFailure("Views incorrectly set up")
             return
@@ -39,7 +38,7 @@ class GeneraWindowController: NSWindowController {
         gameViewController.debugger = sidePanelViewController.debugger
 
         DispatchQueue.main.async {
-            self.changeGameType(to: startingGameType)
+            self.reset()
         }
     }
 
@@ -57,9 +56,9 @@ class GeneraWindowController: NSWindowController {
         return nil
     }
 
-    /// Actually changes the game type and orchestrates the sidebar change as a result
-    private func changeGameType(to gameType: GameType) {
-        gameViewController?.reset(to: gameType)
+    /// Resets + orchestrates the sidebar change as a result
+    private func reset() {
+        gameViewController?.reset()
         sidePanelViewController?.resetViews(toIncludeConfigView: gameViewController?.currentConfigView)
     }
 }
@@ -99,17 +98,6 @@ extension GeneraWindowController: NSToolbarDelegate {
         item.target = self
         item.menuFormRepresentation = nil
         return item
-    }
-
-    /// Called in response to changing the game type from the toolbar - changes it on the gameViewController
-    @objc func didChangeGameType(_ sender: AnyObject) {
-        guard let selector = sender as? NSPopUpButton else {
-            return
-        }
-        let selectedItem = selector.indexOfSelectedItem
-        if let gameType = GameType(rawValue: GameType.titles[selectedItem]) {
-            changeGameType(to: gameType)
-        }
     }
 
     /// Shows or hides the sidebar by calling the split view's toggle method
