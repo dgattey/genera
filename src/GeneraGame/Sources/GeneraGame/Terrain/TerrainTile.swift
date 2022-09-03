@@ -1,5 +1,5 @@
 // TerrainTile.swift
-// Copyright (c) 2020 Dylan Gattey
+// Copyright (c) 2022 Dylan Gattey
 
 import Engine
 import simd
