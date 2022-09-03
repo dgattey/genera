@@ -17,7 +17,6 @@
 		751D56C8256268F0000B0326 /* SimplexNoise.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C2256268F0000B0326 /* SimplexNoise.metal */; };
 		751D56C9256268F0000B0326 /* TerrainShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C5256268F0000B0326 /* TerrainShaders.metal */; };
 		751D56CA256268F0000B0326 /* Color.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C4256268F0000B0326 /* Color.metal */; };
-		751D56CB256268F0000B0326 /* GridShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 751D56C7256268F0000B0326 /* GridShaders.metal */; };
 		75206A3B257737A7001D7B9B /* AppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75206A3A257737A7001D7B9B /* AppViewController.swift */; };
 		75A090D92577457F008D759F /* HideableTitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A090D82577457F008D759F /* HideableTitlebarView.swift */; };
 /* End PBXBuildFile section */
@@ -50,7 +49,6 @@
 		751D56C3256268F0000B0326 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		751D56C4256268F0000B0326 /* Color.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Color.metal; sourceTree = "<group>"; };
 		751D56C5256268F0000B0326 /* TerrainShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = TerrainShaders.metal; sourceTree = "<group>"; };
-		751D56C7256268F0000B0326 /* GridShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GridShaders.metal; sourceTree = "<group>"; };
 		75206A3A257737A7001D7B9B /* AppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewController.swift; sourceTree = "<group>"; };
 		75A090D82577457F008D759F /* HideableTitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideableTitlebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,7 +104,6 @@
 		750FFFF125611E3600E166D4 /* Shaders - Game */ = {
 			isa = PBXGroup;
 			children = (
-				751D56C7256268F0000B0326 /* GridShaders.metal */,
 				751D56C5256268F0000B0326 /* TerrainShaders.metal */,
 			);
 			path = "Shaders - Game";
@@ -231,7 +228,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				751D56CA256268F0000B0326 /* Color.metal in Sources */,
-				751D56CB256268F0000B0326 /* GridShaders.metal in Sources */,
 				75206A3B257737A7001D7B9B /* AppViewController.swift in Sources */,
 				75A090D92577457F008D759F /* HideableTitlebarView.swift in Sources */,
 				750F001525611E3700E166D4 /* SidePanelViewController.swift in Sources */,

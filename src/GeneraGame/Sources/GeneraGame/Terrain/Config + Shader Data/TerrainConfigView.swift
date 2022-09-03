@@ -61,7 +61,6 @@ class TerrainConfigView: NSStackView {
     private let moistureColorWeight = EditableConfigValue(fallback: TerrainPresetData.default.moistureColorWeight,
                                                           label: "Color weight")
 
-    /// A grid view for all the biome color data at a glance
     private lazy var biomeOverviewView: BiomeOverview = {
         let view = BiomeOverview()
         view.connect(to: biomes)
