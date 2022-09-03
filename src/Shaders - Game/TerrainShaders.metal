@@ -55,11 +55,7 @@ float4 color(Biome biome, float noise, float weight) {
 float4 blend(Biome upperBiome, Biome lowerBiome, float elevation, float moisture, constant TerrainShaderConfigData *configData) {
     float4 elevationColorA = color(upperBiome, elevation, (*configData).elevationColorWeight);
     float4 elevationColorB = color(lowerBiome, elevation, (*configData).elevationColorWeight);
-    float4 moistureColorA = color(upperBiome, moisture, (*configData).moistureColorWeight);
-    float4 moistureColorB = color(lowerBiome, moisture, (*configData).moistureColorWeight);
     float percentOfElevationThreshold = (upperBiome.minElevation - elevation + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
-    /// TODO: @dgattey is this right at all?
-    float percentOfMoistureThreshold = (upperBiome.maxMoisture - moisture + upperBiome.blendRange)/upperBiome.blendRange - 0.5 * upperBiome.blendRange;
     return mix(elevationColorA, elevationColorB, max(min(percentOfElevationThreshold, 1.0), 0.0));
 }
 

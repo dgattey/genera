@@ -1,5 +1,5 @@
 // EditableBiomeValues.swift
-// Copyright (c) 2020 Dylan Gattey
+// Copyright (c) 2022 Dylan Gattey
 
 import Combine
 import EngineCore
@@ -11,7 +11,7 @@ import UI
 public class EditableBiomeValues {
     /// Sorts all biomes by moisture and elevation so they draw right
     private static func sortedBiomes(_ biomes: [Biome]) -> [Biome] {
-        biomes.sorted { (a, b) -> Bool in
+        biomes.sorted { a, b -> Bool in
             a.maxMoisture < b.maxMoisture
                 && a.maxElevation - a.minElevation < b.maxElevation - b.minElevation
         }
